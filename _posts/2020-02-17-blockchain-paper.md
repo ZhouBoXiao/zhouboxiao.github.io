@@ -6,7 +6,7 @@ date:       2020-02-17
 author:     "ZBX"
 header-img: "img/tag-bg.jpg"
 tags:
-    - BlockChaing
+    - BlockChain
     - 翻译
 ---
 
