@@ -85,7 +85,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 friends: [
     {
         title: "APA Blog",
-        href: "http://zhouboxiao.github.io"
+        href: "http://apayaduo.cn"
     },{
         title: "Foo",
         href: "#"
