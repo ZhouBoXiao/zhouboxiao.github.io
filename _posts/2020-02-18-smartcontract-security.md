@@ -12,10 +12,6 @@ tags:								#标签
     - 翻译
 ---
 
-
-
-# Challenges for Combining Smart Contracts with Trusted Computing
-
 **Author： Marcus Brandenburger、Christian Cachin 等**
 
 ## 1 INTRODUCTION

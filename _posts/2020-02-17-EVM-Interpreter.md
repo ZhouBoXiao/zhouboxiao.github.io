@@ -10,13 +10,9 @@ tags:								#标签
     - Ethereum
 ---
 
-
-
-## 正文
-
 ​		在以太坊虚拟机中，解释器扮演着重要的角色，想要弄清楚解释器的原理，必须从虚拟机的源码层面上进行分析。
 
-从instruction.go文件中的指令解释入手，因为指令很多，只列举几个例子：
+​		从instruction.go文件中的指令解释入手，因为指令很多，只列举几个例子：
 
 ```go
 func opPc(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
