@@ -1,6 +1,6 @@
 # Site settings
-title: APA Blog
-SEOTitle: APA博客 | APA Blog
+title: ZBX Blog
+SEOTitle: ZBX博客 | ZBX Blog
 header-img: img/home-bg.jpg
 email: apayaduo@163.com
 description: ""
@@ -84,7 +84,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 # Friends
 friends: [
     {
-        title: "APA Blog",
+        title: "ZBX Blog",
         href: "http://apayaduo.cn"
     },{
         title: "Foo",
