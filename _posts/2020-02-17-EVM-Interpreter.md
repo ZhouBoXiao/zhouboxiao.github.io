@@ -8,6 +8,7 @@ header-img: img/post-bg-2015.jpg 	#这篇文章标题背景图片
 catalog: true 						# 是否归档
 tags:								#标签
     - Ethereum
+    - EVM
 ---
 
 ​		在以太坊虚拟机中，解释器扮演着重要的角色，想要弄清楚解释器的原理，必须从虚拟机的源码层面上进行分析。
