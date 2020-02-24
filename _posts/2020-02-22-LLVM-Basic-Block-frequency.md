@@ -8,6 +8,7 @@ header-img: img/post-bg-2015.jpg 	#这篇文章标题背景图片
 catalog: true 						# 是否归档
 tags:								#标签
     - LLVM
+    - 翻译
 ---
 
 ### **介绍**	
@@ -72,4 +73,3 @@ Block bias 是用来指示在函数执行期间对给定块的偏差。其思想
 - 忽略loop scales
 
 这个参考频率代表了无偏图中的块频率。偏差是块频率与参考块频率的比值。
-
