@@ -20,7 +20,6 @@ tags:								#标签
 
 Trie树，又称字典树，单词查找树或者前缀树，是一种用于快速检索的多叉树结构，如英文字母的字典树是一个26叉树，数字的字典树是一个10叉树。Trie树可以利用字符串的公共前缀来节约存储空间。如下图所示，该trie树用10个节点保存了6个字符串：tea，ten，to，in，inn，int：
 
-
 <img src="/img/fig/wps20.png" width="350" height="350"/>
 
 在该trie树中，字符串in，inn和int的公共前缀是“in”，因此可以只存储一份“in”以节省空间。当然，如果系统中存在大量字符串且这些字符串基本没有公共前缀，则相应的trie树将非常消耗内存，这也是trie树的一个缺点。
@@ -38,25 +37,21 @@ Trie树的基本性质可以归纳为：
 前缀树跟Trie树的不同之处在于：Trie树给每一个字符串分配一个节点，这样将使那些很长但又没有公共节点的字符串的Trie树退化成数组。前缀树的不同之处在于如果节点具有公共前缀，那么就使用公共前缀，否则就把剩下的所有节点插入同一个节点。Patricia相对Tire的优化如下图：
 
 <div align="center"> <img src="/img/fig/wps21.jpg" /> </div>
-    
-<div align="center"> <img src="/img/fig/wps22.jpg" />  </div>
 
+<div align="center"> <img src="/img/fig/wps22.jpg" />  </div>
 上图存储的8个Key Value对，可以看到前缀树的特点。
 
 <div align="center"> <img src="/img/fig/wps23.jpg" />  </div>
-
 **（3）Merkle树：**
 
 Merkle Tree，通常也被称作Hash Tree，顾名思义，就是存储hash值的一棵树。Merkle树的叶子是数据块(例如，文件或者文件的集合)的hash值。非叶节点是其对应子节点串联字符串的hash。
 
 <div align="center"> <img src="/img/fig/wps24.jpg" />  </div>
-
 Merkle Tree的主要作用是当拿到Top Hash的时候，这个hash值代表了整颗树的信息摘要，当树里面任何一个数据发生了变动，都会导致Top Hash的值发生变化。 而Top Hash的值是会存储到区块链的区块头里面去的， 区块头是必须经过工作量证明。 这也就是说只要拿到一个区块头，就可以对区块信息进行验证。 
 
 **（4）MPT存储与查询流程：**
 
 <div align="center"> <img src="/img/fig/wps25.jpg" /> </div>
-
  下面是节点的结构：
 
 ```go
@@ -83,11 +78,9 @@ shortNode struct {  //extension node or leaf node
 由于是采用nibble作为路径单位，所以先将路径和值都写为字节形式：
 
 <div align="center"> <img src="/img/fig/wps27.jpg" /> </div>
-
 那么在数据库中存储形式为：
 
 <div align="center"> <img src="/img/fig/wps28.jpg" /> </div>
-
 查询值为coin的流程如下：
 
 （1）rootHash已知(存储在区块头中)，那么从levelDB中读出key为rootHash的值，也就是[ <16>, hashA ]，这是一个扩展节点，路径为6，剩下路径为4,6,f,6,7,6,5，并得到下一个节点hashA
@@ -108,7 +101,6 @@ shortNode struct {  //extension node or leaf node
 
 <div align="center"> <img src="/img/fig/wps29.jpg" />  </div>
 <div align="center"> <img src="/img/fig/wps30.jpg" />  </div>
-
 从图中可以看出，**MPT中是以交易在区块中的索引的RLP编码作为key，存储交易数据的RLP编码。**
 
 其中DeriveSha() 操作代码如下：

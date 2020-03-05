@@ -7,6 +7,7 @@ author:     "ZBX"
 header-img: "img/tag-bg.jpg"
 tags:
     - BlockChain
+    - Security
     - 翻译
 ---
 

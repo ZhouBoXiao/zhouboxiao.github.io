@@ -9,7 +9,7 @@ catalog: true 						# 是否归档
 tags:								#标签
     - Smart Contract
     - 翻译
-
+    - Security
 ---
 
 ​		要构建一个安全的Ethereum代码库，熟悉要避免的已知错误，对每个新的代码签入进行静态分析，fuzz新特性，并使用symbolic execution验证final product。

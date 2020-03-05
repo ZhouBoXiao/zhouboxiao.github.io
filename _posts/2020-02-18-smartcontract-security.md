@@ -10,6 +10,7 @@ tags:								#标签
     - Smart Contract
     - SGX
     - 翻译
+    - Security
 ---
 
 **Author： Marcus Brandenburger、Christian Cachin 等**
