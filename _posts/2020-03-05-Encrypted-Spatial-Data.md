@@ -2,7 +2,7 @@
 layout:     post   				    # 使用的布局（不需要改）
 title:      空间的密文查询			# 标题 
 subtitle:   空间几何范围的密文查询    #副标题
-date:       2020-02-24 				# 时间
+date:       2020-03-05 				# 时间
 author:     ZBX 						# 作者
 header-img: img/post-bg-2015.jpg 	#这篇文章标题背景图片
 catalog: true 						# 是否归档
@@ -20,6 +20,7 @@ tags:								#标签
 ## System Model
 
 <div align="center"> <img src="/img/fig/system_model.png" /> </div>
+
 1. 数据拥有者
 
    数据所有者的主要任务是将其空间数据以密文（utilizing AES）的形式提交给云服务器。为了提高检索效率，对于每个原始数据，数据所有者将创建一个与之相关联的加密索引。然后密文和索引都被发送到云服务器。
@@ -51,6 +52,7 @@ $$
 θ^{*}_{2}(x) =b_0 +b_1x +b_2x^2 +···+b_nx^N
 $$
 <div align="center"> <img src="/img/fig/polynomial.png" /> </div>
+
 ​		如图2所示，假设`X`的定义域是`[a,b]`，可以判断出(`x1`, `y1`)是在给定范围内。
 ​		多项式曲线拟合可以用来拟合任何给定的曲线，并检查点是否在该曲线内。然而，由于曲线拟合是一种近似算法，利用拟合曲线代替实际曲线，不可避免地会产生误差。
 
@@ -63,6 +65,7 @@ $$
 ​		R-Tree的核心思想是聚合距离相近的节点并在树结构的上一层将其表示为这些节点的最小外接矩形，这个最小外接矩形就成为上一层的一个节点。
 
 <div align="center"> <img src="/img/fig/build_R_tree.png" /> </div>
+
 - R-Tree从根节点开始，遍历整个树，找到与给定搜索矩形相交的所有最深的非叶节点(如果存在的话)，否者返回空。
 - 对于上面非叶节点中包含的每个点，检查它是否满足节中说明的条件。如果满足，将这些点返回给搜索用户。否者返回空。
 
@@ -75,3 +78,9 @@ $$
 3. *GenTrapdoor*
 
 4. *Query* 
+
+
+
+
+
+原文：Enabling Efﬁcient and Geometric Range Query With Access Control Over Encrypted Spatial Data
