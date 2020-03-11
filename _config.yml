@@ -61,9 +61,9 @@ disqus_username: zhouboxiao
 
 # Analytics settings
 # Baidu Analytics
-# ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
+ba_track_id: d7bac37781804076bc3fb5fed5f65b98
 # Google Analytics
-# ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+ga_track_id: 'UA-160267678-1'            # Format: UA-xxxxxx-xx
 ga_domain: auto
 
 
@@ -85,7 +85,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 friends: [
     {
         title: "ZBX Blog",
-        href: "http://apayaduo.cn"
+        href: "https://zhouboxiao.github.io/"
     },{
         title: "Foo",
         href: "#"
