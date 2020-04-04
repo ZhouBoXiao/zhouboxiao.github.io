@@ -45,7 +45,9 @@ Stream中还有fifter、sorted、Match、map、Reduce这一类的API
 
 ## Default Method
 
+jdk8 的时候接口可以有默认方法和静态方法功能。静态方法可以直接用接口名调用。
 
+Jdk 9 在接口中引入了私有方法和私有静态方法
 
 
 
