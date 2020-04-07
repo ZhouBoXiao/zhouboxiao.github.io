@@ -11,6 +11,19 @@ tags:
 
 ~还待进一步完善~
 
+# 线程的通信方式
+
+1. 等待通知机制。两个线程通过对同一对象调用等待 wait() 和通知 notify() 方法来进行通讯。
+2. 信号量机制
+3. 锁机制
+4. join() 方法 （内部实现为wait）
+5. volatile共享内存
+6. CountDownLatch
+7. CyclicBarrier
+8. 线程响应中断
+9. 线程池 awaitTermination() 方法
+10. 管道通信
+
 # HashTable和HashMap区别
 
 - 继承的父类不同
