@@ -1,7 +1,5 @@
 # APA Blog
 
-
-
 [My  Blog  Website](https://zhouboxiao.github.io)
 
 
@@ -18,6 +16,9 @@
 - [数据库](#数据库)
     - [MySQL](#mysql)
     - [Redis](#redis)
+- [Spring](#Spring)
+- [设计模式](#设计模式)
+- [Zookeeper](#Zookeeper)
 - [面试](#面试)
 	- [面试常见问题](#面试常见问题)
 
@@ -34,14 +35,15 @@
 
 ### JVM
 
-
+1. [Jvm类加载机制](_posts/2020-04-08-jvm-study01.md)
 
 ## 网络
 
 1. [HTTP协议](_posts/2020-03-19-HTTP-study.md)
 
-
 ## 操作系统
+
+### Linux
 
 ## 数据库
 
@@ -54,13 +56,15 @@
 1. [Redis基础知识01](2020-03-11-Redis-study01.md)
 2. [Redis基础知识02](2020-04-06-Redis-study02.md)
 
-### Linux
-
-
+## Spring
 
 ## 设计模式
 
 1. [Design Pattern](_posts/2020-03-29-设计模式-study.md)
+
+## Zookeeper
+
+1. [Zookeeper](_posts/2020-04-07-zookeeper-study01.md)
 
 ## 面试
 
