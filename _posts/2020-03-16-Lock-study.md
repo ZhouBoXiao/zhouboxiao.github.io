@@ -54,6 +54,36 @@ tags:
 - synchronized 修饰方法的的情况
   - `ACC_SYNCHRONIZED `标识，该标识指明了该方法是一个同步方法，JVM 通过该 `ACC_SYNCHRONIZED` 访问标志来辨别一个方法是否声明为同步方法，从而执行相应的同步调用。
 
+### 区别
+
+1. 原始构成
+
+   1. Synchronized是关键字属于JVM层面，Lock是API层面的锁
+
+2. 使用方法
+
+   1. Synchronized不需要用户手动释放锁，当Synchronized代码执行完后系统会自动让线程释放对锁的占用。ReentrantLock需要手动释放
+
+3. 等待是否可中断
+
+   1. Synchronized不可中断。
+
+   2. ReentrantLock可中断，
+
+      ```java
+      //1、设置超时方法
+      tryLock(long timeout, TimeUnit unit)
+      //2、lockInterruptibly()放代码块中，调用interrupt()方法可中断
+      ```
+
+4. 加锁是否公平
+
+   1. Synchronized非公平锁，ReentrantLock两者都可以，默认非公平锁，构造方法可以传入boolean值，true为公平锁，false为非公平锁。
+
+5. 锁绑定多个条件Condition
+
+   1. Synchronized没有，ReetrantLock用来实现分组唤醒需要唤醒的线程们，可以**精确唤醒**，而不是像Synchronized要么随机唤醒一个线程，要么唤醒全部线程。
+
 ## 偏向锁
 
 - 偏向锁的目标是，减少无竞争且只有一个线程使用锁的情况下，使用轻量级锁产生的性能消耗。轻量级锁每次申请、释放锁都至少需要一次CAS，但偏向锁只有初始化时需要一次CAS。
