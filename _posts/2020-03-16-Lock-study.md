@@ -23,7 +23,22 @@ tags:
 | 偏向锁   | 线程ID、 Epoch                                 | 对象分代年龄 | 1                |
 | 无锁     | 对象的hashCode                                 | 对象分代年龄 | 0                |
 
+## volatile
 
+例如你让一个volatile的integer自增（i++），其实要分成3步：1）读取volatile变量值到local； 2）增加变量的值；3）把local的值写回，让其它的线程可见。这3步的jvm指令为：
+
+```
+mov    0xc(%r10),%r8d ; Load
+inc    %r8d           ; Increment
+mov    %r8d,0xc(%r10) ; Store
+lock addl $0x0,(%rsp) ; StoreLoad Barrier
+```
+
+- 内存屏障（[memory barrier](http://en.wikipedia.org/wiki/Memory_barrier)）是一个CPU指令。基本上，它是这样一条指令： a) 确保一些特定操作执行的顺序； b) 影响一些数据的可见性(可能是某些指令执行后的结果)。编译器和CPU可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后于这个命令的必须后执行。内存屏障另一个作用是强制更新一次不同CPU的缓存。例如，一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何试图读取该数据的线程将得到最新值，而不用考虑到底是被哪个cpu核心或者哪颗CPU执行的。
+
+### volatile为什么没有原子性?
+
+从Load到store到内存屏障，一共4步，其中最后一步jvm让这个最新的变量的值在所有线程可见，也就是最后一步让所有的CPU内核都获得了最新的值，但**中间的几步（从Load到Store）**是不安全的，中间如果其他的CPU修改了值将会丢失。
 
 # Lock
 
