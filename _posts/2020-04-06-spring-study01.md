@@ -9,7 +9,23 @@ tags:
     - Spring
 ---
 
-~还待进一步完善~
+还待进一步完善
+
+## Spring 事务管理实现方式
+
+- **编程式事务管理**
+  - 编程式事务管理通过TransactionTemplate手动管理事务，调用beginTransaction()、commit()、rollback()等事务管理相关的方法
+
+- **声明式事务管理**
+  - 声明式事务管理有三种实现方式：**基于TransactionProxyFactoryBean的方式**、**基于AspectJ的XML方式**、**基于@Transactional注解的方式**
+
+## Spring中自动装配的方式
+
+- no：不进行自动装配，手动设置Bean的依赖关系。 
+- byName：根据Bean的名字进行自动装配。 
+- byType：根据Bean的类型进行自动装配。 
+- constructor：类似于byType，不过是应用于构造器的参数，如果正好有一个Bean与构造器的参数类型相同则可以自动装配，否则会导致错误。 
+- autodetect：如果有默认的构造器，则通过constructor的方式进行自动装配，否则使用byType的方式进行自动装配。
 
 ## Spring 的 Bean的作用域与生命周期
 
