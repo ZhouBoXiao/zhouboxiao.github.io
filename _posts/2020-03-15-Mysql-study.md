@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "MySQL相关知识"
+title:      "MySQL相关知识01"
 subtitle:   "MySQL的原理、数据结构、引擎、使用、事务隔离级别等"
 date:       2020-03-01
 author:     "ZBX"
@@ -9,7 +9,9 @@ tags:
     - MySQL
 ---
 
-~还待进一步完善~
+还待进一步完善
+
+
 
 # 关系型数据库设计理论
 
@@ -183,13 +185,17 @@ MySQL 的 Query Profiler 是一个使用非常方便的 Query 诊断分析工具
 
 ## 日志
 
+- Error log
+  - 错误日志记录了 MyQL Server 运行过程中所有较为严重的警告和错误信息，以及 MySQL Server 每次启动和关闭的详细信息。
+- query log
+- slow query log
 - **undo log**
   - 回滚和多版本并发控制(`MVCC`)
   - 存储着修改之前的数据，如果有`update`，则存储对应的`delete`
 - **binlog**
   - 复制和恢复数据
   - 主从服务器需要保持数据的一致性，通过`binlog`来同步数据
-- **redo log**
+- InnoDB的**redo log**
   - `redo log`记录的是数据的**物理变化**，`binlog`记录的是数据的**逻辑变化**
   - 不会存储着**历史**所有数据的变更，**文件的内容会被覆盖的**。
 
@@ -211,14 +217,6 @@ set global slow_query_log = 1;
 ```
 
 MySQL重启后则会失效。如果要永久生效，就必须修改配置文件my.cnf。 	
-
-## 主从复制原理、作用和实现
-
-主要涉及三个线程：binlog 线程、I/O 线程和 SQL 线程。
-
-- **binlog 线程** ：负责将主服务器上的数据更改写入二进制日志（Binary log）中。
-- **I/O 线程** ：负责从主服务器上读取二进制日志，并写入从服务器的中继日志（Relay log）。
-- **SQL 线程** ：负责读取中继日志，解析出主服务器已经执行的数据更改并在从服务器中重放（Replay）。
 
 
 
@@ -250,6 +248,19 @@ MySQL重启后则会失效。如果要永久生效，就必须修改配置文件
 Explain查看下
 
 
+
+## 安装
+
+```
+yum install mysql-community-server
+systemctl enable mysqld
+systemctl daemon-reload
+systemctl start mysqld
+grep 'temporary password' /var/log/mysqld.log
+mysql -uroot -p
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
+```
 
 
 
