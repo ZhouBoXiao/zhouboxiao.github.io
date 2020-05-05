@@ -50,12 +50,13 @@
 
 ### MySQL
 
-1. [MySQL基础知识](_posts/2020-03-15-Mysql-study.md)
+1. [MySQL基础知识01](_posts/2020-03-15-Mysql-study.md)
+2. [MySQL基础知识02](_posts/2020-04-19-MySQL-study02.md)
 
 ### Redis
 
-1. [Redis基础知识01](2020-03-11-Redis-study01.md)
-2. [Redis基础知识02](2020-04-06-Redis-study02.md)
+1. [Redis基础知识01](_posts/2020-03-11-Redis-study01.md)
+2. [Redis基础知识02](_posts/2020-04-06-Redis-study02.md)
 
 ## Spring
 
