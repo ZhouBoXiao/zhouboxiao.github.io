@@ -39,6 +39,10 @@ tags:
 | seesion       | 同一个HTTP Session共享一个Bean，不同Session使用不同Bean，仅适用于WebApplicationContext环境 |
 | globalSession | 一般用于Portlet应用环境，仅适用于WebApplicationContext环境   |
 
+### 生命周期
+
+
+
 ## Spring 中的事务传播和隔离级别
 
 ### 事务传播
