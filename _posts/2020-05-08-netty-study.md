@@ -1,12 +1,12 @@
 ---
 layout:     post
-title:      "Netty学习"
-subtitle:   "Netty的基础知识"
+title:      "Nio学习"
+subtitle:   "Nio的基础知识"
 date:       2020-05-08
 author:     "ZBX"
 header-img: "img/tag-bg.jpg"
 tags:
-    - Netty
+    - Nio
 	- Java
 ---
 
@@ -25,13 +25,19 @@ tags:
 - Buffer就是一个内存块，底层是有一个数组
 - 数据的读取写入是通过Buffer，flip切换读写，channel是双向的。
 
+### Selector
+
+Selector能够检测多个注册的通道上是否有事件发生，如果有事件发生，便获取事件然后针对每个事件进行相应的处理。
+
 ### Channel
+
+- Channel类似于Stream，但是可以同时进行读写，而Stream只能读或者只能写
+- Channel可以实现异步读取数据
+- Channel可以从Buffer中读写数据
 
 ### Buffer
 
-### Selector
-
-
+Buffer本质上是一个可以读写数据的内存块，可以理解成一个容器对象，该对象提供了一组方法，可以更轻松地使用内存块，Buffer对象内置了一些机制，能够跟踪和记录Buffer的状态变化情况。Channel提供从文件、网络读取数据的渠道，但是读取或写入的数据都必须经由Buffer。
 
 ## NIO和零拷贝
 
