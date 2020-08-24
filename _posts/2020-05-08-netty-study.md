@@ -16,6 +16,80 @@ tags:
 - NIO：同步非阻塞，面向缓冲区，面向块编程。服务器实现模式为一个线程处理多个请求，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求就进行处理；
 - AIO： 异步非阻塞，引入异步通道，采用了Proactor模式，简化了程序的编写，有效的请求才启动线程，它的特点是现有操作系统完成后通知服务端程序启动线程来处理，一般用户连接数较多时间较长的应用。
 
+## I/O 复用
+
+### select
+
+```c
+int select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+```
+
+select 允许应用程序监视一组文件描述符，等待一个或者多个描述符成为就绪状态，从而完成I/O操作。
+
+- fd_set使用数组实现，数组大小使用`FD_SETSIZE`定义，所以只能监听少于`FD_SETSIZE`数量的描述符，有三种的类型的描述符类型：readset、writeset、exceptset，分别对应读、写、异常条件的描述符集合。
+- timeout 为超时参数，调用 select 会一直阻塞直到有描述符的事件到达或者等待的时间超过 timeout。
+- 成功调用返回结果大于 0，出错返回结果为 -1，超时返回结果为 0。
+
+### poll
+
+```c
+int poll(struct pollfd *fds, unsigned int nfds, int timeout);
+```
+
+poll的功能与select类似，也是等待一组描述符中的一个成为就绪状态。
+
+poll中描述符是pollfd类型的数组，pollfd的定义如下：
+
+```c
+struct pollfd {
+               int   fd;         /* file descriptor */
+               short events;     /* requested events */
+               short revents;    /* returned events */
+           };
+```
+
+### epoll
+
+```c
+int epoll_create(int size); //创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)；
+int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);
+```
+
+1. int epoll_create(int size)
+   1. 创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大，这个参数不同于select()中的第一个参数，给出最大监听的fd+1的值，`参数size并不是限制了epoll所能监听的描述符最大个数，只是对内核初始分配内部数据结构的一个建议`。
+   2. 当创建好epoll句柄后，它就会占用一个fd值，在linux下如果查看/proc/进程id/fd/，是能够看到这个fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。
+
+2. epoll_ctl()
+
+   1. 函数是对指定描述符fd执行op操作。
+      \- epfd：是epoll_create()的返回值。
+      \- op：表示op操作，用三个宏来表示：添加**EPOLL_CTL_ADD，删除EPOLL_CTL_DEL，修改EPOLL_CTL_MOD**。分别添加、删除和修改对fd的监听事件。
+      \- fd：是需要监听的fd（文件描述符）
+      \- epoll_event：是告诉内核需要监听什么事，struct epoll_event结构如下：
+
+      ```c
+      struct epoll_event {
+        __uint32_t events;  /* Epoll events */
+        epoll_data_t data;  /* User data variable */
+      };
+      
+      //events可以是以下几个宏的集合：
+      EPOLLIN ：表示对应的文件描述符可以读（包括对端SOCKET正常关闭）；
+      EPOLLOUT：表示对应的文件描述符可以写；
+      EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）；
+      EPOLLERR：表示对应的文件描述符发生错误；
+      EPOLLHUP：表示对应的文件描述符被挂断；
+      EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的。
+      EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里
+      ```
+
+      
+
+   2. epoll_ctl()用于向内核注册新的描述符或者是改变某个文件描述符的状态。已注册的描述符在内核中会被维护在一棵红黑树上，通过回调函数内核会将I/O准备好的描述符加入到一个链表中管理，进程调用epoll_wait()便可以得到事件完成的描述符。
+
+从上面的描述可以看出，epoll 只需要将描述符**从进程缓冲区向内核缓冲区拷贝一次**，并且进程不需要通过轮询来获得事件完成的描述符。
+
 ## NIO的三大核心
 
 - 每个channel都会对应一个Buffer
@@ -39,19 +113,46 @@ Selector能够检测多个注册的通道上是否有事件发生，如果有事
 
 Buffer本质上是一个可以读写数据的内存块，可以理解成一个容器对象，该对象提供了一组方法，可以更轻松地使用内存块，Buffer对象内置了一些机制，能够跟踪和记录Buffer的状态变化情况。Channel提供从文件、网络读取数据的渠道，但是读取或写入的数据都必须经由Buffer。
 
-## NIO和零拷贝
+## 零拷贝
 
-Java中常用的零拷贝有mmap和sendFile。零拷贝是从OS角度来说的，因为内核缓冲区之间，没有数据是重复的。（只有kernel buffer一份数据）。零拷贝还减少了环境切换，带来了性能优势。
+原本数据从磁盘文件通过DMA copy 到kernel space，再从kernel space CPU copy 到用户空间缓存，用户空间缓存 copy 到socket 缓冲区，DMA copy到网络。
+
+**零拷贝主要指的是避免数据拷贝，而非没有拷贝。**
+
+Java中常用的零拷贝有`mmap`和`sendFile`。零拷贝是从OS角度来说的，因为内核缓冲区之间，没有数据是重复的。（只有kernel buffer一份数据）。零拷贝还减少了环境切换，带来了性能优势。
 
 ### mmap
 
-mmap通过内存映射，将文件映射到内核缓冲区，同时用户空间可以共享内核空间的数据。这样，在进行网络传输时，就可以减少内核空间到用户空间的拷贝次数。
+mmap通过内存映射，将文件映射到内核缓冲区，同时**用户空间可以共享内核空间的数据**。这样，在进行网络传输时，就可以减少内核空间到用户空间的拷贝次数。
 
-### sendFile
+### **sendfile()**
 
-kernel Buffer - > protocol engine , 中间没有经过socket buffer。实现CPU零拷贝
+利用 DMA 引擎将文件中的数据拷贝到操作系统内核缓冲区中，然后数据被拷贝到与 socket 相关的内核缓冲区中去。接下来，DMA 引擎将数据从内核 socket 缓冲区中拷贝到协议引擎中去。
+
+### **带有 DMA 收集拷贝功能的 sendfile()**
+
+DMA gather copy
+
+1. DMA 从拷贝至内核缓冲区
+2. 将数据的位置和长度的信息的描述符增加至内核空间（socket 缓冲区）
+3. DMA 将数据从内核拷贝至协议引擎
+
+### mmap和
+
+- mmap适合小数据量读写，sendFile适合大文件传输
+- mmap需要4次上下文切换，3次数据拷贝；sendFile需要3次上下文切换，最少2次数据拷贝
+- sendFile可以利用DMA方式，减少CPU拷贝，mmap则不能
+
+## NIO流程
+
+1. ServerBootstrap.bind, 初始化channel，NioServerSocketChannel
+2. 注册channel到selector （boss NioEventLoop Selector）
+3. 轮询accept事件 （processSelectedKeys -> runAllTasks）
+4. 处理accept建立连接channel
+5. 注册channel到selector （worker NioEventLoopGroup Selector）
+6. 轮询读写事件（READ/WRITE）
+7. 处理读写事件（processSelectedKeys -> runAllTasks）
 
 ## Netty优点
 
 - 高性能、高吞吐、延迟低，资源消耗更少
-

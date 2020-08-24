@@ -45,7 +45,9 @@ tags:
 - **403 Forbidden** ：请求被拒绝。
 - **404 Not Found**
 - **500 Internal Server Error** ：服务器正在执行请求时发生错误。
+- **502 Bad Gateway**： 作为网关或者代理工作的服务器尝试执行请求时，从上游服务器接收到无效的响应。 
 - **503 Service Unavailable** ：服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。
+- **504 Gateway Time-out**： 作为网关或者代理工作的服务器尝试执行请求时，未能及时从上游服务器（URI标识出的服务器，例如HTTP、FTP、LDAP）或者辅助服务器（例如DNS）收到响应。 
 
 # HTTP的方法
 
@@ -111,3 +113,31 @@ tags:
 - 流量控制
   - 流量控制基于窗口更新帧进行，即接收方广播自己准备接收某个数据流的多少字节，以及对整个链接要接收多少个字节。
   - 流量控制有方向性，即接收方可能根据自己的情况为每个流乃至整个链接设置任意窗口大小。
+
+## DNS劫持
+
+[域名](https://baike.baidu.com/item/域名)劫持是互联网攻击的一种方式，通过攻击[域名解析](https://baike.baidu.com/item/域名解析/574285)服务器（DNS），或伪造域名解析服务器（DNS）的方法，把目标网站域名解析到错误的IP地址从而实现用户无法访问目标网站的目的或者蓄意或恶意要求用户访问指定IP地址（网站）的目的。
+
+攻击者使用DNS请求，**将数据放入一个具有漏洞的DNS服务器的缓存当中。这些缓存信息会在客户进行DNS访问时返回给用户**，从而把用户客户对正常域名的访问引导到入侵者所设置挂马、钓鱼等页面上，或者通过伪造的邮件和其他的server服务获取用户口令信息，导致客户遭遇进一步的侵害。
+
+原则上TCP/IP体系通过序列号等多种方式避免仿冒数据的插入，但入侵者如果通过监听客户端和DNS服务器的对话，就可以猜测服务器响应给客户端的DNS查询ID。攻击者在DNS服务器之前将虚假的响应交给用户，从而欺骗客户端去访问恶意的网站。
+
+方法：1. 修改Hosts文件。 2. 使用安全的DNS服务器。
+
+## ARP欺骗
+
+**介绍**
+
+是针对[以太网](https://baike.baidu.com/item/以太网)[地址解析协议](https://baike.baidu.com/item/地址解析协议)（[ARP](https://baike.baidu.com/item/ARP)）的一种攻击技术。此种攻击可让攻击者获取[局域网](https://baike.baidu.com/item/局域网)上的数据包甚至可篡改数据包，且可让网络上特定计算机或所有计算机无法正常连线。
+
+**原理**
+
+ARP欺骗的运作原理是由攻击者发送假的ARP数据包到网上，尤其是送到网关上。其目的是要让送至特定的IP地址的流量被错误送到攻击者所取代的地方。因此攻击者可将这些流量另行转送到真正的网关（被动式数据包嗅探，passive sniffing）或是篡改后再转送（中间人攻击，man-in-the-middle attack）。攻击者亦可将ARP数据包导到不存在的[MAC地址](https://baike.baidu.com/item/MAC地址)以达到阻断服务攻击的效果，例如netcut软件。
+
+**防御方案**
+
+1. 最理想的防制方法是网上内的每台计算机的ARP一律改用静态的方式，不过这在大型的网上是不可行的，因为需要经常更新每台计算机的ARP表。
+
+2. 另外一种方法，例如[DHCP snooping](https://baike.baidu.com/item/DHCP snooping)，网上设备可借由[DHCP](https://baike.baidu.com/item/DHCP)保留网络上各计算机的MAC地址，在伪造的ARP数据包发出时即可侦测到。此方式已在一些厂牌的网上设备产品所支持。
+
+3. 有一些软件可监听网络上的ARP回应，若侦测出有不正常变动时可发送[邮箱](https://baike.baidu.com/item/邮箱)通知管理者。例如UNIX平台的[Arpwatch](https://baike.baidu.com/item/Arpwatch)以及[Windows](https://baike.baidu.com/item/Windows)上的XArp v2或一些网上设备的Dynamic ARP inspection功能。 [1]

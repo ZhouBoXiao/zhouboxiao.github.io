@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Java8相关知识"
-subtitle:   "Java8的一些新特性"
+subtitle:   "Java8相关知识"
 date:       2020-03-11
 author:     "ZBX"
 header-img: "img/tag-bg.jpg"
@@ -10,6 +10,98 @@ tags:
 ---
 
 ~还待进一步完善~
+
+## 为什么局部内部类和匿名内部类只能访问局部final变量
+
+```
+public class Test {
+    public static void main(String[] args)  {
+         
+    }
+     
+    public void test(final int b) {
+        final int a = 10;
+        new Thread(){
+            public void run() {
+                System.out.println(a);
+                System.out.println(b);
+            };
+        }.start();
+    }
+}
+```
+
+​	这段代码会被编译成两个class文件：Test.class和Test1.class。
+
+​	当test方法执行完毕之后，变量a的生命周期就结束了，而此时Thread对象的生命周期很可能还没有结束，那么在Thread的run方法中继续访问变量a就变成不可能了，但是又要实现这样的效果，怎么办呢？Java采用了 复制 的手段来解决这个问题。
+
+​	我们看到在run方法中有一条指令：
+
+```
+bipush 10
+```
+
+　　这条指令表示将操作数10压栈，表示使用的是一个本地局部变量。这个过程是在编译期间由编译器默认进行，如果这个变量的值在编译期间可以确定，则编译器默认会在匿名内部类（局部内部类）的常量池中添加一个内容相等的字面量或直接将相应的字节码嵌入到执行字节码中。这样一来，匿名内部类使用的变量是另一个局部变量，只不过值和方法中局部变量的值相等，因此和方法中的局部变量完全独立开。
+
+​	**如果局部变量的值在编译期间就可以确定，则直接在匿名内部里面创建一个拷贝。如果局部变量的值无法在编译期间确定，则通过构造器传参的方式来对拷贝进行初始化赋值。**
+
+​	在run方法中访问的变量a和test方法中的变量a不是同一个变量，当在run方法中改变变量a的值的话，会造成数据不一致性，所以必须加上final。
+
+## 泛型中？和T的区别
+
+区别1：通过 T 来 确保 泛型参数的一致性
+
+区别2：类型参数可以多重限定而通配符不行
+
+区别3：通配符可以使用超类限定而类型参数不行
+
+## Optional类
+
+代表一个值存在或者不存在，原来null表示一个值不存在，Optional可以更好的表达这个概念，并且可以规避空指针异常
+
+```
+Optional.of：创建一个Optional实例
+
+Optional.empty：创建一个空的Optional实例
+
+Optional.ofNullable：若t不为null，创建optional实例，否者创建一个空实例
+
+isPresent：判断是否包含值
+
+orElse(T t)：如果对象包含值，则返回该值，否则返回t
+
+orElseGet(Supplier s)：如果调用对象包含值，返回该值，否则返回S获取的值
+
+map(Function f)：如果有值对其处理，返回处理后的Optional，否则返回Optional.empty()
+
+flatMap(Function mapper)：与map类似，要求返回值必须是Optional
+```
+
+
+
+## JVM 中有三类常量池
+
+1. 静态常量池（class 文件中的常量池）
+
+2. 运行时常量池
+
+3. 字符串常量池
+
+   他们再 JDK6~8 中分别位于不同的地方
+
+   > 在JDK6及之前的版本：
+   > 静态常量池在Class文件中。
+   > 运行时常量池在Perm Gen区(也就是方法区)中。（所谓的方法区是在Java堆的一个逻辑部分，为了与Java堆区别开来，也称其为非堆（Non-Heap），那么Perm Gen（永久代）区也被视为方法区的一种实现。）
+   > 字符串常量池在运行时常量池中。
+
+   > 在JDK7版本：
+   > 静态常量池在Class文件中。
+   > 运行时常量池依然在Perm Gen区(也就是方法区)中。在JDK7版本中，永久代的转移工作就已经开始了，将譬如符号引用(Symbols)转移到了native heap；字面量(interned strings)转移到了java heap；类的静态变量(class statics)转移到了java heap。但是运行时常量池依然还存在，只是很多内容被转移，其只存着这些被转移的引用。网上流传的一些测试运行时常量池转移的方式或者代码，其实是对字符串常量池转移的测试。
+
+   > 在JDK8版本：
+   > 静态常量池在Class文件中。
+   > JVM已经将运行时常量池从方法区中移了出来，在Java 堆（Heap）中开辟了一块区域存放运行时常量池。同时永久代被移除，以元空间代替。元空间并不在虚拟机中，而是使用本地内存。因此，默认情况下，元空间的大小仅受本地内存限制。其主要用于存放一些元数据。
+   > 字符串常量池存在于Java堆中。
 
 ### HashMap的优化
 
@@ -22,13 +114,7 @@ tags:
 
 ## Lambda表达式
 
-
-
-
-
 ## Stream流
-
-
 
 ```java
 	List<String> a = new ArrayList<>();
@@ -38,10 +124,6 @@ tags:
 Stream中还有fifter、sorted、Match、map、Reduce这一类的API
 
 ### 构造函数和方法引用
-
-
-
-
 
 ## Default Method
 
