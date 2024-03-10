@@ -83,7 +83,57 @@ String 类中使用 final 关键字修饰字符数组来保存字符串，`priva
 
   - 默认的loadClass方法是实现了双亲委派机制的逻辑，即会先让父类加载器加载，当无法加载时才由自己加载。为了破坏双亲委派机制必须重写loadClass方法，即这里先尝试交由System类加载器加载，加载失败才会由自己加载。它并没有优先交给父类加载器，这就打破了双亲委派机制。
 
+- 打破的案例： Tomcat
+  - 为了Web应用程序类之间隔离，为每个应用程序创建WebAppClassLoader类加载器
+  - 为了Web应用程序类之间共享，把ShareClassLoader作为WebAppClassLoader的父加载器，如果WebAppClassLoader加载不到，则尝试ShareClassLoader
+  - 为了Tomcat本身与Web应用程序类隔离，用CatalinaClassLoader类加载器进行隔离，CatalinaClassLoader加载Tomcat本身的类
+  - 为了Tomcat与Web应用程序类共享，用CommonClassLoader作为CatalinaClassLoader和ShareClassLoader的父类加载器
+  - ShareClassLoader、CatalinaClassLoader、CommonClassLoader的目录可以在Tomcat的catalina.properties进行配置
     
+
+# Tomcat对ThreadPoolExecutor线程池的扩展
+
+核心：重写了父类的execute方法，进行扩展
+
+```java
+  
+public void execute(Runnable command) {
+	execute(command,0,TimeUnit.MILLISECONDS);
+}
+ 
+public void execute(Runnable command, long timeout, TimeUnit unit) {
+    // 将自己的计算器叠加
+	submittedCount.incrementAndGet();
+	try { // 调用父类的模板流程
+		super.execute(command);
+	} catch (RejectedExecutionException rx) {
+        // 父类执行拒绝策略（肯定是到达了最大线程数） 
+		if (super.getQueue() instanceof TaskQueue) {
+			final TaskQueue queue = (TaskQueue)super.getQueue();
+			try {
+                // 尝试着真正将任务添加到队列中，没有成功则说明队列也真的满了，该真的执行拒绝策略
+				if (!queue.force(command, timeout, unit)) {
+					submittedCount.decrementAndGet();
+					throw new RejectedExecutionException(sm.getString("threadPoolExecutor.queueFull"));
+				}
+			} catch (InterruptedException x) {
+				submittedCount.decrementAndGet();
+				throw new RejectedExecutionException(x);
+			}
+		} else {
+			submittedCount.decrementAndGet();
+			throw rx;
+		}
+ 
+	}
+}
+```
+
+  1、将自己的计算器叠加
+
+  2、调用父类的模板方法执行
+
+  3、父类执行拒绝策略，说明已经到了核心线程数。那么获取父类的队列，尝试着将任务添加到队列中（**这样就实现了先到创建最大线程，再放入队列中**），如果队列也满了放不进去，再执行真正的拒绝策略。
 
 # ORM
 
