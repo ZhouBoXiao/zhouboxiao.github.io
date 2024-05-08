@@ -239,7 +239,6 @@ MySQL 的 Query Profiler 是一个使用非常方便的 Query 诊断分析工具
 - InnoDB的**redo log**
   - `redo log`记录的是数据的**物理变化**，`binlog`记录的是数据的**逻辑变化**
   - 不会存储着**历史**所有数据的变更，**文件的内容会被覆盖的**。
-  - 
 
 ## 慢查询
 
@@ -259,6 +258,12 @@ set global slow_query_log = 1;
 ```
 
 MySQL重启后则会失效。如果要永久生效，就必须修改配置文件my.cnf。 	
+
+
+
+## Mysql文件排序
+
+
 
 
 
