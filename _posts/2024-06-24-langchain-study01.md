@@ -9,6 +9,10 @@ tags:
     - LangChain
 ---
 
+## Adapter
+
+![image-20240706195901107](C:\Users\15338\AppData\Roaming\Typora\typora-user-images\image-20240706195901107.png)
+
 ## Agent 
 
 ### Agent提示词模板样例

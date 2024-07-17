@@ -9,6 +9,32 @@ tags:
     - 洞察
 ---
 
+
+
+![image-20240717223648541](https://s2.loli.net/2024/07/17/6itc7S8gVmI54lx.png)
+
+![image-20240717224004859](https://s2.loli.net/2024/07/18/xV6MrDLupZloHXG.png)
+
+![image-20240717225339097](https://s2.loli.net/2024/07/18/nG714OkwthSEpNc.png)
+
+![image-20240717230335641](https://s2.loli.net/2024/07/18/GQ2gZVolARzEnk6.png)
+
+![image-20240717230414968](https://s2.loli.net/2024/07/18/iBDnSbEU9wKvstC.png)
+
+![image-20240717230433173](https://s2.loli.net/2024/07/18/4tWNKjisuTZeMrF.png)
+
+![image-20240717232110795](https://s2.loli.net/2024/07/18/OU7saNz8r5IYW2j.png)
+
+![image-20240717232254488](https://s2.loli.net/2024/07/18/MjCepiU3EQAbK8Y.png)
+
+![image-20240717232316003](https://s2.loli.net/2024/07/18/QmnzS35RVEXLyWB.png)
+
+![image-20240717231417074](https://s2.loli.net/2024/07/18/9IWTbG84oypsflY.png)
+
+![image-20240717232457589](https://s2.loli.net/2024/07/18/4QRBklzZVj5Nnyf.png)
+
+![image-20240717232534586](https://s2.loli.net/2024/07/18/DcsbVjame2LW3Ck.png)
+
 # Digital Buildings Project
 
 数字建筑项目是一个开放源代码、Apache许可证的项目，旨在创建一个统一的模式和工具集，用于表示建筑物及其安装设备的结构化信息。目前，数字建筑本体论和工具集的一个版本正在被谷歌用于管理其投资组合中的建筑物。数字建筑项目起源于以可扩展的方式管理大量且异构建筑物组合的需要。该项目旨在实现在建筑物之间轻松移植管理应用程序和分析的目标。这一目标通过结合语义上表达丰富的抽象建模、易于使用的配置语言和健壮的验证工具来实现。数字建筑项目的工作受到了Project Haystack和BrickSchema的启发，并以长期目标保持跨兼容性和/或融合。
