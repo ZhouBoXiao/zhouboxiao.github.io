@@ -15,9 +15,7 @@ tags:
 
 目前主流的产品借助Google的Dapper论文实现的，一下是Dapper的翻译版本：
 
-[Dapper，大规模分布式系统的跟踪系统]: https://bigbully.github.io/Dapper-translation/
-
-
+[Dapper，大规模分布式系统的跟踪系统](https://bigbully.github.io/Dapper-translation/ )
 
 - 日志Logs
 - 指标 Metrics
@@ -31,7 +29,7 @@ tags:
 
 ### OpenTracing 标准
 
-https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/README.md
+[OpenTracing 标准](https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/README.md)
 
 
 
