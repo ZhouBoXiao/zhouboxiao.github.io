@@ -101,7 +101,7 @@ print(trg_input)
 **输出：**
 
 ```
-lua复制编辑tensor([[ 1,  2,  3,  4],
+tensor([[ 1,  2,  3,  4],
         [ 6,  7,  8,  9],
         [11, 12, 13, 14]])
 ```
@@ -122,3 +122,91 @@ lua复制编辑tensor([[ 1,  2,  3,  4],
 
 - **训练时**：使用目标序列的前 n-1 个词作为输入（`trg_input`），并用真实的目标序列作为目标输出（`trg`）。
 - **推理时**：根据模型预测的结果作为输入来生成后续词。
+
+## 源语言掩码&目标语言掩码
+
+### **source mask**
+
+`source mask`用于在 Transformer 模型的编码器中屏蔽填充符（`<pad>`）的位置，确保模型在计算注意力时不关注这些无效位置。
+
+```
+src_mask = (src != input_pad).unsqueeze(-2)
+```
+
+```
+src = torch.tensor([[1, 2, 0, 0], [3, 4, 5, 0]])  # batch_size=2, seq_len=4
+input_pad = 0
+mask = (src != input_pad)
+# mask = [[True, True, False, False], [True, True, True, False]]
+mask = mask.unsqueeze(-2) # mask.shape = (2, 1, 4)
+# mask = [
+#    [[True, True, False, False]],   # 第一个句子的掩码
+#    [[True, True, True, False]]     # 第二个句子的掩码
+#]
+```
+
+
+
+### create mask
+
+```python
+def create_masks(src, trg):
+    # 源语言掩码（忽略填充符）
+    # src 是输入序列的张量，形状为 (batch_size, seq_len)，包含词索引
+    # input_pad 是填充符 <pad> 在词表中的索引
+    # src != input_pad 会生成一个布尔张量，标记哪些位置是有效词（非填充符），形状为 (batch_size, seq_len)
+    src_mask = (src != input_pad).unsqueeze(-2)  # [batch_size, 1, seq_len]
+
+    if trg is not None:
+        # 目标语言掩码（填充符掩码 + 未来信息掩码）
+        trg_pad_mask = (trg != target_pad).unsqueeze(-2)  # [batch_size, 1, seq_len]
+        trg_len = trg.size(1)
+        trg_sub_mask = torch.tril(  # 下三角掩码（允许自回归）
+            torch.ones((trg_len, trg_len), device=trg.device)
+        ).bool()
+        trg_mask = trg_pad_mask & trg_sub_mask  # 合并两种掩码
+    else:
+        trg_mask = None
+
+    return src_mask, trg_mask
+```
+
+输入例子：
+
+```
+# 假设：
+input_pad = 0  # 源语言填充符索引
+target_pad = 0 # 目标语言填充符索引
+batch_size = 2
+src_seq_len = 4
+trg_seq_len = 3
+
+# 样例输入：
+src = torch.tensor([
+    [1, 2, 3, 0],  # 第1个样本（末尾填充1个<pad>）
+    [4, 5, 0, 0]   # 第2个样本（末尾填充2个<pad>）
+]) # shape [2,4]
+
+trg = torch.tensor([
+    [6, 7, 8],     # 第1个目标序列（无填充）
+    [9, 0, 0]      # 第2个目标序列（末尾填充2个<pad>）
+]) # shape [2,3]
+
+# 函数返回结果：
+src_mask = [
+    [[True, True, True, False]],  # 第1个样本掩码
+    [[True, True, False, False]]  # 第2个样本掩码
+] # shape [2,1,4]
+
+trg_mask = [
+    [[[ True, False, False],      # 第1个目标序列掩码
+      [ True,  True, False],
+      [ True,  True,  True]]],
+    
+    [[[ True, False, False],      # 第2个目标序列掩码（注意pad位置）
+      [False, False, False],      # 第2行全False（因为trg[1,1]是<pad>）
+      [False, False, False]]]
+] # shape [2,1,3,3]
+
+```
+
