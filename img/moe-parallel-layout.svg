@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="900" height="340" fill="#ffffff"/>
+  <defs>
+    <marker id="arrS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 注意力层：Dense，数据并行 -->
+  <rect x="40" y="36" width="820" height="64" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="450" y="64" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e40af">注意力层（Attention）— Dense：数据并行（DP）</text>
+  <text x="450" y="88" text-anchor="middle" font-size="12.5" fill="#475569">每张卡一份完整副本，输入输出一致，无需额外通信</text>
+
+  <!-- 连接线 -->
+  <line x1="107" y1="100" x2="107" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="205" y1="100" x2="205" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="303" y1="100" x2="303" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="401" y1="100" x2="401" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="499" y1="100" x2="499" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="597" y1="100" x2="597" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="695" y1="100" x2="695" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+  <line x1="793" y1="100" x2="793" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arrS)"/>
+
+  <!-- 8 张 GPU -->
+  <rect x="63" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="107" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 0</text>
+  <rect x="77" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="107" y="212" text-anchor="middle" font-size="12" fill="#92400e">E0</text>
+
+  <rect x="161" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="205" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 1</text>
+  <rect x="175" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="205" y="212" text-anchor="middle" font-size="12" fill="#92400e">E1</text>
+
+  <rect x="259" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="303" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 2</text>
+  <rect x="273" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="303" y="212" text-anchor="middle" font-size="12" fill="#92400e">E2</text>
+
+  <rect x="357" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="401" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 3</text>
+  <rect x="371" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="401" y="212" text-anchor="middle" font-size="12" fill="#92400e">E3</text>
+
+  <rect x="455" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="499" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 4</text>
+  <rect x="469" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="499" y="212" text-anchor="middle" font-size="12" fill="#92400e">E4</text>
+
+  <rect x="553" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="597" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 5</text>
+  <rect x="567" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="597" y="212" text-anchor="middle" font-size="12" fill="#92400e">E5</text>
+
+  <rect x="651" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="695" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 6</text>
+  <rect x="665" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="695" y="212" text-anchor="middle" font-size="12" fill="#92400e">E6</text>
+
+  <rect x="749" y="160" width="88" height="70" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="793" y="184" text-anchor="middle" font-size="12.5" fill="#334155">GPU 7</text>
+  <rect x="763" y="194" width="60" height="26" rx="5" fill="#fde68a" stroke="#d97706"/>
+  <text x="793" y="212" text-anchor="middle" font-size="12" fill="#92400e">E7</text>
+
+  <!-- MoE 层：EP -->
+  <rect x="40" y="256" width="820" height="60" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="450" y="282" text-anchor="middle" font-size="15" font-weight="bold" fill="#92400e">MoE 层 — 稀疏：专家并行（EP）</text>
+  <text x="450" y="305" text-anchor="middle" font-size="12.5" fill="#a16207">E0…E7 切片分布在 8 张卡上，跨卡 token 交换走 All-to-All</text>
+</svg>

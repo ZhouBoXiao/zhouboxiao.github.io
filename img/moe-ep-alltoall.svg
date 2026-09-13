@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="900" height="650" fill="#ffffff"/>
+  <defs>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <!-- ===== GPU 0 ===== -->
+  <rect x="40" y="100" width="350" height="420" rx="14" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="215" y="132" text-anchor="middle" font-size="17" font-weight="bold" fill="#1d4ed8">GPU 0</text>
+  <text x="215" y="152" text-anchor="middle" font-size="12" fill="#475569">持有专家 E0、E1</text>
+
+  <rect x="75" y="175" width="130" height="58" rx="8" fill="#bfdbfe" stroke="#2563eb"/>
+  <text x="140" y="210" text-anchor="middle" font-size="14" fill="#1e3a8a">专家 E0</text>
+  <rect x="225" y="175" width="130" height="58" rx="8" fill="#bfdbfe" stroke="#2563eb"/>
+  <text x="290" y="210" text-anchor="middle" font-size="14" fill="#1e3a8a">专家 E1</text>
+  <text x="215" y="258" text-anchor="middle" font-size="12.5" fill="#2563eb">③ Compute：只算自己的专家</text>
+
+  <!-- dispatch buffers -->
+  <rect x="75" y="272" width="130" height="48" rx="8" fill="#bfdbfe" stroke="#2563eb"/>
+  <text x="140" y="301" text-anchor="middle" font-size="12.5" fill="#1e3a8a">[t1 t2] 留本地</text>
+  <rect x="225" y="272" width="130" height="48" rx="8" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="290" y="301" text-anchor="middle" font-size="12.5" fill="#7c2d12">[t3 t4] → GPU1</text>
+
+  <!-- router -->
+  <rect x="150" y="355" width="130" height="46" rx="8" fill="#bbf7d0" stroke="#16a34a"/>
+  <text x="215" y="383" text-anchor="middle" font-size="14" fill="#14532d">Router 打分</text>
+  <line x1="195" y1="355" x2="142" y2="324" stroke="#64748b" stroke-width="1.3" marker-end="url(#arrG)"/>
+  <line x1="235" y1="355" x2="258" y2="324" stroke="#64748b" stroke-width="1.3" marker-end="url(#arrG)"/>
+  <text x="215" y="425" text-anchor="middle" font-size="12.5" fill="#15803d">① Route</text>
+
+  <!-- tokens -->
+  <circle cx="90" cy="485" r="15" fill="#93c5fd" stroke="#2563eb"/>
+  <text x="90" y="490" text-anchor="middle" font-size="11" fill="#1e3a8a">t1</text>
+  <circle cx="150" cy="485" r="15" fill="#93c5fd" stroke="#2563eb"/>
+  <text x="150" y="490" text-anchor="middle" font-size="11" fill="#1e3a8a">t2</text>
+  <circle cx="210" cy="485" r="15" fill="#fdba74" stroke="#ea580c"/>
+  <text x="210" y="490" text-anchor="middle" font-size="11" fill="#7c2d12">t3</text>
+  <circle cx="270" cy="485" r="15" fill="#fdba74" stroke="#ea580c"/>
+  <text x="270" y="490" text-anchor="middle" font-size="11" fill="#7c2d12">t4</text>
+  <line x1="96" y1="468" x2="182" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+  <line x1="152" y1="468" x2="200" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+  <line x1="208" y1="468" x2="230" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+  <line x1="264" y1="468" x2="248" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+
+  <!-- ===== GPU 1 ===== -->
+  <rect x="510" y="100" width="350" height="420" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
+  <text x="685" y="132" text-anchor="middle" font-size="17" font-weight="bold" fill="#c2410c">GPU 1</text>
+  <text x="685" y="152" text-anchor="middle" font-size="12" fill="#475569">持有专家 E2、E3</text>
+
+  <rect x="545" y="175" width="130" height="58" rx="8" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="610" y="210" text-anchor="middle" font-size="14" fill="#7c2d12">专家 E2</text>
+  <rect x="695" y="175" width="130" height="58" rx="8" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="760" y="210" text-anchor="middle" font-size="14" fill="#7c2d12">专家 E3</text>
+  <text x="685" y="258" text-anchor="middle" font-size="12.5" fill="#ea580c">③ Compute：只算自己的专家</text>
+
+  <rect x="545" y="272" width="130" height="48" rx="8" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="610" y="301" text-anchor="middle" font-size="12.5" fill="#7c2d12">[t5 t6] 留本地</text>
+  <rect x="695" y="272" width="130" height="48" rx="8" fill="#bfdbfe" stroke="#2563eb"/>
+  <text x="760" y="301" text-anchor="middle" font-size="12.5" fill="#1e3a8a">[t7 t8] → GPU0</text>
+
+  <rect x="620" y="355" width="130" height="46" rx="8" fill="#bbf7d0" stroke="#16a34a"/>
+  <text x="685" y="383" text-anchor="middle" font-size="14" fill="#14532d">Router 打分</text>
+  <line x1="665" y1="355" x2="612" y2="324" stroke="#64748b" stroke-width="1.3" marker-end="url(#arrG)"/>
+  <line x1="705" y1="355" x2="728" y2="324" stroke="#64748b" stroke-width="1.3" marker-end="url(#arrG)"/>
+  <text x="685" y="425" text-anchor="middle" font-size="12.5" fill="#15803d">① Route</text>
+
+  <circle cx="560" cy="485" r="15" fill="#fdba74" stroke="#ea580c"/>
+  <text x="560" y="490" text-anchor="middle" font-size="11" fill="#7c2d12">t5</text>
+  <circle cx="620" cy="485" r="15" fill="#fdba74" stroke="#ea580c"/>
+  <text x="620" y="490" text-anchor="middle" font-size="11" fill="#7c2d12">t6</text>
+  <circle cx="680" cy="485" r="15" fill="#93c5fd" stroke="#2563eb"/>
+  <text x="680" y="490" text-anchor="middle" font-size="11" fill="#1e3a8a">t7</text>
+  <circle cx="740" cy="485" r="15" fill="#93c5fd" stroke="#2563eb"/>
+  <text x="740" y="490" text-anchor="middle" font-size="11" fill="#1e3a8a">t8</text>
+  <line x1="566" y1="468" x2="652" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+  <line x1="622" y1="468" x2="670" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+  <line x1="678" y1="468" x2="700" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+  <line x1="734" y1="468" x2="718" y2="406" stroke="#94a3b8" stroke-width="1.1" marker-end="url(#arrG)"/>
+
+  <!-- ===== 中间：All-to-All 通信 ===== -->
+  <text x="450" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#6d28d9">④ Combine：结果按原路送回</text>
+  <line x1="360" y1="196" x2="535" y2="196" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrP)"/>
+  <line x1="535" y1="218" x2="360" y2="218" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrP)"/>
+
+  <text x="450" y="262" text-anchor="middle" font-size="13" font-weight="bold" fill="#c2410c">② Dispatch：token 装箱发出</text>
+  <line x1="358" y1="290" x2="540" y2="290" stroke="#ea580c" stroke-width="2" marker-end="url(#arrO)"/>
+  <line x1="692" y1="315" x2="360" y2="315" stroke="#ea580c" stroke-width="2" marker-end="url(#arrO)"/>
+  <text x="450" y="345" text-anchor="middle" font-size="11.5" fill="#9a3412">All-to-All：每张卡同时收发，颜色 = token 的目标卡</text>
+
+  <!-- ===== 图例 ===== -->
+  <text x="60" y="575" font-size="12.5" fill="#334155">① Route：每张卡的 Router 为本地 token 打分，选出全局专家编号</text>
+  <text x="60" y="603" font-size="12.5" fill="#334155">② Dispatch：token 按目标卡分组，All-to-All 发出（先换 counts 再换 token）</text>
+  <text x="490" y="575" font-size="12.5" fill="#334155">③ Compute：各卡只计算自己持有的那片专家</text>
+  <text x="490" y="603" font-size="12.5" fill="#334155">④ Combine：结果 All-to-All 送回，unpermute 后加权合并</text>
+</svg>
