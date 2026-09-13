@@ -1,0 +1,39 @@
+<svg viewBox="0 0 600 280" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MPI SPMD 模型">
+  <title>MPI SPMD 模型：一份代码，N 个进程副本</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect x="210" y="20" width="180" height="48" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+  <text x="300" y="38" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#0C447C">mpi_hello_world.c</text>
+  <text x="300" y="56" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#185FA5">只有这一份源码</text>
+  <rect x="170" y="86" width="260" height="38" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1"/>
+  <text x="300" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#633806">mpirun -n 4 ./mpi_hello_world</text>
+  <path d="M300 68 L300 86" fill="none" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="30" y="160" width="120" height="70" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+    <text x="90" y="185" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#085041">进程副本 0</text>
+    <text x="90" y="207" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0F6E56">rank = 0</text>
+  </g>
+  <g>
+    <rect x="170" y="160" width="120" height="70" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+    <text x="230" y="185" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#085041">进程副本 1</text>
+    <text x="230" y="207" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0F6E56">rank = 1</text>
+  </g>
+  <g>
+    <rect x="310" y="160" width="120" height="70" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+    <text x="370" y="185" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#085041">进程副本 2</text>
+    <text x="370" y="207" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0F6E56">rank = 2</text>
+  </g>
+  <g>
+    <rect x="450" y="160" width="120" height="70" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+    <text x="510" y="185" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#085041">进程副本 3</text>
+    <text x="510" y="207" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0F6E56">rank = 3</text>
+  </g>
+  <path d="M270 124 L90 158" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M290 124 L230 158" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M310 124 L370 158" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M330 124 L510 158" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <text x="300" y="262" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#888780">每个副本执行同一段 main()，唯一区别是拿到的 rank 不同</text>
+</svg>

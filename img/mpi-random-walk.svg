@@ -1,0 +1,43 @@
+<svg viewBox="0 0 600 300" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="随机游走的域分解与游走者移交">
+  <title>并行随机游走：域分解、越界移交与 tag 方向</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <text x="300" y="22" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0C447C">全局空间 [0, 100) 被切成 4 段，每段一个进程</text>
+  <rect x="40" y="40" width="120" height="50" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+  <text x="100" y="58" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0C447C">rank 0: [0, 25)</text>
+  <text x="100" y="76" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#185FA5">无左邻居</text>
+  <rect x="160" y="40" width="120" height="50" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+  <text x="220" y="58" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0C447C">rank 1: [25, 50)</text>
+  <text x="220" y="76" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#185FA5">左右都有邻居</text>
+  <rect x="280" y="40" width="120" height="50" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+  <text x="340" y="58" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0C447C">rank 2: [50, 75)</text>
+  <text x="340" y="76" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#185FA5">左右都有邻居</text>
+  <rect x="400" y="40" width="120" height="50" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+  <text x="460" y="58" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0C447C">rank 3: [75, 100)</text>
+  <text x="460" y="76" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#185FA5">无右邻居</text>
+
+  <text x="300" y="122" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#888780">游走者每步随机 ±1；走出自己这段就移交给邻居</text>
+
+  <path d="M150 70 L158 70" fill="none" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M158 60 L150 60" fill="none" stroke="#854F0B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="154" y="50" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#0F6E56">右</text>
+  <text x="154" y="82" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#854F0B">左</text>
+  <path d="M270 70 L278 70" fill="none" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M278 60 L270 60" fill="none" stroke="#854F0B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M390 70 L398 70" fill="none" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M398 60 L390 60" fill="none" stroke="#854F0B" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="146" width="480" height="40" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="1"/>
+  <text x="280" y="160" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#27500A">tag 区分方向：发给右邻居用 TAG_RIGHT，发给左邻居用 TAG_LEFT</text>
+  <text x="280" y="178" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#3B6D11">接收方用 MPI_Probe 先探大小，再精确接收</text>
+
+  <rect x="40" y="200" width="480" height="40" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="1"/>
+  <text x="280" y="214" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#791F1F">每轮必定给存在的邻居发一条（哪怕 0 个），只从存在的邻居 Probe</text>
+  <text x="280" y="232" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#A32D2D">收发条件必须严格对称，否则就会等一条永远不会来的消息</text>
+
+  <text x="300" y="272" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#888780">终止条件：MPI_Allreduce 汇总"活着的游走者数"，全局为 0 才结束</text>
+  <text x="300" y="292" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#888780">掉出全局边界 [0, 100) 的游走者直接消失</text>
+</svg>
