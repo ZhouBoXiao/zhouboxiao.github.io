@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="720" height="560" role="img" aria-label="传统 KV 缓存与 PagedAttention 分页机制对比">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .used { fill: #3C2ECA; }
+    .resv { fill: none; stroke: #52525B; stroke-dasharray: 5 4; }
+    .blkA { fill: #3C2ECA; }
+    .blkB { fill: #A9AEFF; }
+    .blkC { fill: #6F6FFF; }
+    .free { fill: none; stroke: rgba(23,23,23,0.12); }
+    .pill { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="560" fill="#FFFFFF"/>
+
+  <rect class="panel" x="40" y="32" width="640" height="212" rx="12"/>
+  <text class="th" x="60" y="58">传统 KV 缓存 · 每条序列预留最大长度</text>
+  <text class="t" x="142" y="101" text-anchor="end">序列 A</text>
+  <rect class="used" x="150" y="84" width="150" height="26" rx="5"/>
+  <rect class="resv" x="300" y="84" width="240" height="26" rx="5"/>
+  <text class="ts" x="420" y="101" text-anchor="middle">预留未用 · 浪费</text>
+  <text class="t" x="142" y="143" text-anchor="end">序列 B</text>
+  <rect class="used" x="150" y="126" width="260" height="26" rx="5"/>
+  <rect class="resv" x="410" y="126" width="130" height="26" rx="5"/>
+  <text class="t" x="142" y="185" text-anchor="end">序列 C</text>
+  <rect class="used" x="150" y="168" width="100" height="26" rx="5"/>
+  <rect class="resv" x="250" y="168" width="290" height="26" rx="5"/>
+  <text class="ts" x="60" y="226">内部碎片严重 · 并发数受限 · 相同前缀无法共享</text>
+
+  <rect class="panel" x="40" y="276" width="640" height="252" rx="12"/>
+  <text class="th" x="60" y="302">PagedAttention · 分页 KV 缓存</text>
+  <text class="ts" x="60" y="328">逻辑视图 · 连续</text>
+  <text class="ts" x="432" y="328">物理块池 · 非连续</text>
+
+  <text class="t" x="84" y="362" text-anchor="end">A</text>
+  <rect class="blkA" x="96" y="344" width="30" height="26" rx="5"/>
+  <rect class="blkA" x="132" y="344" width="30" height="26" rx="5"/>
+  <rect class="blkA" x="168" y="344" width="30" height="26" rx="5"/>
+  <rect class="blkA" x="204" y="344" width="30" height="26" rx="5"/>
+  <rect class="blkA" x="240" y="344" width="30" height="26" rx="5"/>
+  <text class="tw" x="111" y="361" text-anchor="middle">0</text>
+  <text class="tw" x="147" y="361" text-anchor="middle">1</text>
+  <text class="tw" x="183" y="361" text-anchor="middle">2</text>
+  <text class="tw" x="219" y="361" text-anchor="middle">3</text>
+  <text class="tw" x="255" y="361" text-anchor="middle">4</text>
+  <text class="t" x="84" y="400" text-anchor="end">B</text>
+  <rect class="blkB" x="96" y="382" width="30" height="26" rx="5"/>
+  <rect class="blkB" x="132" y="382" width="30" height="26" rx="5"/>
+  <rect class="blkB" x="168" y="382" width="30" height="26" rx="5"/>
+  <text class="ts" x="111" y="399" text-anchor="middle">0</text>
+  <text class="ts" x="147" y="399" text-anchor="middle">1</text>
+  <text class="ts" x="183" y="399" text-anchor="middle">2</text>
+  <text class="t" x="84" y="438" text-anchor="end">C</text>
+  <rect class="blkC" x="96" y="420" width="30" height="26" rx="5"/>
+  <rect class="blkC" x="132" y="420" width="30" height="26" rx="5"/>
+  <rect class="blkC" x="168" y="420" width="30" height="26" rx="5"/>
+  <rect class="blkC" x="204" y="420" width="30" height="26" rx="5"/>
+  <text class="tw" x="111" y="437" text-anchor="middle">0</text>
+  <text class="tw" x="147" y="437" text-anchor="middle">1</text>
+  <text class="tw" x="183" y="437" text-anchor="middle">2</text>
+  <text class="tw" x="219" y="437" text-anchor="middle">3</text>
+
+  <rect class="pill" x="306" y="370" width="88" height="24" rx="12"/>
+  <text class="ts" x="350" y="386" text-anchor="middle">Block Table</text>
+  <path class="arr" d="M286 404 L420 404" marker-end="url(#a)"/>
+
+  <rect class="blkA" x="432" y="344" width="34" height="26" rx="5"/>
+  <rect class="blkB" x="472" y="344" width="34" height="26" rx="5"/>
+  <rect class="blkA" x="512" y="344" width="34" height="26" rx="5"/>
+  <rect class="free" x="552" y="344" width="34" height="26" rx="5"/>
+  <rect class="blkC" x="592" y="344" width="34" height="26" rx="5"/>
+  <rect class="blkC" x="632" y="344" width="34" height="26" rx="5"/>
+  <rect class="free" x="432" y="376" width="34" height="26" rx="5"/>
+  <rect class="free" x="472" y="376" width="34" height="26" rx="5"/>
+  <rect class="blkC" x="512" y="376" width="34" height="26" rx="5"/>
+  <rect class="blkA" x="552" y="376" width="34" height="26" rx="5"/>
+  <rect class="blkB" x="592" y="376" width="34" height="26" rx="5"/>
+  <rect class="free" x="632" y="376" width="34" height="26" rx="5"/>
+  <rect class="free" x="432" y="408" width="34" height="26" rx="5"/>
+  <rect class="blkA" x="472" y="408" width="34" height="26" rx="5"/>
+  <rect class="free" x="512" y="408" width="34" height="26" rx="5"/>
+  <rect class="free" x="552" y="408" width="34" height="26" rx="5"/>
+  <rect class="blkA" x="592" y="408" width="34" height="26" rx="5"/>
+  <rect class="free" x="632" y="408" width="34" height="26" rx="5"/>
+  <rect class="blkB" x="432" y="440" width="34" height="26" rx="5"/>
+  <rect class="free" x="472" y="440" width="34" height="26" rx="5"/>
+  <rect class="free" x="512" y="440" width="34" height="26" rx="5"/>
+  <rect class="blkC" x="552" y="440" width="34" height="26" rx="5"/>
+  <rect class="free" x="592" y="440" width="34" height="26" rx="5"/>
+  <rect class="free" x="632" y="440" width="34" height="26" rx="5"/>
+  <text class="tw" x="449" y="361" text-anchor="middle">A</text>
+  <text class="ts" x="489" y="361" text-anchor="middle">B</text>
+  <text class="tw" x="529" y="361" text-anchor="middle">A</text>
+  <text class="tw" x="609" y="361" text-anchor="middle">C</text>
+  <text class="tw" x="649" y="361" text-anchor="middle">C</text>
+  <text class="tw" x="529" y="393" text-anchor="middle">C</text>
+  <text class="tw" x="569" y="393" text-anchor="middle">A</text>
+  <text class="ts" x="609" y="393" text-anchor="middle">B</text>
+  <text class="tw" x="489" y="425" text-anchor="middle">A</text>
+  <text class="tw" x="609" y="425" text-anchor="middle">A</text>
+  <text class="ts" x="449" y="457" text-anchor="middle">B</text>
+  <text class="tw" x="569" y="457" text-anchor="middle">C</text>
+
+  <rect x="60" y="484" width="12" height="12" rx="3" fill="#3C2ECA"/>
+  <text class="ts" x="78" y="494">序列 A</text>
+  <rect x="150" y="484" width="12" height="12" rx="3" fill="#A9AEFF"/>
+  <text class="ts" x="168" y="494">序列 B</text>
+  <rect x="240" y="484" width="12" height="12" rx="3" fill="#6F6FFF"/>
+  <text class="ts" x="258" y="494">序列 C</text>
+  <rect class="free" x="330" y="484" width="12" height="12" rx="3"/>
+  <text class="ts" x="348" y="494">空闲块</text>
+</svg>

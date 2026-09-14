@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 780" width="720" height="780" role="img" aria-label="Prefill 单次前向的内部流水线">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .node { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .loop { fill: none; stroke: #52525B; stroke-dasharray: 6 6; }
+    .tok { fill: #4B3FE3; }
+    .cellon { fill: #3C2ECA; }
+    .celloff { fill: none; stroke: rgba(23,23,23,0.18); }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+    .brand-t { fill: #1A1759; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="780" fill="#FFFFFF"/>
+
+  <text class="ts" x="150" y="56" text-anchor="end">prompt</text>
+  <rect class="tok" x="168" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="187" y="55" text-anchor="middle">t0</text>
+  <rect class="tok" x="214" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="233" y="55" text-anchor="middle">t1</text>
+  <rect class="tok" x="260" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="279" y="55" text-anchor="middle">t2</text>
+  <rect class="tok" x="306" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="325" y="55" text-anchor="middle">t3</text>
+  <rect class="tok" x="352" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="371" y="55" text-anchor="middle">t4</text>
+  <rect class="tok" x="398" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="417" y="55" text-anchor="middle">t5</text>
+  <rect class="tok" x="444" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="463" y="55" text-anchor="middle">t6</text>
+  <rect class="tok" x="490" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="509" y="55" text-anchor="middle">t7</text>
+  <path class="arr" d="M348 68 L348 82" marker-end="url(#a)"/>
+
+  <rect class="node" x="168" y="86" width="360" height="48" rx="8"/>
+  <text class="th" x="348" y="106" text-anchor="middle">Embedding 查表 + RoPE 位置编码</text>
+  <text class="ts" x="348" y="124" text-anchor="middle">token id → 向量 · 位置编码只加在 Q / K 上</text>
+  <path class="arr" d="M348 134 L348 152" marker-end="url(#a)"/>
+
+  <rect class="loop" x="88" y="156" width="520" height="430" rx="12"/>
+  <text class="th" x="108" y="182">Transformer 层 × N（LLaMA-7B 为 32 层）</text>
+
+  <rect class="node" x="128" y="200" width="440" height="60" rx="8"/>
+  <text class="th" x="348" y="224" text-anchor="middle">QKV 投影 · 大 GEMM</text>
+  <text class="ts" x="348" y="244" text-anchor="middle">所有位置并行 · 每个位置各得一份 q / k / v —— prefill 算力大头</text>
+  <path class="arr" d="M348 260 L348 274" marker-end="url(#a)"/>
+
+  <rect class="node" x="128" y="278" width="440" height="128" rx="8"/>
+  <text class="th" x="152" y="302">因果自注意力 · flash 融合算子</text>
+  <text class="ts" x="152" y="322">Q·Kᵀ → softmax → ·V · 分块计算</text>
+  <text class="ts" x="152" y="338">从不物化 L×L 注意力矩阵</text>
+  <text class="ts" x="152" y="358">GQA：多个 Q 头共享一组 K / V</text>
+  <text class="ts" x="152" y="378">位置 i 只与 0..i 做注意力</text>
+  <g>
+    <rect class="cellon" x="440" y="296" width="11" height="11"/>
+    <rect class="celloff" x="451" y="296" width="11" height="11"/>
+    <rect class="celloff" x="462" y="296" width="11" height="11"/>
+    <rect class="celloff" x="473" y="296" width="11" height="11"/>
+    <rect class="celloff" x="484" y="296" width="11" height="11"/>
+    <rect class="celloff" x="495" y="296" width="11" height="11"/>
+    <rect class="celloff" x="506" y="296" width="11" height="11"/>
+    <rect class="celloff" x="517" y="296" width="11" height="11"/>
+    <rect class="cellon" x="440" y="307" width="11" height="11"/>
+    <rect class="cellon" x="451" y="307" width="11" height="11"/>
+    <rect class="celloff" x="462" y="307" width="11" height="11"/>
+    <rect class="celloff" x="473" y="307" width="11" height="11"/>
+    <rect class="celloff" x="484" y="307" width="11" height="11"/>
+    <rect class="celloff" x="495" y="307" width="11" height="11"/>
+    <rect class="celloff" x="506" y="307" width="11" height="11"/>
+    <rect class="celloff" x="517" y="307" width="11" height="11"/>
+    <rect class="cellon" x="440" y="318" width="11" height="11"/>
+    <rect class="cellon" x="451" y="318" width="11" height="11"/>
+    <rect class="cellon" x="462" y="318" width="11" height="11"/>
+    <rect class="celloff" x="473" y="318" width="11" height="11"/>
+    <rect class="celloff" x="484" y="318" width="11" height="11"/>
+    <rect class="celloff" x="495" y="318" width="11" height="11"/>
+    <rect class="celloff" x="506" y="318" width="11" height="11"/>
+    <rect class="celloff" x="517" y="318" width="11" height="11"/>
+    <rect class="cellon" x="440" y="329" width="11" height="11"/>
+    <rect class="cellon" x="451" y="329" width="11" height="11"/>
+    <rect class="cellon" x="462" y="329" width="11" height="11"/>
+    <rect class="cellon" x="473" y="329" width="11" height="11"/>
+    <rect class="celloff" x="484" y="329" width="11" height="11"/>
+    <rect class="celloff" x="495" y="329" width="11" height="11"/>
+    <rect class="celloff" x="506" y="329" width="11" height="11"/>
+    <rect class="celloff" x="517" y="329" width="11" height="11"/>
+    <rect class="cellon" x="440" y="340" width="11" height="11"/>
+    <rect class="cellon" x="451" y="340" width="11" height="11"/>
+    <rect class="cellon" x="462" y="340" width="11" height="11"/>
+    <rect class="cellon" x="473" y="340" width="11" height="11"/>
+    <rect class="cellon" x="484" y="340" width="11" height="11"/>
+    <rect class="celloff" x="495" y="340" width="11" height="11"/>
+    <rect class="celloff" x="506" y="340" width="11" height="11"/>
+    <rect class="celloff" x="517" y="340" width="11" height="11"/>
+    <rect class="cellon" x="440" y="351" width="11" height="11"/>
+    <rect class="cellon" x="451" y="351" width="11" height="11"/>
+    <rect class="cellon" x="462" y="351" width="11" height="11"/>
+    <rect class="cellon" x="473" y="351" width="11" height="11"/>
+    <rect class="cellon" x="484" y="351" width="11" height="11"/>
+    <rect class="cellon" x="495" y="351" width="11" height="11"/>
+    <rect class="celloff" x="506" y="351" width="11" height="11"/>
+    <rect class="celloff" x="517" y="351" width="11" height="11"/>
+    <rect class="cellon" x="440" y="362" width="11" height="11"/>
+    <rect class="cellon" x="451" y="362" width="11" height="11"/>
+    <rect class="cellon" x="462" y="362" width="11" height="11"/>
+    <rect class="cellon" x="473" y="362" width="11" height="11"/>
+    <rect class="cellon" x="484" y="362" width="11" height="11"/>
+    <rect class="cellon" x="495" y="362" width="11" height="11"/>
+    <rect class="cellon" x="506" y="362" width="11" height="11"/>
+    <rect class="celloff" x="517" y="362" width="11" height="11"/>
+    <rect class="cellon" x="440" y="373" width="11" height="11"/>
+    <rect class="cellon" x="451" y="373" width="11" height="11"/>
+    <rect class="cellon" x="462" y="373" width="11" height="11"/>
+    <rect class="cellon" x="473" y="373" width="11" height="11"/>
+    <rect class="cellon" x="484" y="373" width="11" height="11"/>
+    <rect class="cellon" x="495" y="373" width="11" height="11"/>
+    <rect class="cellon" x="506" y="373" width="11" height="11"/>
+    <rect class="cellon" x="517" y="373" width="11" height="11"/>
+  </g>
+  <text class="ts" x="484" y="400" text-anchor="middle">三角因果掩码</text>
+  <path class="arr" d="M348 406 L348 420" marker-end="url(#a)"/>
+
+  <rect class="node" x="128" y="424" width="440" height="60" rx="8"/>
+  <text class="th" x="348" y="448" text-anchor="middle">K / V 按块表写入物理块</text>
+  <text class="ts" x="348" y="468" text-anchor="middle">16 token 一块 · 写满申请新块 · 落在 910B HBM</text>
+  <path class="arr" d="M348 484 L348 498" marker-end="url(#a)"/>
+
+  <rect class="node" x="128" y="502" width="440" height="60" rx="8"/>
+  <text class="th" x="348" y="526" text-anchor="middle">FFN · gate / up / down 投影</text>
+  <text class="ts" x="348" y="546" text-anchor="middle">每个位置独立 · 又一批大 GEMM</text>
+  <path class="arr" d="M572 532 C600 532 600 230 572 230" marker-end="url(#a)"/>
+  <path class="arr" d="M348 586 L348 600" marker-end="url(#a)"/>
+
+  <rect class="node-brand" x="88" y="604" width="520" height="84" rx="8"/>
+  <text class="th brand-t" x="348" y="628" text-anchor="middle">出口 · 只取最后一个位置</text>
+  <text class="ts brand-t" x="348" y="648" text-anchor="middle">末位置隐状态 → logits → 采样出第 1 个生成 token</text>
+  <text class="ts brand-t" x="348" y="666" text-anchor="middle">其余位置的输出直接丢弃 —— 价值全沉淀在已写入的 KV 里</text>
+
+  <rect class="strip" x="40" y="704" width="640" height="60" rx="12"/>
+  <text class="tb" x="60" y="726">组批：多个 prompt 拼一次 batch · 各带各的 Block Table · 前缀缓存命中只算后缀</text>
+  <text class="ts" x="60" y="746">chunked prefill：长 prompt 切块逐次执行 · 后块的注意力要读前块已写入的 KV</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 336" width="720" height="336" role="img" aria-label="请求在 vllm-ascend 上的端到端执行流程">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .node { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="336" fill="#FFFFFF"/>
+
+  <rect class="node" x="48" y="56" width="112" height="96" rx="8"/>
+  <text class="th" x="104" y="90" text-anchor="middle">请求接入</text>
+  <text class="ts" x="104" y="112" text-anchor="middle">OpenAI API · 分词</text>
+  <rect class="node" x="176" y="56" width="112" height="96" rx="8"/>
+  <text class="th" x="232" y="90" text-anchor="middle">调度组批</text>
+  <text class="ts" x="232" y="112" text-anchor="middle">迭代级 · 前缀缓存</text>
+  <rect class="node-brand" x="304" y="56" width="112" height="96" rx="8"/>
+  <text class="th" x="360" y="90" text-anchor="middle" style="fill:#1A1759;">Prefill</text>
+  <text class="ts" x="360" y="112" text-anchor="middle" style="fill:#1A1759;">整段并行预填充</text>
+  <rect class="node-brand" x="432" y="56" width="112" height="96" rx="8"/>
+  <text class="th" x="488" y="90" text-anchor="middle" style="fill:#1A1759;">Decode</text>
+  <text class="ts" x="488" y="112" text-anchor="middle" style="fill:#1A1759;">逐 token 解码</text>
+  <rect class="node" x="560" y="56" width="112" height="96" rx="8"/>
+  <text class="th" x="616" y="90" text-anchor="middle">输出返回</text>
+  <text class="ts" x="616" y="112" text-anchor="middle">采样 · 流式</text>
+
+  <path class="arr" d="M161 104 H173" marker-end="url(#a)"/>
+  <path class="arr" d="M289 104 H301" marker-end="url(#a)"/>
+  <path class="arr" d="M417 104 H429" marker-end="url(#a)"/>
+  <path class="arr" d="M545 104 H557" marker-end="url(#a)"/>
+
+  <text class="ts" x="104" y="176" text-anchor="middle">prompt 分词</text>
+  <text class="ts" x="104" y="194" text-anchor="middle">进入等待队列</text>
+  <text class="ts" x="232" y="176" text-anchor="middle">完成即出</text>
+  <text class="ts" x="232" y="194" text-anchor="middle">新请求即入</text>
+  <text class="ts" x="360" y="176" text-anchor="middle">算完 prompt</text>
+  <text class="ts" x="360" y="194" text-anchor="middle">KV 入物理块池</text>
+  <text class="ts" x="488" y="176" text-anchor="middle">每步 1 token</text>
+  <text class="ts" x="488" y="194" text-anchor="middle">整图在 NPU 执行</text>
+  <text class="ts" x="616" y="176" text-anchor="middle">采样输出</text>
+  <text class="ts" x="616" y="194" text-anchor="middle">流式返回</text>
+
+  <rect class="strip" x="48" y="222" width="624" height="80" rx="12"/>
+  <text class="th" x="360" y="246" text-anchor="middle">NPU 执行内核 — vllm-ascend 替换实现</text>
+  <text class="ts" x="360" y="268" text-anchor="middle">torch_npu → CANN · ATB 融合算子 · ACL Graph 整图下沉 NPU</text>
+  <text class="ts" x="360" y="288" text-anchor="middle">HCCL 多卡通信 (TP/PP) · W8A8 / KV Cache 量化 · 分页显存管理</text>
+</svg>

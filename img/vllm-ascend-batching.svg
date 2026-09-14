@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 556" width="720" height="556" role="img" aria-label="静态批处理与连续批处理对比">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .run { fill: #3C2ECA; }
+    .idle { fill: none; stroke: #52525B; stroke-dasharray: 5 4; }
+    .end { stroke: #52525B; stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="556" fill="#FFFFFF"/>
+
+  <rect class="panel" x="40" y="32" width="640" height="224" rx="12"/>
+  <text class="th" x="60" y="58">静态批处理 · 整批同进同出</text>
+  <text class="ts" x="58" y="102">R1</text>
+  <rect class="run" x="90" y="86" width="130" height="24" rx="5"/>
+  <rect class="idle" x="224" y="86" width="346" height="24" rx="5"/>
+  <text class="ts" x="380" y="102" text-anchor="middle">空转等待</text>
+  <text class="ts" x="58" y="136">R2</text>
+  <rect class="run" x="90" y="120" width="250" height="24" rx="5"/>
+  <rect class="idle" x="344" y="120" width="226" height="24" rx="5"/>
+  <text class="ts" x="58" y="170">R3</text>
+  <rect class="run" x="90" y="154" width="370" height="24" rx="5"/>
+  <rect class="idle" x="464" y="154" width="106" height="24" rx="5"/>
+  <text class="ts" x="58" y="204">R4</text>
+  <rect class="run" x="90" y="188" width="480" height="24" rx="5"/>
+  <path class="end" d="M570 76 L570 214"/>
+  <text class="ts" x="570" y="70" text-anchor="end">整批必须等最慢序列</text>
+  <path class="arr" d="M90 228 H580" marker-end="url(#a)"/>
+  <text class="ts" x="60" y="246">仅完成 4 条请求 · 短序列完成后被迫「陪跑」</text>
+
+  <rect class="panel" x="40" y="292" width="640" height="224" rx="12"/>
+  <text class="th" x="60" y="318">连续批处理 · 迭代级动态组批</text>
+  <rect class="run" x="90" y="346" width="160" height="24" rx="5"/>
+  <text class="tw" x="170" y="362" text-anchor="middle">A</text>
+  <rect class="run" x="254" y="346" width="316" height="24" rx="5"/>
+  <text class="tw" x="412" y="362" text-anchor="middle">B</text>
+  <rect class="run" x="90" y="380" width="260" height="24" rx="5"/>
+  <text class="tw" x="220" y="396" text-anchor="middle">C</text>
+  <rect class="run" x="354" y="380" width="216" height="24" rx="5"/>
+  <text class="tw" x="462" y="396" text-anchor="middle">D</text>
+  <rect class="run" x="90" y="414" width="210" height="24" rx="5"/>
+  <text class="tw" x="195" y="430" text-anchor="middle">E</text>
+  <rect class="run" x="304" y="414" width="266" height="24" rx="5"/>
+  <text class="tw" x="437" y="430" text-anchor="middle">F</text>
+  <rect class="run" x="90" y="448" width="330" height="24" rx="5"/>
+  <text class="tw" x="255" y="464" text-anchor="middle">G</text>
+  <rect class="run" x="424" y="448" width="146" height="24" rx="5"/>
+  <text class="tw" x="497" y="464" text-anchor="middle">H</text>
+  <path class="arr" d="M90 488 H580" marker-end="url(#a)"/>
+  <text class="ts" x="60" y="506">相同时间窗完成 8 条请求 · 完成即出 · 新请求即入</text>
+</svg>
