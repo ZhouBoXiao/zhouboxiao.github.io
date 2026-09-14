@@ -15,11 +15,11 @@ tags:
 
 ## 传统Attention实现
 
-![image-20250412182920640](C:\Users\15338\AppData\Roaming\Typora\typora-user-images\image-20250412182920640.png)
+![image-20250412182920640](../img/posts/flashattention/image-20250412182920640.png)
 
 ## FlashAttention实现
 
-![image-20250412183102602](C:\Users\15338\AppData\Roaming\Typora\typora-user-images\image-20250412183102602.png)
+![image-20250412183102602](../img/posts/flashattention/image-20250412183102602.png)
 
 ## FlashAttention 如何分块计算
 
@@ -64,7 +64,7 @@ $$
 
 #### Safe Softmax
 
-<img src="C:\Users\15338\AppData\Roaming\Typora\typora-user-images\image-20250426225645303.png" alt="image-20250426225645303" style="zoom:80%;" />
+<img src="../img/posts/flashattention/image-20250426225645303.png" alt="image-20250426225645303" style="zoom:80%;" />
 
 
 

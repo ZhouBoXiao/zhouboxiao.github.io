@@ -47,7 +47,12 @@ layout: default
                 col-md-10 col-md-offset-1
                 post-container">
 
-				{{ content }}
+				{% comment %}
+                    Keep Markdown image URLs repository-relative (../img/...) so editors such as
+                    Typora and VS Code can resolve them locally. At render time, rewrite them to
+                    site-root URLs because post permalinks live under /year/month/day/title/.
+                {% endcomment %}
+				{{ content | replace: 'src="../img/', 'src="/img/' }}
 
                 <hr>
 
