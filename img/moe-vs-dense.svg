@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="440" fill="#ffffff"/>
+
+  <!-- ===== 左：Dense FFN ===== -->
+  <rect x="20" y="16" width="400" height="404" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="220" y="48" text-anchor="middle" font-size="16" font-weight="bold" fill="#334155">Dense FFN：token × 全部参数</text>
+
+  <rect x="150" y="64" width="140" height="44" rx="8" fill="#dcfce7" stroke="#22c55e"/>
+  <text x="220" y="92" text-anchor="middle" font-size="15" fill="#166534">输出</text>
+
+  <line x1="220" y1="112" x2="220" y2="158" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="110" y="164" width="220" height="110" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="220" y="212" text-anchor="middle" font-size="17" font-weight="bold" fill="#5b21b6">FFN</text>
+  <text x="220" y="240" text-anchor="middle" font-size="13" fill="#6d28d9">全部参数都参与计算</text>
+
+  <line x1="220" y1="278" x2="220" y2="324" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="140" y="330" width="160" height="46" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="220" y="359" text-anchor="middle" font-size="15" fill="#1e40af">Token 表示 x</text>
+
+  <text x="220" y="402" text-anchor="middle" font-size="12.5" fill="#94a3b8">参数翻倍 → 计算量同步翻倍</text>
+
+  <!-- ===== 右：稀疏 MoE ===== -->
+  <rect x="480" y="16" width="400" height="404" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="680" y="48" text-anchor="middle" font-size="16" font-weight="bold" fill="#334155">MoE：Router 按需选 Top-K 专家</text>
+
+  <rect x="510" y="64" width="140" height="44" rx="8" fill="#dcfce7" stroke="#22c55e"/>
+  <text x="580" y="92" text-anchor="middle" font-size="15" fill="#166534">输出</text>
+
+  <circle cx="580" cy="176" r="20" fill="#fef9c3" stroke="#eab308" stroke-width="1.5"/>
+  <text x="580" y="182" text-anchor="middle" font-size="17" font-weight="bold" fill="#a16207">+</text>
+  <text x="545" y="176" text-anchor="end" font-size="12.5" fill="#a16207">加权求和</text>
+
+  <line x1="580" y1="154" x2="580" y2="112" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 专家 1（选中） -->
+  <rect x="760" y="60" width="104" height="44" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="812" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e40af">专家 1 ✓</text>
+  <!-- 专家 2（未激活） -->
+  <rect x="760" y="116" width="104" height="44" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-dasharray="5,4"/>
+  <text x="812" y="144" text-anchor="middle" font-size="14" fill="#9ca3af">专家 2</text>
+  <!-- 专家 3（选中） -->
+  <rect x="760" y="172" width="104" height="44" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="812" y="200" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e40af">专家 3 ✓</text>
+  <!-- 专家 4（未激活） -->
+  <rect x="760" y="228" width="104" height="44" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-dasharray="5,4"/>
+  <text x="812" y="256" text-anchor="middle" font-size="14" fill="#9ca3af">专家 4</text>
+
+  <!-- Router -->
+  <rect x="618" y="296" width="116" height="44" rx="22" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="676" y="324" text-anchor="middle" font-size="15" font-weight="bold" fill="#92400e">Router</text>
+  <text x="676" y="290" text-anchor="middle" font-size="12" fill="#b45309">Top-2 选路</text>
+
+  <rect x="595" y="356" width="160" height="46" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="675" y="385" text-anchor="middle" font-size="15" fill="#1e40af">Token 表示 x</text>
+
+  <line x1="675" y1="356" x2="675" y2="344" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Router → 专家 -->
+  <path d="M734,308 C750,308 748,88 756,84" fill="none" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <path d="M734,314 C750,316 748,142 756,140" fill="none" stroke="#9ca3af" stroke-width="1.2" stroke-dasharray="4,4"/>
+  <path d="M734,320 C750,322 748,200 756,196" fill="none" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <path d="M734,326 C750,328 748,254 756,252" fill="none" stroke="#9ca3af" stroke-width="1.2" stroke-dasharray="4,4"/>
+
+  <!-- 专家 → 加权求和（仅选中者） -->
+  <path d="M760,80 C700,92 660,130 600,166" fill="none" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <path d="M760,196 C700,196 660,186 601,178" fill="none" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <text x="690" y="112" font-size="12.5" fill="#1d4ed8">×g₁</text>
+  <text x="690" y="190" font-size="12.5" fill="#1d4ed8">×g₃</text>
+
+  <text x="680" y="418" text-anchor="middle" font-size="12.5" fill="#94a3b8">仅 2/4 个专家激活，计算量大幅降低</text>
+</svg>
