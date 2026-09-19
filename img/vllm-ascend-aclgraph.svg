@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 580" width="720" height="580" role="img" aria-label="ACL Graph 图模式原理：Eager 逐算子下发与整图重放对比">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .brand-t { fill: #1A1759; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .panel-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .launch { fill: #A9AEB8; }
+    .bubble { fill: #ECECEE; }
+    .run { fill: #3C2ECA; }
+    .buf { fill: #FFFFFF; stroke: #4B3FE3; }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="580" fill="#FFFFFF"/>
+
+  <rect class="panel" x="40" y="32" width="640" height="200" rx="12"/>
+  <text class="th" x="60" y="58">Eager · host 逐个下发 N 个小算子</text>
+  <rect class="launch" x="130" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="172" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="214" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="256" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="298" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="340" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="382" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="424" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="466" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="508" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="550" y="88" width="22" height="20" rx="4"/>
+  <rect class="launch" x="592" y="88" width="22" height="20" rx="4"/>
+  <text class="ts" x="124" y="102" text-anchor="end">host 下发</text>
+  <rect class="bubble" x="130" y="136" width="484" height="20"/>
+  <rect class="run" x="152" y="136" width="14" height="20"/>
+  <rect class="run" x="194" y="136" width="14" height="20"/>
+  <rect class="run" x="236" y="136" width="14" height="20"/>
+  <rect class="run" x="278" y="136" width="14" height="20"/>
+  <rect class="run" x="320" y="136" width="14" height="20"/>
+  <rect class="run" x="362" y="136" width="14" height="20"/>
+  <rect class="run" x="404" y="136" width="14" height="20"/>
+  <rect class="run" x="446" y="136" width="14" height="20"/>
+  <rect class="run" x="488" y="136" width="14" height="20"/>
+  <rect class="run" x="530" y="136" width="14" height="20"/>
+  <rect class="run" x="572" y="136" width="14" height="20"/>
+  <text class="ts" x="124" y="150" text-anchor="end">NPU 执行</text>
+  <text class="ts" x="372" y="176" text-anchor="middle">灰底露出处 = AI Core 空等下一条指令</text>
+  <path class="arr" d="M130 182 H614" marker-end="url(#a)"/>
+  <text class="ts" x="60" y="212">N 个算子 = N 份调度开销 · 空泡比计算还长</text>
+
+  <rect class="panel-brand" x="40" y="256" width="640" height="214" rx="12"/>
+  <text class="th brand-t" x="60" y="282">ACL Graph · 捕获一次，整图重放</text>
+  <text class="tb" x="60" y="310">Capture · 一次性</text>
+  <rect class="run" x="76" y="322" width="34" height="24" rx="5"/>
+  <text class="tw" x="93" y="338" text-anchor="middle">qkv</text>
+  <path class="arr" d="M112 334 H122" marker-end="url(#a)"/>
+  <rect class="run" x="124" y="322" width="34" height="24" rx="5"/>
+  <text class="tw" x="141" y="338" text-anchor="middle">attn</text>
+  <path class="arr" d="M160 334 H170" marker-end="url(#a)"/>
+  <rect class="run" x="172" y="322" width="34" height="24" rx="5"/>
+  <text class="tw" x="189" y="338" text-anchor="middle">add</text>
+  <path class="arr" d="M208 334 H218" marker-end="url(#a)"/>
+  <rect class="run" x="220" y="322" width="34" height="24" rx="5"/>
+  <text class="tw" x="237" y="338" text-anchor="middle">ffn</text>
+  <path class="arr" d="M256 334 H266" marker-end="url(#a)"/>
+  <rect class="run" x="268" y="322" width="34" height="24" rx="5"/>
+  <text class="tw" x="285" y="338" text-anchor="middle">out</text>
+  <path class="arr" d="M285 350 V360" marker-end="url(#a)"/>
+  <rect class="buf" x="76" y="364" width="226" height="36" rx="18"/>
+  <text class="tb" x="189" y="386" text-anchor="middle">静态图 = 算子序列 + 依赖 + 地址</text>
+  <text class="ts" x="60" y="432">首次执行该形状时记录一次</text>
+
+  <text class="tb" x="380" y="310">Replay · 每步</text>
+  <rect class="buf" x="396" y="322" width="86" height="24" rx="6"/>
+  <text class="ts" x="439" y="338" text-anchor="middle">写输入 buffer</text>
+  <path class="arr" d="M486 334 H494" marker-end="url(#a)"/>
+  <rect class="launch" x="496" y="322" width="86" height="24" rx="6"/>
+  <text class="tw" x="539" y="338" text-anchor="middle">整图下发 ×1</text>
+  <path class="arr" d="M586 334 H594" marker-end="url(#a)"/>
+  <rect class="buf" x="596" y="322" width="44" height="24" rx="6"/>
+  <text class="ts" x="618" y="338" text-anchor="middle">读输出</text>
+  <rect class="run" x="396" y="368" width="20" height="24"/>
+  <rect class="run" x="416" y="368" width="20" height="24"/>
+  <rect class="run" x="436" y="368" width="20" height="24"/>
+  <rect class="run" x="456" y="368" width="20" height="24"/>
+  <rect class="run" x="476" y="368" width="20" height="24"/>
+  <rect class="run" x="496" y="368" width="20" height="24"/>
+  <rect class="run" x="516" y="368" width="20" height="24"/>
+  <rect class="run" x="536" y="368" width="20" height="24"/>
+  <rect class="run" x="556" y="368" width="20" height="24"/>
+  <rect class="run" x="576" y="368" width="20" height="24"/>
+  <rect class="run" x="596" y="368" width="20" height="24"/>
+  <rect class="run" x="616" y="368" width="20" height="24"/>
+  <text class="ts" x="396" y="410">整图连续执行 · 无空泡</text>
+  <text class="ts" x="396" y="432">host 只剩 1 次下发 · 调度开销为常数</text>
+
+  <rect class="strip" x="40" y="494" width="640" height="72" rx="12"/>
+  <text class="tb" x="60" y="516">静态图怎么装下动态的 decode</text>
+  <text class="ts" x="60" y="536">① 输入输出地址与形状固定，变的只是内容　② batch 按桶捕获（1/2/4/8/…），运行时向上取整 padding</text>
+  <text class="ts" x="60" y="554">③ Block Table 以 tensor 输入传入：地址固定、每步更新 —— 图模式与 PagedAttention 共存的关键</text>
+</svg>

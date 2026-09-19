@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 592" width="720" height="592" role="img" aria-label="Prefill 与 Decode 阶段计算特征对比，含 Chunked Prefill">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .arr-soft { stroke: #3C2ECA; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .panel-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .tok { fill: #4B3FE3; }
+    .kv { fill: #3C2ECA; }
+    .band { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .band-brand { fill: #FFFFFF; stroke: #4B3FE3; stroke-dasharray: 6 4; }
+    .cut { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+    <marker id="ap" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#3C2ECA"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="592" fill="#FFFFFF"/>
+
+  <!-- Prefill -->
+  <rect class="panel-brand" x="40" y="36" width="640" height="224" rx="12"/>
+  <text class="th" x="60" y="60" style="fill:#1A1759;">Prefill · 一次前向并行算完整段 prompt</text>
+  <text class="ts" x="150" y="102" text-anchor="end">输入</text>
+  <rect class="tok" x="168" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="187" y="103" text-anchor="middle">t0</text>
+  <rect class="tok" x="214" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="233" y="103" text-anchor="middle">t1</text>
+  <rect class="tok" x="260" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="279" y="103" text-anchor="middle">t2</text>
+  <rect class="tok" x="306" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="325" y="103" text-anchor="middle">t3</text>
+  <rect class="tok" x="352" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="371" y="103" text-anchor="middle">t4</text>
+  <rect class="tok" x="398" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="417" y="103" text-anchor="middle">t5</text>
+  <rect class="tok" x="444" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="463" y="103" text-anchor="middle">t6</text>
+  <rect class="tok" x="490" y="84" width="38" height="28" rx="5"/>
+  <text class="tw" x="509" y="103" text-anchor="middle">t7</text>
+  <path class="arr" d="M360 118 L360 136" marker-end="url(#a)"/>
+  <rect class="band" x="168" y="140" width="360" height="40" rx="8"/>
+  <text class="th" x="348" y="165" text-anchor="middle">整段自注意力 Q·K·V 一次算完</text>
+  <text class="ts" x="348" y="180" text-anchor="middle">每个位置各自与全部前缀并行计算</text>
+  <path class="arr" d="M360 186 L360 204" marker-end="url(#a)"/>
+  <text class="ts" x="150" y="231" text-anchor="end">KV Cache</text>
+  <rect class="kv" x="168" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="214" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="260" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="306" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="352" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="398" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="444" y="214" width="38" height="28" rx="5"/>
+  <rect class="kv" x="490" y="214" width="38" height="28" rx="5"/>
+  <text class="ts" x="524" y="231">整段写入</text>
+  <path class="arr" d="M60 240 H660" marker-end="url(#a)"/>
+  <text class="ts" x="360" y="252" text-anchor="middle">计算密集 · 走 flash attention 类融合算子</text>
+
+  <!-- Decode -->
+  <rect class="panel" x="40" y="280" width="640" height="224" rx="12"/>
+  <text class="th" x="60" y="304">Decode · 每步前向只算新增的 1 个 token</text>
+  <text class="ts" x="150" y="338" text-anchor="end">输入</text>
+  <rect class="tok" x="168" y="320" width="38" height="28" rx="5"/>
+  <text class="tw" x="187" y="339" text-anchor="middle">t8</text>
+  <path class="arr" d="M216 334 L360 334" marker-end="url(#a)"/>
+  <text class="ts" x="360" y="338" text-anchor="middle" style="fill:#3C2ECA; font-weight:500;">查询已缓存的前缀 K/V</text>
+  <rect class="band-brand" x="168" y="358" width="360" height="40" rx="8"/>
+  <text class="th" x="348" y="383" text-anchor="middle" style="fill:#1A1759;">读全部前缀 · 只写 1 个量级不对称</text>
+  <text class="ts" x="348" y="398" text-anchor="middle" style="fill:#1A1759;">访存密集 · 需按块表寻址读 KV</text>
+  <path class="arr" d="M360 404 L360 422" marker-end="url(#a)"/>
+  <text class="ts" x="150" y="449" text-anchor="end">KV Cache</text>
+  <rect class="kv" x="168" y="432" width="38" height="28" rx="5"/>
+  <text class="ts" x="524" y="449" text-anchor="end">仅追加写 1 块 →</text>
+  <path class="arr" d="M60 484 H660" marker-end="url(#a)"/>
+  <text class="ts" x="360" y="496" text-anchor="middle">小算子多 · 用 ACL Graph 整图下沉 NPU 执行</text>
+
+  <!-- Chunked Prefill -->
+  <rect class="panel" x="40" y="520" width="640" height="56" rx="12"/>
+  <text class="ts" x="60" y="540">Chunked Prefill</text>
+  <rect class="tok" x="150" y="528" width="120" height="30" rx="6"/>
+  <text class="tw" x="210" y="548" text-anchor="middle">chunk 0</text>
+  <rect class="tok" x="284" y="528" width="120" height="30" rx="6"/>
+  <text class="tw" x="344" y="548" text-anchor="middle">chunk 1</text>
+  <rect class="tok" x="418" y="528" width="120" height="30" rx="6"/>
+  <text class="tw" x="478" y="548" text-anchor="middle">chunk 2</text>
+  <path class="cut" d="M270 524 L270 562"/>
+  <path class="cut" d="M404 524 L404 562"/>
+  <path class="arr" d="M150 552 L278 552"/>
+  <path class="arr" d="M284 556.5 L412 556.5"/>
+  <path class="arr" d="M418 561.5 L540 561.5"/>
+  <text class="ts" x="566" y="548">长 prompt 切块逐次执行 → 不卡住并发请求的 decode</text>
+</svg>

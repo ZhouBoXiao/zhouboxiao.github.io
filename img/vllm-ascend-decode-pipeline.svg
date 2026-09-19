@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 780" width="720" height="780" role="img" aria-label="Decode 单步的内部流水线">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .node { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .loop { fill: none; stroke: #52525B; stroke-dasharray: 6 6; }
+    .tok { fill: #4B3FE3; }
+    .kv { fill: #3C2ECA; }
+    .other { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+    .brand-t { fill: #1A1759; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="780" fill="#FFFFFF"/>
+
+  <text class="ts" x="317" y="56" text-anchor="end">上一步采样输出</text>
+  <rect class="tok" x="329" y="36" width="38" height="28" rx="5"/>
+  <text class="tw" x="348" y="55" text-anchor="middle">t8</text>
+  <text class="ts" x="377" y="56">× B 条并发序列</text>
+  <path class="arr" d="M348 68 L348 82" marker-end="url(#a)"/>
+
+  <rect class="node" x="168" y="86" width="360" height="48" rx="8"/>
+  <text class="th" x="348" y="106" text-anchor="middle">Embedding 查表 + RoPE（单 token）</text>
+  <text class="ts" x="348" y="124" text-anchor="middle">位置号 = 当前序列长度</text>
+  <path class="arr" d="M348 134 L348 152" marker-end="url(#a)"/>
+
+  <rect class="loop" x="88" y="156" width="520" height="430" rx="12"/>
+  <text class="th" x="108" y="182">Transformer 层 × N · 每步循环一遍</text>
+
+  <rect class="node" x="128" y="200" width="440" height="60" rx="8"/>
+  <text class="th" x="348" y="224" text-anchor="middle">QKV 投影 · 退化为 GEMV</text>
+  <text class="ts" x="348" y="244" text-anchor="middle">矩阵 × 向量 · 单 token 喂不饱 AI Core</text>
+  <path class="arr" d="M348 260 L348 274" marker-end="url(#a)"/>
+
+  <rect class="node" x="128" y="278" width="440" height="128" rx="8"/>
+  <text class="th" x="152" y="298">分页自注意力 · 读全部前缀 KV</text>
+  <rect class="node-brand" x="334" y="306" width="28" height="18" rx="5"/>
+  <text class="tw" x="348" y="319" text-anchor="middle">q</text>
+  <path class="arr" d="M348 324 L348 334"/>
+  <path class="arr" d="M158 334 H491"/>
+  <path class="arr" d="M167 334 L167 342" marker-end="url(#a)"/>
+  <path class="arr" d="M239 334 L239 342" marker-end="url(#a)"/>
+  <path class="arr" d="M311 334 L311 342" marker-end="url(#a)"/>
+  <path class="arr" d="M419 334 L419 342" marker-end="url(#a)"/>
+  <path class="arr" d="M491 334 L491 342" marker-end="url(#a)"/>
+  <rect class="kv" x="152" y="346" width="30" height="28" rx="5"/>
+  <text class="tw" x="167" y="364" text-anchor="middle">0</text>
+  <rect class="other" x="188" y="346" width="30" height="28" rx="5"/>
+  <rect class="kv" x="224" y="346" width="30" height="28" rx="5"/>
+  <text class="tw" x="239" y="364" text-anchor="middle">1</text>
+  <rect class="other" x="260" y="346" width="30" height="28" rx="5"/>
+  <rect class="kv" x="296" y="346" width="30" height="28" rx="5"/>
+  <text class="tw" x="311" y="364" text-anchor="middle">2</text>
+  <rect class="other" x="332" y="346" width="30" height="28" rx="5"/>
+  <rect class="other" x="368" y="346" width="30" height="28" rx="5"/>
+  <rect class="kv" x="404" y="346" width="30" height="28" rx="5"/>
+  <text class="tw" x="419" y="364" text-anchor="middle">3</text>
+  <rect class="other" x="440" y="346" width="30" height="28" rx="5"/>
+  <rect class="kv" x="476" y="346" width="30" height="28" rx="5"/>
+  <text class="tw" x="491" y="364" text-anchor="middle">4</text>
+  <text class="ts" x="348" y="394" text-anchor="middle">块池 · 深色 = 本序列的块 · 按 Block Table 寻址 · GQA 只读 kv_heads 份</text>
+  <path class="arr" d="M348 406 L348 420" marker-end="url(#a)"/>
+
+  <rect class="node" x="128" y="424" width="440" height="60" rx="8"/>
+  <text class="th" x="348" y="448" text-anchor="middle">KV 追加写入尾块</text>
+  <text class="ts" x="348" y="468" text-anchor="middle">新 k / v 写进最后一块的空位 · 尾块写满申请新块</text>
+  <path class="arr" d="M348 484 L348 498" marker-end="url(#a)"/>
+
+  <rect class="node" x="128" y="502" width="440" height="60" rx="8"/>
+  <text class="th" x="348" y="526" text-anchor="middle">FFN · gate / up / down · GEMV</text>
+  <text class="ts" x="348" y="546" text-anchor="middle">单 token 独立过三个投影</text>
+  <path class="arr" d="M572 532 C600 532 600 230 572 230" marker-end="url(#a)"/>
+  <path class="arr" d="M348 586 L348 600" marker-end="url(#a)"/>
+
+  <rect class="node-brand" x="88" y="604" width="520" height="84" rx="8"/>
+  <text class="th brand-t" x="348" y="628" text-anchor="middle">出口 · 唯一位置 → logits → 采样</text>
+  <text class="ts brand-t" x="348" y="648" text-anchor="middle">采出的 token 就是下一步的输入 · 循环直至 EOS 或 max_tokens</text>
+  <text class="ts brand-t" x="348" y="666" text-anchor="middle">B 条并发序列每步各产 1 个 token</text>
+
+  <rect class="strip" x="40" y="704" width="640" height="60" rx="12"/>
+  <text class="tb" x="60" y="726">连续批处理：每步迭代后重组批 · 完成的序列出 · 新请求进</text>
+  <text class="ts" x="60" y="746">ACL Graph：一步解码整图下沉 NPU 一次执行 · 推测解码一次前向验证多个草稿 token</text>
+</svg>

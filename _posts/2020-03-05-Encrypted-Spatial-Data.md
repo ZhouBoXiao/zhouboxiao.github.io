@@ -19,7 +19,7 @@ tags:								#标签
 
 ## System Model
 
-<div align="center"> <img src="/img/fig/system_model.png" /> </div>
+<div align="center"> <img src="../img/fig/system_model.png" /> </div>
 
 1. 数据拥有者
 
@@ -51,7 +51,7 @@ $$
 θ^{*}_{1}(x) = a_0 +a_1x +a_2x^2 +···+a_nx^N  \\
 θ^{*}_{2}(x) =b_0 +b_1x +b_2x^2 +···+b_nx^N
 $$
-<div align="center"> <img src="/img/fig/polynomial.png" /> </div>
+<div align="center"> <img src="../img/fig/polynomial.png" /> </div>
 
 ​		如图2所示，假设`X`的定义域是`[a,b]`，可以判断出(`x1`, `y1`)是在给定范围内。
 ​		多项式曲线拟合可以用来拟合任何给定的曲线，并检查点是否在该曲线内。然而，由于曲线拟合是一种近似算法，利用拟合曲线代替实际曲线，不可避免地会产生误差。
@@ -64,7 +64,7 @@ $$
 
 ​		R-Tree的核心思想是聚合距离相近的节点并在树结构的上一层将其表示为这些节点的最小外接矩形，这个最小外接矩形就成为上一层的一个节点。
 
-<div align="center"> <img src="/img/fig/build_R_tree.png" /> </div>
+<div align="center"> <img src="../img/fig/build_R_tree.png" /> </div>
 
 - R-Tree从根节点开始，遍历整个树，找到与给定搜索矩形相交的所有最深的非叶节点(如果存在的话)，否者返回空。
 - 对于上面非叶节点中包含的每个点，检查它是否满足节中说明的条件。如果满足，将这些点返回给搜索用户。否者返回空。

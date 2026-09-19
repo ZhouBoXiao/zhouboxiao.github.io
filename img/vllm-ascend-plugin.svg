@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 540" width="720" height="540" role="img" aria-label="vllm-ascend 插件注册与替换点架构图">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #171717; font: 500 12px "JetBrains Mono", Consolas, Menlo, monospace; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .col { fill: #F7F7F8; stroke: #52525B; stroke-dasharray: 6 6; }
+    .col-brand { fill: #F2F7FF; stroke: #4B3FE3; stroke-dasharray: 6 6; }
+    .iface { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .impl { fill: #FFFFFF; stroke: #4B3FE3; }
+    .pill { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="540" fill="#FFFFFF"/>
+
+  <rect class="pill" x="48" y="48" width="224" height="40" rx="20"/>
+  <text class="tc" x="160" y="72" text-anchor="middle">pip install vllm vllm-ascend</text>
+  <path class="arr" d="M276 68 H300" marker-end="url(#a)"/>
+  <rect class="pill" x="306" y="48" width="200" height="40" rx="20"/>
+  <text class="tc" x="406" y="72" text-anchor="middle">扫描 vllm.platform_plugins</text>
+  <path class="arr" d="M508 68 H530" marker-end="url(#a)"/>
+  <rect class="pill" x="534" y="48" width="138" height="40" rx="20"/>
+  <text class="tc" x="603" y="72" text-anchor="middle">激活 ascend 插件</text>
+
+  <rect class="col" x="48" y="124" width="300" height="376" rx="12"/>
+  <text class="th" x="68" y="150">vLLM 主干 · 设备无关</text>
+  <rect class="col-brand" x="372" y="124" width="300" height="376" rx="12"/>
+  <text class="th" x="392" y="150" style="fill:#1A1759;">vllm-ascend · 昇腾实现</text>
+
+  <rect class="iface" x="68" y="172" width="260" height="64" rx="8"/>
+  <text class="th" x="198" y="199" text-anchor="middle">Platform 接口</text>
+  <text class="ts" x="198" y="219" text-anchor="middle">设备探测 · 属性 · 初始化</text>
+  <path class="arr" d="M328 204 H392" marker-end="url(#a)"/>
+  <rect class="impl" x="392" y="172" width="260" height="64" rx="8"/>
+  <text class="th" x="522" y="199" text-anchor="middle" style="fill:#1A1759;">NPUPlatform</text>
+  <text class="ts" x="522" y="219" text-anchor="middle" style="fill:#1A1759;">torch_npu 探测 · NPU 属性</text>
+
+  <rect class="iface" x="68" y="254" width="260" height="64" rx="8"/>
+  <text class="th" x="198" y="281" text-anchor="middle">WorkerBase</text>
+  <text class="ts" x="198" y="301" text-anchor="middle">worker 执行循环骨架</text>
+  <path class="arr" d="M328 286 H392" marker-end="url(#a)"/>
+  <rect class="impl" x="392" y="254" width="260" height="64" rx="8"/>
+  <text class="th" x="522" y="281" text-anchor="middle" style="fill:#1A1759;">NPUWorker</text>
+  <text class="ts" x="522" y="301" text-anchor="middle" style="fill:#1A1759;">昇腾卡上的执行循环</text>
+
+  <rect class="iface" x="68" y="336" width="260" height="64" rx="8"/>
+  <text class="th" x="198" y="363" text-anchor="middle">ModelRunnerBase</text>
+  <text class="ts" x="198" y="383" text-anchor="middle">批数据组装 · 模型执行</text>
+  <path class="arr" d="M328 368 H392" marker-end="url(#a)"/>
+  <rect class="impl" x="392" y="336" width="260" height="64" rx="8"/>
+  <text class="th" x="522" y="363" text-anchor="middle" style="fill:#1A1759;">NPUModelRunner</text>
+  <text class="ts" x="522" y="383" text-anchor="middle" style="fill:#1A1759;">构图 · 算子 · 量化适配</text>
+
+  <rect class="iface" x="68" y="418" width="260" height="64" rx="8"/>
+  <text class="th" x="198" y="445" text-anchor="middle">AttentionBackend</text>
+  <text class="ts" x="198" y="465" text-anchor="middle">注意力核抽象</text>
+  <path class="arr" d="M328 450 H392" marker-end="url(#a)"/>
+  <rect class="impl" x="392" y="418" width="260" height="64" rx="8"/>
+  <text class="th" x="522" y="445" text-anchor="middle" style="fill:#1A1759;">AscendAttention 后端</text>
+  <text class="ts" x="522" y="465" text-anchor="middle" style="fill:#1A1759;">ATB 分页注意力算子</text>
+
+  <text class="ts" x="48" y="526">零侵入：不改 vLLM 源码，纯 Python entry points 动态注册</text>
+</svg>

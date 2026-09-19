@@ -11,7 +11,7 @@ tags:
 
 ## Adapter
 
-![image-20240706195901107](C:\Users\15338\AppData\Roaming\Typora\typora-user-images\image-20240706195901107.png)
+![image-20240706195901107](../img/posts/langchain-study01/image-20240706195901107.png)
 
 ## Agent 
 
