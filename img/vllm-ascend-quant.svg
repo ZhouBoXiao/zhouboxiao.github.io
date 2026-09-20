@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 580" width="720" height="580" role="img" aria-label="vllm-ascend 量化方案：W8A8 权重与 KV Cache 量化">
+  <style>
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .brand-t { fill: #1A1759; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .mem { fill: #F5F1FF; stroke: #3C2ECA; }
+    .cell { fill: #FFFFFF; stroke: rgba(23,23,23,0.15); }
+    .cell8 { fill: #4B3FE3; }
+    .cell16 { fill: #3C2ECA; }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="580" fill="#FFFFFF"/>
+
+  <text class="th" x="360" y="30" text-anchor="middle">量化在推理中的两个落点</text>
+
+  <rect class="panel" x="40" y="48" width="640" height="180" rx="12"/>
+  <text class="th" x="60" y="76">① 权重量化 · W8A8 与 W8A16</text>
+  <text class="ts" x="60" y="98">权重压到 INT8，激活保持 FP16（W8A16）或也 INT8（W8A8）· 计算用 INT8 矩阵乘，累加后反量化回 FP16</text>
+  <rect class="mem" x="176" y="116" width="130" height="56" rx="8"/>
+  <text class="ts" x="241" y="142" text-anchor="middle" style="fill:#1A1759;">FP16 权重</text>
+  <text class="ts" x="241" y="158" text-anchor="middle" style="fill:#1A1759;">4×N tokens</text>
+  <path class="arr" d="M241 172 L241 184" marker-end="url(#a)"/>
+  <text class="tb" x="241" y="200">量化</text>
+  <path class="arr" d="M241 208 L241 220" marker-end="url(#a)"/>
+  <rect class="mem" x="176" y="224" width="130" height="56" rx="8"/>
+  <text class="ts" x="241" y="250" text-anchor="middle" style="fill:#1A1759;">INT8 权重</text>
+  <text class="ts" x="241" y="266" text-anchor="middle" style="fill:#1A1759;">2×N tokens</text>
+  <text class="ts" x="326" y="252">省一半参数量</text>
+  <text class="ts" x="60" y="214">显存占用 · 同等卡</text>
+  <rect class="strip" x="400" y="120" width="256" height="120" rx="8"/>
+  <text class="tb" x="528" y="150" text-anchor="middle">选哪个看激活精度需求</text>
+  <text class="ts" x="528" y="172" text-anchor="middle">W8A8：更快更长省，但需激活校准</text>
+  <text class="ts" x="528" y="192" text-anchor="middle">W8A16：权重省了、精度更稳</text>
+  <text class="ts" x="528" y="212" text-anchor="middle">未量化位置回退 FP16</text>
+
+  <rect class="panel" x="40" y="248" width="640" height="206" rx="12"/>
+  <text class="th" x="60" y="276">② KV Cache 量化 · FP16 → FP8/INT8</text>
+  <text class="ts" x="60" y="298">KV 缓存是并发瓶颈所在：随序列和 batch 线性增长 · 压缩后同样 HBM 容纳更多并发</text>
+  <rect class="mem" x="176" y="318" width="130" height="56" rx="8"/>
+  <text class="ts" x="241" y="344" text-anchor="middle" style="fill:#1A1759;">FP16 KV</text>
+  <text class="ts" x="241" y="360" text-anchor="middle" style="fill:#1A1759;">2×L×heads</text>
+  <path class="arr" d="M241 374 L241 386" marker-end="url(#a)"/>
+  <text class="tb" x="241" y="402">量化</text>
+  <path class="arr" d="M241 410 L241 422" marker-end="url(#a)"/>
+  <rect class="mem" x="176" y="426" width="130" height="56" rx="8"/>
+  <text class="ts" x="241" y="452" text-anchor="middle" style="fill:#1A1759;">FP8/INT8 KV</text>
+  <text class="ts" x="241" y="468" text-anchor="middle" style="fill:#1A1759;">1×L×heads</text>
+  <text class="ts" x="326" y="454">省一半 KV 显存</text>
+  <rect class="strip" x="400" y="322" width="256" height="120" rx="8"/>
+  <text class="tb" x="528" y="352" text-anchor="middle">decode 步写入即量化</text>
+  <text class="ts" x="528" y="374" text-anchor="middle">注意力前按表取出、反量化再算</text>
+  <text class="ts" x="528" y="394" text-anchor="middle">块表寻址的注意力算子直接支持</text>
+  <text class="ts" x="528" y="414" text-anchor="middle">精度略降 · 显存换来并发</text>
+
+  <rect class="strip" x="40" y="478" width="640" height="86" rx="12"/>
+  <text class="tb" x="60" y="502">在 vllm-ascend 里的落地</text>
+  <text class="ts" x="60" y="522">权重量化：`--quantization 格式` 选用 · KV 量化由缓存块管理器统一调度，对上层透明</text>
+  <text class="ts" x="60" y="542">从源码编译时自定义算子默认构建用于内核 · 无需时以环境变量 `COMPILE_CUSTOM_KERNELS=0` 关闭</text>
+</svg>

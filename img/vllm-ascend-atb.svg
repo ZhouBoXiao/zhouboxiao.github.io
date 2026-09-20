@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" width="720" height="600" role="img" aria-label="ATB 算子库的定位与算子融合原理">
+  <style>
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .brand-t { fill: #1A1759; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .layer { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .atb { fill: #F2F7FF; stroke: #4B3FE3; }
+    .acc { fill: #F5F1FF; stroke: #3C2ECA; }
+    .step { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+    .fuse { fill: #3C2ECA; }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="600" fill="#FFFFFF"/>
+
+  <text class="th" x="360" y="30" text-anchor="middle">ATB 在昇腾栈中的位置</text>
+
+  <rect class="layer" x="200" y="46" width="320" height="40" rx="8"/>
+  <text class="th" x="360" y="64" text-anchor="middle">vLLM engine</text>
+  <text class="ts" x="360" y="80" text-anchor="middle">AscendAttention / NPUModelRunner</text>
+  <path class="arr" d="M360 86 V98" marker-end="url(#a)"/>
+  <rect class="atb" x="160" y="102" width="400" height="84" rx="10"/>
+  <text class="th brand-t" x="360" y="126" text-anchor="middle">ATB · Ascend Transformer Boost</text>
+  <text class="ts brand-t" x="360" y="146" text-anchor="middle">Transformer 高融合算子库 · 预置算子</text>
+  <text class="ts brand-t" x="360" y="164" text-anchor="middle">paged attention / flash attention / rmsnorm / gemm…</text>
+  <path class="arr" d="M360 186 V198" marker-end="url(#a)"/>
+  <rect class="acc" x="160" y="202" width="400" height="58" rx="10"/>
+  <text class="th" x="360" y="226" text-anchor="middle" style="fill:#1A1759;">ACL runtime + 昇腾栈</text>
+  <text class="ts" x="360" y="246" text-anchor="middle" style="fill:#1A1759;">CANN 算子 · AI Core 张量/向量/标量单元</text>
+
+  <text class="th" x="60" y="308">一次前向：逐算子下发 vs 融合算子</text>
+
+  <text class="tb" x="60" y="340">逐算子下发</text>
+  <rect class="step" x="60" y="352" width="46" height="40" rx="6"/>
+  <text class="ts" x="83" y="376" text-anchor="middle">qkv</text>
+  <path class="arr" d="M108 372 H118" marker-end="url(#a)"/>
+  <rect class="step" x="120" y="352" width="46" height="40" rx="6"/>
+  <text class="ts" x="143" y="376" text-anchor="middle">soft</text>
+  <path class="arr" d="M168 372 H178" marker-end="url(#a)"/>
+  <rect class="step" x="180" y="352" width="46" height="40" rx="6"/>
+  <text class="ts" x="203" y="376" text-anchor="middle">mask</text>
+  <path class="arr" d="M228 372 H238" marker-end="url(#a)"/>
+  <rect class="step" x="240" y="352" width="46" height="40" rx="6"/>
+  <text class="ts" x="263" y="376" text-anchor="middle">drop</text>
+  <path class="arr" d="M288 372 H298" marker-end="url(#a)"/>
+  <rect class="step" x="300" y="352" width="46" height="40" rx="6"/>
+  <text class="ts" x="323" y="376" text-anchor="middle">resc</text>
+  <path class="arr" d="M348 372 H358" marker-end="url(#a)"/>
+  <rect class="step" x="360" y="352" width="46" height="40" rx="6"/>
+  <text class="ts" x="383" y="376" text-anchor="middle">out</text>
+  <text class="ts" x="424" y="376">中间张量逐一落 HBM</text>
+  <text class="ts" x="60" y="414">每个 kernel 读→算→写回 · L×L 分数矩阵会物化到显存 · 带宽浪费</text>
+
+  <text class="tb" x="60" y="444">单个融合算子</text>
+  <rect class="fuse" x="60" y="456" width="360" height="40" rx="8"/>
+  <text class="tw" x="240" y="480" text-anchor="middle">flash attention：q·K → softmax → ·V 一体</text>
+  <rect class="fuse" x="60" y="500" width="360" height="40" rx="8"/>
+  <text class="tw" x="240" y="524" text-anchor="middle">RMSNorm + QKV 投影融合成大 GEMM</text>
+  <text class="ts" x="60" y="560">中间结果留在片内 · 只把最终结果写回 HBM</text>
+
+  <rect class="strip" x="40" y="574" width="640" height="12" rx="6"/>
+</svg>

@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 800" width="720" height="800" role="img" aria-label="TP 与 PP 并行切分示意，及 HCCL 与 MoE 调度">
+  <style>
+    .th { fill: #171717; font: 600 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .brand-t { fill: #1A1759; }
+    .arr { stroke: #52525B; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .arr2 { stroke: #3C2ECA; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .box { fill: #FFFFFF; stroke: rgba(23,23,23,0.2); }
+    .mat { fill: #F2F7FF; stroke: #4B3FE3; }
+    .sum { fill: #F5F1FF; stroke: #3C2ECA; }
+    .ppb { fill: #4B3FE3; }
+    .ppb2 { fill: #3C2ECA; }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+    .hcc { fill: #171717; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.1); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+    <marker id="ap" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#3C2ECA"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="800" fill="#FFFFFF"/>
+
+  <!-- ===== TP ===== -->
+  <rect class="panel" x="40" y="30" width="640" height="90" rx="12"/>
+  <text class="th" x="360" y="56" text-anchor="middle">TP · 张量并行 —— 把 a 大矩阵在单层内切开</text>
+  <text class="ts" x="360" y="76" text-anchor="middle">QKV / 输出投影的权重按头或按列切到多卡 · 每张卡算自己一半</text>
+  <text class="ts" x="360" y="94" text-anchor="middle">每层计算结束都要 all-reduce 一次 · 切得越细通信占比越大</text>
+
+  <text class="ts" x="150" y="150" text-anchor="end" style="fill:#4B3FE3;">NPU0</text>
+  <rect class="mat" x="166" y="132" width="170" height="34" rx="6"/>
+  <text class="th" x="251" y="154" text-anchor="middle" style="fill:#1A1759;">W₀ = W[:, 0:d2]</text>
+  <text class="ts" x="251" y="182" text-anchor="middle">列前一半</text>
+
+  <rect class="box" x="96" y="90" width="70" height="34" rx="6"/>
+  <text class="ts" x="131" y="112" text-anchor="middle">输入 X</text>
+  <path class="arr" d="M132 124 L132 152"/>
+  <path class="arr" d="M166 124 C166 140 200 140 200 152"/>
+  <path class="arr" d="M330 140 C360 140 420 140 438 152"/>
+  <rect class="mat" x="452" y="132" width="170" height="34" rx="6"/>
+  <text class="th" x="537" y="154" text-anchor="middle" style="fill:#1A1759;">W₁ = W[:, d2:d]</text>
+  <path class="arr" d="M438 124 C438 140 380 140 360 152"/>
+  <text class="ts" x="537" y="182" text-anchor="middle">列后一半</text>
+  <text class="ts" x="680" y="150" text-anchor="middle" style="fill:#4B3FE3;">NPU1</text>
+
+  <rect class="box" x="166" y="204" width="170" height="38" rx="6"/>
+  <text class="th" x="251" y="228" text-anchor="middle">Y₀ = X·W₀　部分和</text>
+  <rect class="box" x="452" y="204" width="170" height="38" rx="6"/>
+  <text class="th" x="537" y="228" text-anchor="middle">Y₁ = X·W₁　部分和</text>
+  <path class="arr" d="M251 166 L251 200" marker-end="url(#a)"/>
+  <path class="arr" d="M537 166 L537 200" marker-end="url(#a)"/>
+
+  <rect class="sum" x="220" y="258" width="340" height="42" rx="21"/>
+  <text class="th" x="390" y="276" text-anchor="middle" style="fill:#1A1759;">all-reduce 合并</text>
+  <text class="ts" x="390" y="294" text-anchor="middle" style="fill:#1A1759;">Y = Y₀ + Y₁（两卡结果一致）</text>
+  <path class="arr" d="M251 242 C 251 252, 300 250, 320 258" marker-end="url(#a)"/>
+  <path class="arr" d="M537 242 C 537 252, 480 250, 460 258" marker-end="url(#a)"/>
+
+  <!-- ===== PP ===== -->
+  <rect class="panel" x="40" y="318" width="640" height="82" rx="12"/>
+  <text class="th" x="360" y="344" text-anchor="middle">PP · 流水并行 —— 按层切开</text>
+  <text class="ts" x="360" y="364" text-anchor="middle">把 N 层 Transformer 切成若干段，每段放部分层 · 段边界做通信</text>
+  <text class="ts" x="360" y="382" text-anchor="middle">与 TP 不同：层不重复放 · 段间只传激活，不再 all-reduce</text>
+
+  <rect class="ppb" x="200" y="420" width="320" height="58" rx="8"/>
+  <text class="tw" x="360" y="440" text-anchor="middle">Stage0 · 图层 0 … L/2</text>
+  <text class="tw" x="360" y="458" text-anchor="middle">（可再由 TP 切到多卡）</text>
+
+  <path class="arr2" d="M360 478 V494" marker-end="url(#ap)"/>
+  <text class="ts" x="392" y="486" text-anchor="middle" style="fill:#3C2ECA;">段边界通信</text>
+  <text class="ts" x="392" y="504" text-anchor="middle" style="fill:#3C2ECA;">只传激活张量</text>
+
+  <rect class="ppb2" x="200" y="514" width="320" height="58" rx="8"/>
+  <text class="tw" x="360" y="534" text-anchor="middle">Stage1 · 图层 L/2 … L</text>
+  <text class="tw" x="360" y="552" text-anchor="middle">（前一段输出 = 本段输入）</text>
+
+  <text class="ts" x="60" y="600">并行度受层数限制（最多切到层数）· 实际常 TP + PP 组合：卡组内 TP、卡组间 PP</text>
+
+  <!-- ===== HCCL ===== -->
+  <text class="th" x="360" y="642" text-anchor="middle">HCCL 集合通信（PyNPUCommunicator）</text>
+  <rect class="hcc" x="96" y="656" width="120" height="30" rx="6"/>
+  <text class="tw" x="156" y="676" text-anchor="middle">卡0</text>
+  <rect class="hcc" x="250" y="656" width="120" height="30" rx="6"/>
+  <text class="tw" x="310" y="676" text-anchor="middle">卡1</text>
+  <rect class="hcc" x="404" y="656" width="120" height="30" rx="6"/>
+  <text class="tw" x="464" y="676" text-anchor="middle">卡2</text>
+  <rect class="hcc" x="558" y="656" width="120" height="30" rx="6"/>
+  <text class="tw" x="618" y="676" text-anchor="middle">卡3</text>
+  <text class="ts" x="360" y="712" text-anchor="middle">all-reduce：各卡先算局部 → 求和 → 广播 · 板内走 HCCS，跨节点走 RoCE / HiBN</text>
+
+  <!-- ===== MoE 调度 ===== -->
+  <rect class="strip" x="40" y="732" width="640" height="52" rx="12"/>
+  <text class="tb" x="60" y="752">MoE 专项调度</text>
+  <text class="ts" x="60" y="770">TBO 双批重叠：a 通信时 b 在算，把 all-to-all 延迟藏进计算 · EPLB：动态迁移专家副本均衡卡间负载</text>
+</svg>

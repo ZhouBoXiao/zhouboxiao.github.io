@@ -186,7 +186,15 @@ setup(
 
 ## 四、昇腾侧关键技术
 
-**ATB 算子**。CANN 里的 Ascend Transformer Boost 加速库提供高融合度算子：flash attention、分页注意力、RMSNorm 等。AscendAttention 后端调用的就是它们，让 prefill/decode 都能按块表寻址读写 KV。
+**ATB 算子**。ATB（Ascend Transformer Boost）是 CANN 生态里专门加速 Transformer 的高融合算子库，预置 flash attention、分页注意力、RMSNorm、GEMM 等算子，它位于 vLLM engine 之下、ACL runtime 之上——AscendAttention 后端按块表读写 KV 的调用，落到底层最终就是 ATB 的分页注意力算子。
+
+理解 ATB 要抓住"融合"这两个字。以注意力为例，朴素写法是一个位置一个 kernel：`q·Kᵀ` → softmax → 掩码 → dropout → 归一化 → `·V`，每个 kernel 都把中间张量（比如 L×L 的分数矩阵）写回 HBM，下一个 kernel 再读出来。逐算子下发时，这些中间往返消耗的是宝贵的片上带宽。ATB 的融合算子把这一整串合进一个 kernel：非 softmax 部分分块驻留片上、softmax 的统计量在线更新，最终只把结果写回 HBM。RMSNorm 也可以与 QKV 投影融合成一个更大的 GEMM，减少 kernel 数与启动开销。
+
+也就是说，在加图模式、上多卡这些更上层的优化之前，单算子层面的融合已经把 decode 里相当一部分带宽和调度浪费压掉了——图模式解决"多算子调度"，ATB 解决"单算子内的冗余搬运"，两者在不同粒度上互不冲突。[vLLM Ascend 文档](https://docs.vllm.ai/projects/ascend/en/latest/)将 ATB 列为默认的注意力后端。
+
+![ATB 算子库的定位与算子融合原理](../img/vllm-ascend-atb.svg)
+
+> 上：ATB 位于 vLLM 与 ACL runtime 之间；下：一次前向逐算子下发与融合算子的对比，融合算子把中间张量留在片上。
 
 **图模式（ACL Graph / torchair）**。它解决 decode 的"小算子税"：一步解码几十个 kernel，每个都小到喂不饱 AI Core，而 host 每下发一个算子都要走一遍框架→runtime→驱动的固定开销。逐个下发时，NPU 大量时间花在等下一条指令上，空泡比计算还长。
 
@@ -200,11 +208,37 @@ setup(
 
 > 上：eager 模式逐算子下发，NPU 空泡夹在执行块之间；下：capture 记录整图、replay 一次下发连续执行；底部为静态图装下动态 decode 的三个约定。
 
-**量化**。支持 W8A8/W8A16 权重量化与 KV Cache 量化，同等 HBM 容量下容纳更多并发。从源码编译 vllm-ascend 时自定义算子构建默认启用，需要先装 gcc、cmake 等工具链，不需要时可用环境变量 `COMPILE_CUSTOM_KERNELS=0` 关闭。
+**量化**。推理里有两块显存大户可以压：模型权重和 KV 缓存，vllm-ascend 对两者都支持低精度化。
 
-**分布式与调度**。TP/PP 并行走 HCCL；针对 DeepSeek 类模型有 TBO（two-batch overlap，双批重叠）掩盖通信开销；MoE 模型有 EPLB 专家负载均衡，缓解专家命中不均导致的卡间忙闲差。
+**权重量化**走 W8A8 与 W8A16。W8A8 是权重、激活都压到 INT8，权重从 FP16 的 4×N tokens 掉到 2×N，计算用 INT8 矩阵乘（在 910B 上通常比 FP16 更快），累加后反量化回 FP16。W8A16 只压权重、激活保持 FP16，权重省了省、精度更稳，适合激活分布不好校准的场景。选哪种是速度与精度的权衡；未量化的位置可以回退 FP16。
 
-**推测解码**。采用提议者-验证者架构：`vllm_ascend/spec_decode/` 负责生成草稿 token（从 n-gram 匹配到草稿模型），`vllm_ascend/sample/` 里的拒绝采样器根据目标模型分布验证接受，一次前向产出多个 token。
+**KV Cache 量化**把每层每头的 k、v 从 FP16 压到 FP8/INT8，显存对半砍。它比权重量化更能直接提升并发：权重是一次性的固定开销，KV 缓存却随并发序列数和上下文长度线性涨，经常是显存里最先见顶的部分——同一块 HBM，压缩 KV 意味着能同时服务更多请求。decode 步写入时即量化，注意力前按块表取出、反量化再算，分页注意力算子直接内建支持这种流程。
+
+在 vllm-ascend 里，权重量化通过 `--quantization` 参数选用，KV 量化则由缓存块管理器统一调度，对上层模型代码透明。从源码编译时自定义算子（含去量化内核）默认构建，用于这些低精度路径，需要 gcc/cmake 等工具链；不需要时用 `COMPILE_CUSTOM_KERNELS=0` 关闭。
+
+![量化方案：权重量化与 KV Cache 量化](../img/vllm-ascend-quant.svg)
+
+> 左：FP16 权重压成 INT8，显存减半（W8A8/W8A16）；右：KV 缓存 FP16→FP8/INT8，同等 HBM 容纳更多并发。
+
+**分布式与调度**。模型参数装不进单卡时，就要把一次前向拆到多张 NPU 上。两种基本切法：**张量并行（TP）**把单层内的大矩阵按头或按列切开、分到多卡，每张卡算一半，每次线性层后通过 HCCL all-reduce 把局部结果合并成全局；**流水并行（PP）**按层切——每段放一部分 Transformer 层，前一段的输出作为后一段的输入，只在段边界通信。HCCL 在 910B 上封装成 PyNPUCommunicator，是 TP all-reduce 和 PP 段间通信的共同底层。[vLLM Ascend 文档](https://docs.vllm.ai/projects/ascend/en/latest/)里的分布式配置对应这些切分维度。
+
+TP 是把倍速换通信：每层都 all-reduce 一次，卡间带宽是硬约束；切分粒度越细、通信占比越大，超过某个规模后继续加 TP 变成亏本，此时要靠加 PP 或数据并行扩展。这也决定了调度的着力点——在昇腾上，扩展的瓶颈很少在单卡算力，而在卡间通信。
+
+针对 DeepSeek 这类 MoE 模型，vllm-ascend 有两个专门优化。**TBO（two-batch overlap，双批重叠）**：MoE 的专家路由往往要走 all-to-all 通信，慢且空转；把 batch 拆成 a、b 两份，让 a 在通信的同时 b 在算，计算与通信双管线重叠，把通信延迟藏进计算时间。**EPLB（Experts Parallel Load Balancer）**：MoE 的专家命中不均衡，热门专家所在的卡忙到排队、冷门专家的卡闲着；它动态迁移专家副本，让各卡负载趋于均衡。两者针对的都是同一个根因——MoE 推理的瓶颈在卡间走走停停，不在单卡算力。
+
+![分布式并行与 DeepSeek 调度](../img/vllm-ascend-dist.svg)
+
+> 上：TP=2、PP=2 的 4 卡切分，层内走 TP all-reduce、层间走 PP；下：HCCL 集合通信与针对 MoE 的 TBO、EPLB。
+
+**推测解码**。decode 的根本约束是串行：第 i+1 个 token 依赖第 i 个，每步前向只产出 1 个。推测解码的关键洞察是验证比生成便宜——一次前向同时算 k 个位置，权重和 KV 仍然只读一遍，成本几乎等于算 1 个。于是让"猜"和"验"分工：轻量提议者先猜 k 个草稿，目标模型一次前向全部验证，一轮产出多个 token。
+
+一轮分三步。**提议**：`vllm_ascend/spec_decode/` 里的提议者生成草稿——n-gram 直接从 prompt 或历史输出匹配（零模型开销，适合复制型任务），EAGLE 在主干上加轻量草稿头、复用隐状态预测。**验证**：k 个草稿拼成一段 mini-prefill 走目标模型，逐位得到目标分布 p，草稿的 KV 同时写入。**裁决**：`vllm_ascend/sample/` 的拒绝采样器逐位比较草稿分布 q 与目标分布 p——随机数小于 min(1, p/q) 则接受并继续看下一位；首个被拒的位置从修正分布 max(0, p−q) 重采样一个替代 token，其后草稿整体丢弃；全部接受则再从目标分布白送一个 bonus token。无论走哪条分支，最终输出分布都与目标模型完全一致，这是无损加速。
+
+工程细节：接受位置的草稿 KV 直接复用，拒绝位置之后已写入的尾部块要回滚，块管理器必须支持按序列长度截断；收益取决于接受率，草稿质量差时验证步的额外计算反而变成纯开销。
+
+![推测解码一轮的三个阶段](../img/vllm-ascend-specdecode.svg)
+
+> 提议生成 k 个草稿、目标模型一次前向验证、拒绝采样逐位裁决；全接受送 bonus，首拒换采样，其后丢弃；底部为两个关键性质。
 
 ## 五、一个请求的端到端流程
 

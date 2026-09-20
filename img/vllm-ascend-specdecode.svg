@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 670" width="720" height="670" role="img" aria-label="推测解码一轮的三个阶段：提议、验证、裁决">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #4B3FE3; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .brand-t { fill: #1A1759; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .panel-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .tok { fill: #4B3FE3; }
+    .draft { fill: #FFFFFF; stroke: #4B3FE3; stroke-dasharray: 5 3; }
+    .buf { fill: #FFFFFF; stroke: #4B3FE3; }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+    .ok { stroke: #3C2ECA; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .no { stroke: #A9AEB8; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .ring { fill: none; stroke: rgba(23,23,23,0.25); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="670" fill="#FFFFFF"/>
+
+  <rect class="panel" x="40" y="32" width="640" height="118" rx="12"/>
+  <text class="th" x="60" y="58">提议 · 轻量生成 k 个草稿</text>
+  <rect class="tok" x="76" y="84" width="44" height="28" rx="5"/>
+  <text class="tw" x="98" y="103" text-anchor="middle">t8</text>
+  <path class="arr" d="M124 98 H138" marker-end="url(#a)"/>
+  <rect class="buf" x="142" y="84" width="150" height="28" rx="14"/>
+  <text class="tb" x="217" y="103" text-anchor="middle">n-gram / EAGLE</text>
+  <path class="arr" d="M296 98 H310" marker-end="url(#a)"/>
+  <rect class="draft" x="314" y="84" width="40" height="28" rx="5"/>
+  <text class="td" x="334" y="103" text-anchor="middle">d1</text>
+  <rect class="draft" x="364" y="84" width="40" height="28" rx="5"/>
+  <text class="td" x="384" y="103" text-anchor="middle">d2</text>
+  <rect class="draft" x="414" y="84" width="40" height="28" rx="5"/>
+  <text class="td" x="434" y="103" text-anchor="middle">d3</text>
+  <rect class="draft" x="464" y="84" width="40" height="28" rx="5"/>
+  <text class="td" x="484" y="103" text-anchor="middle">d4</text>
+  <text class="ts" x="524" y="103">草稿，未确认</text>
+  <text class="ts" x="60" y="136">n-gram 从 prompt 或历史输出匹配 · 零模型开销 · EAGLE 复用主干隐状态预测</text>
+
+  <rect class="panel" x="40" y="174" width="640" height="156" rx="12"/>
+  <text class="th" x="60" y="200">验证 · 目标模型一次前向算 k 个位置</text>
+  <rect class="draft" x="76" y="232" width="36" height="28" rx="5"/>
+  <text class="td" x="94" y="251" text-anchor="middle">d1</text>
+  <rect class="draft" x="120" y="232" width="36" height="28" rx="5"/>
+  <text class="td" x="138" y="251" text-anchor="middle">d2</text>
+  <rect class="draft" x="164" y="232" width="36" height="28" rx="5"/>
+  <text class="td" x="182" y="251" text-anchor="middle">d3</text>
+  <rect class="draft" x="208" y="232" width="36" height="28" rx="5"/>
+  <text class="td" x="226" y="251" text-anchor="middle">d4</text>
+  <path class="arr" d="M250 246 H264" marker-end="url(#a)"/>
+  <rect class="panel-brand" x="268" y="224" width="150" height="44" rx="8"/>
+  <text class="th brand-t" x="343" y="242" text-anchor="middle">目标模型</text>
+  <text class="ts brand-t" x="343" y="260" text-anchor="middle">一次前向 × k</text>
+  <path class="arr" d="M422 246 H436" marker-end="url(#a)"/>
+  <rect class="buf" x="440" y="232" width="34" height="28" rx="14"/>
+  <text class="td" x="457" y="251" text-anchor="middle">p1</text>
+  <rect class="buf" x="480" y="232" width="34" height="28" rx="14"/>
+  <text class="td" x="497" y="251" text-anchor="middle">p2</text>
+  <rect class="buf" x="520" y="232" width="34" height="28" rx="14"/>
+  <text class="td" x="537" y="251" text-anchor="middle">p3</text>
+  <rect class="buf" x="560" y="232" width="34" height="28" rx="14"/>
+  <text class="td" x="577" y="251" text-anchor="middle">p4</text>
+  <text class="ts" x="60" y="298">草稿 KV 同时写入 · 逐位得到目标分布 p</text>
+
+  <rect class="panel" x="40" y="354" width="640" height="196" rx="12"/>
+  <text class="th" x="60" y="380">裁决 · 拒绝采样逐位验证</text>
+  <rect class="draft" x="68" y="400" width="48" height="28" rx="5"/>
+  <text class="td" x="92" y="419" text-anchor="middle">d1</text>
+  <rect class="draft" x="192" y="400" width="48" height="28" rx="5"/>
+  <text class="td" x="216" y="419" text-anchor="middle">d2</text>
+  <rect class="draft" x="316" y="400" width="48" height="28" rx="5"/>
+  <text class="td" x="340" y="419" text-anchor="middle">d3</text>
+  <rect class="draft" x="440" y="400" width="48" height="28" rx="5"/>
+  <text class="td" x="464" y="419" text-anchor="middle">d4</text>
+  <path class="arr" d="M92 432 V444" marker-end="url(#a)"/>
+  <path class="arr" d="M216 432 V444" marker-end="url(#a)"/>
+  <path class="arr" d="M340 432 V444" marker-end="url(#a)"/>
+  <path class="arr" d="M464 432 V444" marker-end="url(#a)"/>
+  <circle class="ring" cx="92" cy="460" r="12"/>
+  <path class="ok" d="M86 460 L91 465 L99 455"/>
+  <circle class="ring" cx="216" cy="460" r="12"/>
+  <path class="ok" d="M210 460 L215 465 L223 455"/>
+  <circle class="ring" cx="340" cy="460" r="12"/>
+  <path class="no" d="M334 454 L346 466 M346 454 L334 466"/>
+  <circle class="ring" cx="464" cy="460" r="12"/>
+  <path class="no" d="M458 454 L470 466 M470 454 L458 466"/>
+  <text class="ts" x="108" y="464">接受</text>
+  <text class="ts" x="232" y="464">接受</text>
+  <text class="ts" x="356" y="464">拒绝 → 重采样</text>
+  <text class="ts" x="480" y="464">其后丢弃</text>
+  <rect class="tok" x="68" y="492" width="48" height="28" rx="5"/>
+  <text class="tw" x="92" y="511" text-anchor="middle">t9</text>
+  <rect class="tok" x="192" y="492" width="48" height="28" rx="5"/>
+  <text class="tw" x="216" y="511" text-anchor="middle">t10</text>
+  <rect class="buf" x="316" y="492" width="48" height="28" rx="5"/>
+  <text class="td" x="340" y="511" text-anchor="middle">r3</text>
+  <text class="ts" x="372" y="511">重采样自修正分布 max(0, p−q)</text>
+  <text class="ts" x="60" y="540">一轮净得 3 个 token · 全部接受时再白送 1 个 bonus</text>
+
+  <rect class="strip" x="40" y="574" width="640" height="68" rx="12"/>
+  <text class="tb" x="60" y="598">为什么划算</text>
+  <text class="ts" x="60" y="618">验证 k 个草稿的成本 ≈ 生成 1 个 token —— 权重与 KV 仍然只读一遍</text>
+  <text class="ts" x="60" y="636">拒绝采样保证输出分布与目标模型完全一致（无损）· 拒绝后回滚尾部 KV</text>
+</svg>
