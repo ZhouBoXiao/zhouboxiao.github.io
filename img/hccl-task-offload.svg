@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="720" height="480" role="img" aria-label="搬运任务的下发闭环：描述符到完成事件">
+  <style>
+    .t { fill: #171717; font: 400 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="m1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="m2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="480" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">搬运任务的下发闭环：描述符 → 下发队列 → doorbell → 引擎 → 完成事件</text>
+  <text class="ts" x="30" y="52">HOST 侧只负责下发任务与回收完成事件，搬运本身由 DMA 引擎异步完成</text>
+  <rect x="30" y="68" width="660" height="88" rx="10" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.4"/>
+  <text class="bd" x="46" y="90">HOST 侧 · 只下发，不搬运</text>
+  <rect x="46" y="96" width="146" height="44" rx="8" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="th" x="119" y="114" text-anchor="middle">① 生成描述符</text>
+  <text class="ts" x="119" y="131" text-anchor="middle">Executor 编排</text>
+  <rect x="210" y="96" width="146" height="44" rx="8" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="th" x="283" y="114" text-anchor="middle">② 写入下发队列</text>
+  <text class="ts" x="283" y="131" text-anchor="middle">SQ 环形 buffer</text>
+  <rect x="374" y="96" width="130" height="44" rx="8" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="th" x="439" y="114" text-anchor="middle">③ doorbell 敲门</text>
+  <text class="ts" x="439" y="131" text-anchor="middle">通知硬件取任务</text>
+  <rect x="522" y="96" width="152" height="44" rx="8" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="th" x="598" y="114" text-anchor="middle">④ 立即返回</text>
+  <text class="ts" x="598" y="131" text-anchor="middle">host 不被阻塞</text>
+  <path class="arr" d="M198 118 L210 118" marker-end="url(#m1)"/>
+  <path class="arr" d="M362 118 L374 118" marker-end="url(#m1)"/>
+  <path class="arr" d="M510 118 L522 118" marker-end="url(#m1)"/>
+  <rect x="30" y="176" width="660" height="118" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="46" y="198">硬件侧 · 异步搬运</text>
+  <rect x="46" y="208" width="190" height="72" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="th" x="141" y="228" text-anchor="middle">引擎选择</text>
+  <text class="ts" x="58" y="250">SDMA　机内 · HCCS / PCIe</text>
+  <text class="ts" x="58" y="270">RDMA　跨机 · RoCE</text>
+  <rect x="254" y="208" width="200" height="72" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="266" y="218" width="66" height="22" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.1"/>
+  <text class="ts" x="299" y="233" text-anchor="middle">源 NPU 显存</text>
+  <path class="arr" d="M334 229 L352 229" marker-end="url(#m1)"/>
+  <rect x="356" y="218" width="66" height="22" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.1"/>
+  <text class="ts" x="389" y="233" text-anchor="middle">目的 NPU 显存</text>
+  <text class="ts" x="354" y="256" text-anchor="middle">地址已在通信域初始化时注册</text>
+  <text class="ts" x="354" y="272" text-anchor="middle">数据不经过 CPU 内存中转</text>
+  <rect x="472" y="208" width="202" height="72" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="th" x="573" y="228" text-anchor="middle">完成通知</text>
+  <text class="ts" x="484" y="250">搬完写一条完成事件进 CQ</text>
+  <text class="ts" x="484" y="270">host 轮询或等中断回收</text>
+  <path class="arrg" d="M360 164 L360 172" marker-end="url(#m2)"/>
+  <rect x="30" y="310" width="660" height="46" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="th" x="360" y="330" text-anchor="middle">⑤ 完成事件回流 Executor → 确认本步完成 → 下发下一步，形成闭环</text>
+  <text class="ts" x="360" y="346" text-anchor="middle">步与步之间才有同步，因此「步数」就等于「下发—完成往返次数」</text>
+  <rect x="30" y="372" width="660" height="88" rx="10" fill="#FFF7ED" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="46" y="394">小张量的瓶颈通常不是带宽，而是每一步的下发 + 完成等待延迟在累积</text>
+  <text class="ts" x="46" y="416">HCCL_BUFFSIZE 决定单次搬运粒度：太小则任务数爆炸，太大则并发度下降</text>
+  <text class="ts" x="46" y="438">描述符展开位置由 HCCL_OP_EXPANSION_MODE 决定：HOST 灵活但占 CPU，AI_CPU 反之</text>
+</svg>

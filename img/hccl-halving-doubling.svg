@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 424" width="720" height="424" role="img" aria-label="递归减半与递归加倍：每个 rank 负责区间的变化">
+  <style>
+    .t { fill: #171717; font: 400 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 12px "SF Mono", Consolas, monospace; }
+    .mono-b { fill: #1A1759; font: 500 12px "SF Mono", Consolas, monospace; }
+  </style>
+  <rect x="0" y="0" width="720" height="424" fill="#FFFFFF"/>
+  <text class="tb" x="24" y="32">递归减半 → 递归加倍：每个 rank 负责区间的变化（N=8）</text>
+  <rect x="70.0" y="48" width="330.0" height="22" rx="6" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="ts" x="235.0" y="63" text-anchor="middle" style="fill:#1A1759; font-weight:500;">阶段一 · 递归减半（Reduce-Scatter）· 3 步</text>
+  <rect x="412.0" y="48" width="246.0" height="22" rx="6" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="ts" x="535.0" y="63" text-anchor="middle" style="fill:#1A1759; font-weight:500;">阶段二 · 递归加倍（All-Gather）· 3 步</text>
+  <text class="mono" x="109.0" y="86" text-anchor="middle">起始</text>
+  <text class="ts" x="109.0" y="100" text-anchor="middle">持有 8</text>
+  <text class="mono" x="193.0" y="86" text-anchor="middle">① d=4</text>
+  <text class="ts" x="193.0" y="100" text-anchor="middle">收发 4</text>
+  <text class="mono" x="277.0" y="86" text-anchor="middle">② d=2</text>
+  <text class="ts" x="277.0" y="100" text-anchor="middle">收发 2</text>
+  <text class="mono" x="361.0" y="86" text-anchor="middle">③ d=1</text>
+  <text class="ts" x="361.0" y="100" text-anchor="middle">收发 1</text>
+  <text class="mono" x="451.0" y="86" text-anchor="middle">④ d=1</text>
+  <text class="ts" x="451.0" y="100" text-anchor="middle">收发 1</text>
+  <text class="mono" x="535.0" y="86" text-anchor="middle">⑤ d=2</text>
+  <text class="ts" x="535.0" y="100" text-anchor="middle">收发 2</text>
+  <text class="mono" x="619.0" y="86" text-anchor="middle">⑥ d=4</text>
+  <text class="ts" x="619.0" y="100" text-anchor="middle">收发 4</text>
+  <text class="mono" x="40" y="117.0" text-anchor="middle">R0</text>
+  <rect x="70.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="106.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="154.00" y="106.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="238.00" y="106.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="322.00" y="106.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="412.00" y="106.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="496.00" y="106.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="106.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="106.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <text class="mono" x="40" y="147.0" text-anchor="middle">R1</text>
+  <rect x="70.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="136.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="154.00" y="136.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="238.00" y="136.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="331.75" y="136.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="412.00" y="136.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="496.00" y="136.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="136.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="136.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <text class="mono" x="40" y="177.0" text-anchor="middle">R2</text>
+  <rect x="70.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="166.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="154.00" y="166.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="257.50" y="166.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="341.50" y="166.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="431.50" y="166.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="496.00" y="166.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="166.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="166.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <text class="mono" x="40" y="207.0" text-anchor="middle">R3</text>
+  <rect x="70.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="196.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="154.00" y="196.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="257.50" y="196.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="351.25" y="196.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="431.50" y="196.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="496.00" y="196.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="196.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="196.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <text class="mono" x="40" y="237.0" text-anchor="middle">R4</text>
+  <rect x="70.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="226.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="193.00" y="226.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="277.00" y="226.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="361.00" y="226.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="451.00" y="226.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="535.00" y="226.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="226.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="226.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="20" y="252.0" width="644.0" height="22" rx="5" fill="#F2F7FF"/>
+  <text class="mono-b" x="40" y="267.0" text-anchor="middle">R5</text>
+  <rect x="70.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="256.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="193.00" y="256.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="277.00" y="256.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="370.75" y="256.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="451.00" y="256.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="535.00" y="256.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="256.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="256.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <text class="mono" x="40" y="297.0" text-anchor="middle">R6</text>
+  <rect x="70.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="286.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="193.00" y="286.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="296.50" y="286.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="380.50" y="286.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="470.50" y="286.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="535.00" y="286.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="286.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="286.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <text class="mono" x="40" y="327.0" text-anchor="middle">R7</text>
+  <rect x="70.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="70.00" y="316.0" width="78.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="154.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="193.00" y="316.0" width="39.00" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="238.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="296.50" y="316.0" width="19.50" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="322.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="390.25" y="316.0" width="9.75" height="14.0" rx="3" fill="#6F6FFF"/>
+  <rect x="412.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="470.50" y="316.0" width="19.50" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="496.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="535.00" y="316.0" width="39.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="580.0" y="316.0" width="78.0" height="14.0" rx="3" fill="#F1F1F3"/>
+  <rect x="580.00" y="316.0" width="78.00" height="14.0" rx="3" fill="#4B3FE3"/>
+  <rect x="20" y="352" width="680" height="42" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.1)"/>
+  <text class="ts" x="36" y="372">R5 的六步对端：R1 → R7 → R4 │ R4 → R7 → R1　—　减半按 d 降序、加倍按 d 升序，故对称</text>
+  <text class="ts" x="36" y="388">每 rank 收发 7 chunk，共 14 chunk 与 Ring 相同；但只需 6 步（Ring 要 14 步）</text>
+  <text class="ts" x="24" y="416">减半结束时 R5 独占 chunk 5（已归约全部 8 份），加倍后所有 rank 都持有完整 8 个 chunk</text>
+</svg>
