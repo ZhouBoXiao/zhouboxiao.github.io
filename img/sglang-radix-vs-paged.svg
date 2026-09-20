@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="PagedAttention 按块共享与 RadixAttention 按前缀树共享的粒度对比">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #4B3FE3; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .link { stroke: #52525B; stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .blk { fill: #4B3FE3; }
+    .blkB { fill: #6F6FFF; }
+    .blkC { fill: #A9AEFF; }
+    .draft { fill: #FFFFFF; stroke: #4B3FE3; stroke-dasharray: 5 3; }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="520" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="40" width="656" height="200" rx="12"/>
+  <text class="th" x="52" y="66">PagedAttention：共享单位是「块」</text>
+
+  <text class="ts" x="52" y="112">序列 A</text>
+  <rect class="blk" x="110" y="94" width="60" height="36" rx="5"/>
+  <rect class="blk" x="178" y="94" width="60" height="36" rx="5"/>
+  <rect class="blk" x="246" y="94" width="60" height="36" rx="5"/>
+  <rect class="blk" x="314" y="94" width="60" height="36" rx="5"/>
+  <rect class="blkB" x="382" y="94" width="60" height="36" rx="5"/>
+  <rect class="blkB" x="450" y="94" width="60" height="36" rx="5"/>
+  <text class="tw" x="140" y="117" text-anchor="middle">共享块</text>
+  <text class="tw" x="208" y="117" text-anchor="middle">共享块</text>
+  <text class="tw" x="276" y="117" text-anchor="middle">共享块</text>
+  <text class="tw" x="344" y="117" text-anchor="middle">共享块</text>
+  <text class="tw" x="412" y="117" text-anchor="middle">私有</text>
+  <text class="tw" x="480" y="117" text-anchor="middle">私有</text>
+
+  <text class="ts" x="52" y="162">序列 B</text>
+  <rect class="blk" x="110" y="144" width="60" height="36" rx="5"/>
+  <rect class="blk" x="178" y="144" width="60" height="36" rx="5"/>
+  <rect class="blk" x="246" y="144" width="60" height="36" rx="5"/>
+  <rect class="blk" x="314" y="144" width="60" height="36" rx="5"/>
+  <rect class="blkC" x="382" y="144" width="60" height="36" rx="5"/>
+  <rect class="blkC" x="450" y="144" width="60" height="36" rx="5"/>
+  <text class="tw" x="140" y="167" text-anchor="middle">共享块</text>
+  <text class="tw" x="208" y="167" text-anchor="middle">共享块</text>
+  <text class="tw" x="276" y="167" text-anchor="middle">共享块</text>
+  <text class="tw" x="344" y="167" text-anchor="middle">共享块</text>
+  <text class="th" x="412" y="167" text-anchor="middle">私有</text>
+  <text class="th" x="480" y="167" text-anchor="middle">私有</text>
+
+  <text class="ts" x="52" y="206">解决的是「碎片」：KV 不再要求连续显存，序列可动态伸缩</text>
+  <text class="ts" x="52" y="226">代价：命中受块边界限制（如 16 token 对齐），需 block 级 CoW / 前缀缓存配合</text>
+
+  <rect class="panel" x="32" y="268" width="656" height="216" rx="12"/>
+  <text class="th" x="52" y="294">RadixAttention：共享内建于「树」，粒度到 token</text>
+
+  <text class="ts" x="52" y="352">请求 A</text>
+  <rect class="blk" x="120" y="330" width="72" height="36" rx="5"/>
+  <rect class="blk" x="202" y="330" width="72" height="36" rx="5"/>
+  <rect class="blk" x="284" y="330" width="72" height="36" rx="5"/>
+  <rect class="blk" x="366" y="330" width="72" height="36" rx="5"/>
+  <rect class="draft" x="448" y="330" width="72" height="36" rx="5"/>
+  <rect class="draft" x="530" y="330" width="72" height="36" rx="5"/>
+  <text class="tw" x="156" y="353" text-anchor="middle">tok 1</text>
+  <text class="tw" x="238" y="353" text-anchor="middle">tok 2</text>
+  <text class="tw" x="320" y="353" text-anchor="middle">tok 3</text>
+  <text class="tw" x="402" y="353" text-anchor="middle">tok 4</text>
+  <text class="td" x="484" y="353" text-anchor="middle">私有</text>
+  <text class="td" x="566" y="353" text-anchor="middle">私有</text>
+
+  <text class="ts" x="52" y="404">请求 B</text>
+  <rect class="blk" x="120" y="382" width="72" height="36" rx="5"/>
+  <rect class="blk" x="202" y="382" width="72" height="36" rx="5"/>
+  <rect class="blk" x="284" y="382" width="72" height="36" rx="5"/>
+  <rect class="blk" x="366" y="382" width="72" height="36" rx="5"/>
+  <rect class="draft" x="448" y="382" width="72" height="36" rx="5"/>
+  <rect class="draft" x="530" y="382" width="72" height="36" rx="5"/>
+  <text class="tw" x="156" y="405" text-anchor="middle">tok 1</text>
+  <text class="tw" x="238" y="405" text-anchor="middle">tok 2</text>
+  <text class="tw" x="320" y="405" text-anchor="middle">tok 3</text>
+  <text class="tw" x="402" y="405" text-anchor="middle">tok 4</text>
+  <text class="td" x="484" y="405" text-anchor="middle">私有</text>
+  <text class="td" x="566" y="405" text-anchor="middle">私有</text>
+
+  <path class="link" d="M156 366 V378"/>
+  <path class="link" d="M238 366 V378"/>
+  <path class="link" d="M320 366 V378"/>
+  <path class="link" d="M402 366 V378"/>
+
+  <text class="ts" x="52" y="446">虚线竖连表示：两行前 4 个 token 指向同一批物理 KV 块</text>
+  <text class="ts" x="52" y="466">共享关系由树节点决定而非块边界 —— 任意公共前缀自动命中，无需预先对齐</text>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="RadixCache 驱逐策略：叶子节点优先回收">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tsb { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bt { fill: #1A1759; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .hot { fill: #4B3FE3; }
+    .warm { fill: #6F6FFF; }
+    .cold { fill: #A9AEFF; }
+    .ghost { fill: none; stroke: #52525B; stroke-dasharray: 5 4; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="40" width="656" height="300" rx="12"/>
+  <text class="th" x="52" y="66">驱逐优先级：越靠近树根、共享度越高 → 越晚被淘汰</text>
+
+  <rect class="hot" x="60" y="96" width="170" height="72" rx="8"/>
+  <text class="tw" x="145" y="124" text-anchor="middle">系统提示 / 公共前缀</text>
+  <text class="tw" x="145" y="146" text-anchor="middle">共享度最高 · 热度最高</text>
+
+  <path class="arr" d="M230 132 H256" marker-end="url(#a)"/>
+
+  <rect class="warm" x="270" y="96" width="170" height="72" rx="8"/>
+  <text class="tw" x="355" y="124" text-anchor="middle">单次会话轮次</text>
+  <text class="tw" x="355" y="146" text-anchor="middle">共享度中等</text>
+
+  <path class="arr" d="M440 132 H466" marker-end="url(#a)"/>
+
+  <rect class="cold" x="480" y="96" width="170" height="72" rx="8"/>
+  <text class="th" x="565" y="124" text-anchor="middle">叶子节点</text>
+  <text class="th" x="565" y="146" text-anchor="middle">共享度最低 · 最先被驱逐</text>
+
+  <text class="ts" x="52" y="200">上方由深到浅的颜色 = 节点的「热度」梯度，也是驱逐的逆序</text>
+
+  <rect class="node" x="60" y="222" width="280" height="88" rx="8"/>
+  <text class="th" x="80" y="248">回收时机</text>
+  <text class="ts" x="80" y="272">叶子完成生成、引用归零后立即回收</text>
+  <text class="ts" x="80" y="292">父节点在所有子孙都失效后才一起释放</text>
+
+  <rect class="ghost" x="380" y="222" width="270" height="88" rx="8"/>
+  <text class="th" x="400" y="248">为什么必须从叶子开始</text>
+  <text class="ts" x="400" y="272">删掉中间节点会让整条共享前缀失效，</text>
+  <text class="ts" x="400" y="292">所有依赖它的请求都被迫重新 prefill</text>
+
+  <rect class="panel" x="32" y="356" width="656" height="60" rx="12"/>
+  <text class="ts" x="52" y="380">回收粒度同样是「节点」而非「单条序列」—— 一段前缀只要还有一个请求在用，就整段保留</text>
+  <text class="ts" x="52" y="402">效果：有限的显存里尽量保住高频公共前缀，把命中率留给真正能复用的请求</text>
+</svg>

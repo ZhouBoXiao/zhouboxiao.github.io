@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" width="720" height="380" role="img" aria-label="HCCL 在昇腾软件栈中的位置">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  </style>
+  <rect x="0" y="0" width="720" height="380" fill="#FFFFFF"/>
+
+  <rect x="40" y="30" width="300" height="140" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="60" y="54">昇腾 · 训练 / 推理栈</text>
+  <rect x="60" y="68" width="120" height="32" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="120" y="89" text-anchor="middle">MindSpore</text>
+  <rect x="196" y="68" width="124" height="32" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="258" y="89" text-anchor="middle">PyTorch+NPU</text>
+  <rect x="60" y="112" width="260" height="32" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="190" y="133" text-anchor="middle">分布式并行接口</text>
+
+  <rect x="380" y="30" width="300" height="140" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="400" y="54">NVIDIA · 训练 / 推理栈</text>
+  <rect x="400" y="68" width="120" height="32" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="460" y="89" text-anchor="middle">Megatron</text>
+  <rect x="536" y="68" width="124" height="32" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="598" y="89" text-anchor="middle">DeepSpeed</text>
+  <rect x="400" y="112" width="260" height="32" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="530" y="133" text-anchor="middle">torch.distributed</text>
+
+  <path class="arr" d="M190 170 L190 194"/>
+  <path class="arr" d="M530 170 L530 194"/>
+
+  <rect x="40" y="198" width="300" height="56" rx="12" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+  <text class="t" x="190" y="222" text-anchor="middle" style="font-weight:500;">HCCL</text>
+  <text class="ts" x="190" y="242" text-anchor="middle" style="fill:#1A1759;">Huawei Collective Communication Library</text>
+
+  <rect x="380" y="198" width="300" height="56" rx="12" fill="#FFFFFF" stroke="rgba(23,23,23,0.35)" stroke-width="1.4"/>
+  <text class="t" x="530" y="222" text-anchor="middle">NCCL</text>
+  <text class="ts" x="530" y="242" text-anchor="middle">NVIDIA Collective Communications Library</text>
+
+  <path class="arr" d="M190 254 L190 284"/>
+  <path class="arr" d="M530 254 L530 284"/>
+
+  <rect x="40" y="288" width="300" height="62" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="190" y="312" text-anchor="middle">CANN / SDMA · RDMA · HCCS</text>
+  <text class="ts" x="190" y="334" text-anchor="middle">昇腾 910B · Atlas 800</text>
+
+  <rect x="380" y="288" width="300" height="62" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="530" y="312" text-anchor="middle">CUDA / Copy Engine · NVLink</text>
+  <text class="ts" x="530" y="334" text-anchor="middle">A100 / H100</text>
+
+  <text class="ts" x="360" y="372" text-anchor="middle">同一抽象层级，不同硬件底座：集合通信原语一一对应</text>
+</svg>

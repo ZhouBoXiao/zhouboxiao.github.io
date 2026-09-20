@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" width="720" height="340" role="img" aria-label="通信与反向计算的重叠流水线">
+  <style>
+    .t { fill: #171717; font: 400 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #52525B; font: 500 11px "SF Mono", Consolas, monospace; }
+  </style>
+  <rect x="0" y="0" width="720" height="340" fill="#FFFFFF"/>
+
+  <text class="t" x="30" y="30" style="font-weight:500;">无重叠 · 串行执行</text>
+  <rect x="30" y="44" width="600" height="52" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+
+  <text class="ts" x="86" y="66" text-anchor="middle">计算</text>
+  <rect x="30" y="44" width="600" height="52" rx="10" fill="none" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="30" y="52" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="86" y="75" text-anchor="middle">B0</text>
+  <rect x="146" y="52" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="202" y="75" text-anchor="middle">B1</text>
+  <rect x="262" y="52" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="318" y="75" text-anchor="middle">B2</text>
+  <rect x="378" y="52" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="434" y="75" text-anchor="middle">B3</text>
+
+  <rect x="30" y="104" width="600" height="40" rx="10" fill="#FFF1F2" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="90" y="122" text-anchor="middle">通信</text>
+  <rect x="146" y="110" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="202" y="129" text-anchor="middle">AR0</text>
+  <rect x="262" y="110" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="318" y="129" text-anchor="middle">AR1</text>
+  <rect x="378" y="110" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="434" y="129" text-anchor="middle">AR2</text>
+  <rect x="494" y="110" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="550" y="129" text-anchor="middle">AR3</text>
+  <text class="ts" x="660" y="129" text-anchor="end" style="fill:#9F1239;">总耗时 = 计算 + 通信</text>
+
+  <text class="t" x="30" y="196" style="font-weight:500;">有重叠 · bucket 级流水线</text>
+  <rect x="30" y="210" width="600" height="52" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="86" y="232" text-anchor="middle">计算</text>
+  <rect x="30" y="218" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="86" y="241" text-anchor="middle">B0</text>
+  <rect x="146" y="218" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="202" y="241" text-anchor="middle">B1</text>
+  <rect x="262" y="218" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="318" y="241" text-anchor="middle">B2</text>
+  <rect x="378" y="218" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="434" y="241" text-anchor="middle">B3</text>
+  <rect x="494" y="218" width="112" height="36" rx="6" fill="#E8E8EA"/>
+  <text class="mono" x="550" y="241" text-anchor="middle">B4</text>
+
+  <rect x="30" y="270" width="600" height="40" rx="10" fill="#FFF1F2" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="90" y="288" text-anchor="middle">通信</text>
+  <rect x="146" y="276" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="202" y="295" text-anchor="middle">AR0</text>
+  <rect x="262" y="276" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="318" y="295" text-anchor="middle">AR1</text>
+  <rect x="378" y="276" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="434" y="295" text-anchor="middle">AR2</text>
+  <rect x="494" y="276" width="112" height="28" rx="6" fill="#FFE4E6"/>
+  <text class="mono" x="550" y="295" text-anchor="middle">AR3</text>
+  <text class="ts" x="630" y="295" text-anchor="end" style="fill:#166534;">总耗时 ≈ 计算 + 一次通信</text>
+
+  <text class="ts" x="30" y="332">每个 bucket 反向计算完成即刻触发 AllReduce，与下一段计算并行推进</text>
+</svg>

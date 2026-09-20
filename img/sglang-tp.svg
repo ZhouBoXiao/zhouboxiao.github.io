@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420" role="img" aria-label="SGLang 多卡张量并行执行：Scheduler 到 Rank 0 的 ZMQ 投递与 NCCL/HCCL 通信">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tsb { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bt { fill: #1A1759; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="420" fill="#FFFFFF"/>
+
+  <rect class="node" x="250" y="44" width="220" height="52" rx="8"/>
+  <text class="th" x="360" y="68" text-anchor="middle">Scheduler（CPU）</text>
+  <text class="ts" x="360" y="88" text-anchor="middle">组装好的 ScheduleBatch</text>
+
+  <path class="arr" d="M360 96 V118" marker-end="url(#a)"/>
+  <text class="ts" x="372" y="114">ZMQ · 只发给 Rank 0</text>
+
+  <rect class="panel" x="32" y="124" width="656" height="140" rx="12"/>
+  <text class="th" x="52" y="150">GPU · TPWorker 进程组（TP = 4）</text>
+
+  <rect class="node-brand" x="60" y="162" width="130" height="72" rx="8"/>
+  <text class="bt" x="125" y="190" text-anchor="middle">Rank 0</text>
+  <text class="tsb" x="125" y="210" text-anchor="middle">唯一的指挥者</text>
+  <text class="tsb" x="125" y="226" text-anchor="middle">1/4 权重</text>
+
+  <rect class="node" x="210" y="162" width="130" height="72" rx="8"/>
+  <text class="th" x="275" y="190" text-anchor="middle">Rank 1</text>
+  <text class="ts" x="275" y="210" text-anchor="middle">只执行前向</text>
+  <text class="ts" x="275" y="226" text-anchor="middle">1/4 权重</text>
+
+  <rect class="node" x="360" y="162" width="130" height="72" rx="8"/>
+  <text class="th" x="425" y="190" text-anchor="middle">Rank 2</text>
+  <text class="ts" x="425" y="210" text-anchor="middle">只执行前向</text>
+  <text class="ts" x="425" y="226" text-anchor="middle">1/4 权重</text>
+
+  <rect class="node" x="510" y="162" width="130" height="72" rx="8"/>
+  <text class="th" x="575" y="190" text-anchor="middle">Rank 3</text>
+  <text class="ts" x="575" y="210" text-anchor="middle">只执行前向</text>
+  <text class="ts" x="575" y="226" text-anchor="middle">1/4 权重</text>
+
+  <path class="arr" d="M190 198 H206" marker-end="url(#a)"/>
+  <path class="arr" d="M340 198 H356" marker-end="url(#a)"/>
+  <path class="arr" d="M490 198 H506" marker-end="url(#a)"/>
+  <text class="ts" x="52" y="252">NCCL / HCCL：Rank 0 广播请求与采样参数，层内切分张量经 all-reduce 合并</text>
+
+  <rect class="panel" x="32" y="288" width="656" height="100" rx="12"/>
+  <text class="th" x="52" y="314">为什么要这样分工</text>
+  <text class="ts" x="52" y="340">决策集中在 Scheduler + Rank 0 一处，其余 rank 完全被动 —— 通信模式规整，不会出现多点决策不一致</text>
+  <text class="ts" x="52" y="364">模型太大而单卡装不下时才动用 TP；切得越细，每层那次 all-reduce 的通信占比越高</text>
+</svg>

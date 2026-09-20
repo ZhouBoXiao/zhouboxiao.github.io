@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="720" height="560" role="img" aria-label="SGLang 前端 DSL 原语 gen fork select join 与 fork 的前缀共享">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #4B3FE3; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #171717; font: 500 12px "JetBrains Mono", Consolas, Menlo, monospace; }
+    .bt { fill: #1A1759; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .code { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .hit { fill: #4B3FE3; }
+    .miss { fill: #FFFFFF; stroke: #4B3FE3; stroke-dasharray: 5 3; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="560" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="40" width="656" height="254" rx="12"/>
+  <text class="th" x="52" y="66">前端 DSL：把一次 LLM 调用写进程序的控制流里</text>
+
+  <rect class="code" x="52" y="86" width="392" height="180" rx="8"/>
+  <text class="tc" x="70" y="112">s += ctx                     # 公共前缀</text>
+  <text class="tc" x="70" y="140">forks = fork(s, num=3)       # 复制 3 份状态</text>
+  <text class="tc" x="70" y="168">for f in forks: f += gen(f)  # 各自采样生成</text>
+  <text class="tc" x="70" y="196">join(forks)                  # 合并回一条路径</text>
+  <text class="tc" x="70" y="224">best = select(forks)         # 投票 / 打分选优</text>
+  <text class="ts" x="70" y="250">@sgl.function 装饰 → 整段程序作为一个请求提交给 Scheduler</text>
+
+  <path class="arr" d="M448 106 H486" marker-end="url(#a)"/>
+  <rect class="node-brand" x="490" y="88" width="170" height="36" rx="8"/>
+  <text class="td" x="575" y="111" text-anchor="middle">gen：生成并可指定停止条件</text>
+
+  <path class="arr" d="M448 134 H486" marker-end="url(#a)"/>
+  <rect class="node-brand" x="490" y="116" width="170" height="36" rx="8"/>
+  <text class="td" x="575" y="139" text-anchor="middle">fork：并行分支</text>
+
+  <path class="arr" d="M448 162 H486" marker-end="url(#a)"/>
+  <rect class="node-brand" x="490" y="144" width="170" height="36" rx="8"/>
+  <text class="td" x="575" y="167" text-anchor="middle">分支各自的私有生成</text>
+
+  <path class="arr" d="M448 190 H486" marker-end="url(#a)"/>
+  <rect class="node-brand" x="490" y="172" width="170" height="36" rx="8"/>
+  <text class="td" x="575" y="195" text-anchor="middle">join：收敛回单一路径</text>
+
+  <path class="arr" d="M448 218 H486" marker-end="url(#a)"/>
+  <rect class="node-brand" x="490" y="200" width="170" height="36" rx="8"/>
+  <text class="td" x="575" y="223" text-anchor="middle">select：决策 / 自我一致性</text>
+
+  <rect class="panel" x="32" y="314" width="656" height="222" rx="12"/>
+  <text class="th" x="52" y="340">fork 为什么便宜：分叉点之前一次都不重算</text>
+
+  <rect class="hit" x="52" y="372" width="190" height="88" rx="8"/>
+  <text class="tw" x="147" y="404" text-anchor="middle">公共前缀 KV</text>
+  <text class="tw" x="147" y="426" text-anchor="middle">已在 RadixCache 中</text>
+  <text class="tw" x="147" y="444" text-anchor="middle">所有分支共享同一份</text>
+
+  <path class="arr" d="M242 398 H268 V382" marker-end="url(#a)"/>
+  <path class="arr" d="M242 416 H276" marker-end="url(#a)"/>
+  <path class="arr" d="M242 434 H268 V450" marker-end="url(#a)"/>
+
+  <rect class="miss" x="280" y="362" width="384" height="40" rx="8"/>
+  <text class="td" x="472" y="387" text-anchor="middle">分支 1 · 只算私有 token</text>
+  <rect class="miss" x="280" y="412" width="384" height="40" rx="8"/>
+  <text class="td" x="472" y="437" text-anchor="middle">分支 2 · 只算私有 token</text>
+  <rect class="miss" x="280" y="462" width="384" height="40" rx="8"/>
+  <text class="td" x="472" y="487" text-anchor="middle">分支 3 · 只算私有 token</text>
+
+  <text class="ts" x="52" y="522">实心块 = 已缓存可复用 · 虚线框 = 本次真正要 forward 的部分</text>
+</svg>

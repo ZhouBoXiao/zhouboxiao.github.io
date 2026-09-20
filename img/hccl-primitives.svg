@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420" role="img" aria-label="五种集合通信原语的数据流模式对比">
+  <style>
+    .t { fill: #171717; font: 400 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 12px "SF Mono", Consolas, monospace; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arr2 { stroke: #52525B; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="p1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="p2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="420" fill="#FFFFFF"/>
+
+  <!-- AllReduce -->
+  <rect x="24" y="24" width="210" height="180" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="44" y="50" style="font-weight:500;">AllReduce</text>
+  <text class="ts" x="44" y="70">全员归约，全员持有</text>
+  <circle cx="129" cy="130" r="20" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+  <text class="mono" x="129" y="135" text-anchor="middle">R0</text>
+  <circle cx="79" cy="165" r="20" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+  <text class="mono" x="79" y="170" text-anchor="middle">R1</text>
+  <circle cx="179" cy="165" r="20" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+  <text class="mono" x="179" y="170" text-anchor="middle">R2</text>
+  <path class="arr" d="M114 122 L94 150" marker-end="url(#p1)"/>
+  <path class="arr" d="M144 122 L164 150" marker-end="url(#p1)"/>
+  <path class="arr" d="M99 172 L159 172" marker-end="url(#p1)"/>
+  <text class="ts" x="129" y="195" text-anchor="middle">A+B+C → 所有人</text>
+
+  <!-- AllGather -->
+  <rect x="255" y="24" width="210" height="180" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="275" y="50" style="font-weight:500;">AllGather</text>
+  <text class="ts" x="275" y="70">分片汇聚成完整</text>
+  <circle cx="360" cy="130" r="20" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="360" y="135" text-anchor="middle">A</text>
+  <circle cx="310" cy="165" r="20" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="310" y="170" text-anchor="middle">B</text>
+  <circle cx="410" cy="165" r="20" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="410" y="170" text-anchor="middle">C</text>
+  <path class="arr2" d="M325 160 L350 140" marker-end="url(#p2)"/>
+  <path class="arr2" d="M395 160 L370 140" marker-end="url(#p2)"/>
+  <path class="arr2" d="M330 172 L390 172" marker-end="url(#p2)"/>
+  <text class="ts" x="360" y="195" text-anchor="middle">A,B,C → 所有人</text>
+
+  <!-- ReduceScatter -->
+  <rect x="486" y="24" width="210" height="180" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="506" y="50" style="font-weight:500;">ReduceScatter</text>
+  <text class="ts" x="506" y="70">归约后各持一片</text>
+  <circle cx="591" cy="130" r="20" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="591" y="135" text-anchor="middle">ABC</text>
+  <circle cx="541" cy="165" r="20" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="541" y="170" text-anchor="middle">ABC</text>
+  <circle cx="641" cy="165" r="20" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="641" y="170" text-anchor="middle">ABC</text>
+  <path class="arr2" d="M556 160 L581 140" marker-end="url(#p2)"/>
+  <path class="arr2" d="M626 160 L601 140" marker-end="url(#p2)"/>
+  <path class="arr2" d="M561 172 L621 172" marker-end="url(#p2)"/>
+  <text class="ts" x="591" y="195" text-anchor="middle">A+B+C → 各拿一片</text>
+
+  <!-- Broadcast -->
+  <rect x="24" y="222" width="210" height="172" rx="12" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="t" x="44" y="248" style="font-weight:500;">Broadcast</text>
+  <text class="ts" x="44" y="268">一对多分发</text>
+  <circle cx="129" cy="312" r="20" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+  <text class="mono" x="129" y="317" text-anchor="middle">S</text>
+  <circle cx="79" cy="362" r="19" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="79" y="367" text-anchor="middle">R1</text>
+  <circle cx="179" cy="362" r="19" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="179" y="367" text-anchor="middle">R2</text>
+  <circle cx="129" cy="382" r="17" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+  <text class="mono" x="129" y="387" text-anchor="middle">R3</text>
+  <path class="arr" d="M115 305 L92 344" marker-end="url(#p1)"/>
+  <path class="arr" d="M143 305 L166 344" marker-end="url(#p1)"/>
+  <path class="arr" d="M129 333 L129 362" marker-end="url(#p1)"/>
+
+  <!-- AllToAll -->
+  <rect x="255" y="222" width="441" height="172" rx="12" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+  <text class="t" x="275" y="248" style="font-weight:500;">AllToAll</text>
+  <text class="ts" x="275" y="268" style="fill:#1A1759;">多对多全交换 · MoE 专家分发 / 收集的主战场</text>
+  <g>
+    <rect x="300" y="292" width="46" height="26" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="323" y="309" text-anchor="middle">R0</text>
+    <rect x="300" y="332" width="46" height="26" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="323" y="349" text-anchor="middle">R1</text>
+    <rect x="300" y="372" width="46" height="26" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="323" y="389" text-anchor="middle">R2</text>
+  </g>
+  <g>
+    <rect x="600" y="292" width="46" height="26" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="623" y="309" text-anchor="middle">R0</text>
+    <rect x="600" y="332" width="46" height="26" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="623" y="349" text-anchor="middle">R1</text>
+    <rect x="600" y="372" width="46" height="26" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="623" y="389" text-anchor="middle">R2</text>
+  </g>
+  <path class="arr" d="M346 305 L600 305" marker-end="url(#p1)"/>
+  <path class="arr" d="M346 345 L600 345" marker-end="url(#p1)"/>
+  <path class="arr" d="M346 385 L600 385" marker-end="url(#p1)"/>
+  <path class="arr" d="M346 312 L600 332" marker-end="url(#p1)"/>
+  <path class="arr" d="M346 338 L600 318" marker-end="url(#p1)"/>
+  <text class="ts" x="473" y="325" text-anchor="middle">每对 rank 之间直连投递</text>
+  <text class="ts" x="473" y="366" text-anchor="middle">通信量与 rank 数强相关，单机看不出瓶颈</text>
+
+  <text class="ts" x="24" y="412">HCCL 对每个原语都按数据量 / 拓扑 / rank 数动态选路，而非固定一种算法</text>
+</svg>

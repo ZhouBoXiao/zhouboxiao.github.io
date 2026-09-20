@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 620" width="720" height="620" role="img" aria-label="SGLang 运行时架构：前端接入、TokenizerManager、Scheduler 进程与 GPU TPWorker">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tsb { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #171717; font: 500 12px "JetBrains Mono", Consolas, Menlo, monospace; }
+    .bt { fill: #1A1759; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .panel-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="620" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="32" width="656" height="92" rx="12"/>
+  <rect class="node" x="60" y="52" width="260" height="52" rx="8"/>
+  <text class="th" x="190" y="76" text-anchor="middle">HTTP / OpenAI 兼容接口</text>
+  <text class="ts" x="190" y="94" text-anchor="middle">普通请求入口</text>
+  <rect class="node-brand" x="400" y="52" width="260" height="52" rx="8"/>
+  <text class="bt" x="530" y="76" text-anchor="middle">SGLang 前端 DSL</text>
+  <text class="tsb" x="530" y="94" text-anchor="middle">gen / fork / select / join</text>
+
+  <path class="arr" d="M360 124 V146" marker-end="url(#a)"/>
+
+  <rect class="node" x="200" y="152" width="320" height="56" rx="8"/>
+  <text class="th" x="360" y="176" text-anchor="middle">TokenizerManager</text>
+  <text class="ts" x="360" y="196" text-anchor="middle">分词 · 请求接入 · 流式返回</text>
+
+  <path class="arr" d="M360 208 V230" marker-end="url(#a)"/>
+  <text class="ts" x="372" y="226">ZMQ</text>
+
+  <rect class="panel-brand" x="112" y="236" width="496" height="152" rx="12"/>
+  <text class="bt" x="136" y="262">Scheduler 进程（CPU 侧，不占 GPU）</text>
+  <text class="tsb" x="136" y="290">① 收集请求 → 组装成一个 ScheduleBatch</text>
+  <text class="tsb" x="136" y="316">② RadixCache 前缀匹配 · 计算命中长度</text>
+  <text class="tsb" x="136" y="342">③ 缓存感知排序 · LRU 叶子驱逐</text>
+  <rect class="node-brand" x="136" y="356" width="448" height="0" rx="0"/>
+
+  <path class="arr" d="M360 388 V410" marker-end="url(#a)"/>
+  <text class="ts" x="372" y="404">ZMQ · ScheduleBatch</text>
+
+  <rect class="panel" x="32" y="416" width="656" height="144" rx="12"/>
+  <text class="th" x="52" y="442">GPU · TPWorker 进程组</text>
+
+  <rect class="node-brand" x="60" y="458" width="130" height="68" rx="8"/>
+  <text class="bt" x="125" y="484" text-anchor="middle">Rank 0</text>
+  <text class="tsb" x="125" y="504" text-anchor="middle">兼指挥 · 接 Scheduler</text>
+  <rect class="node" x="210" y="458" width="130" height="68" rx="8"/>
+  <text class="th" x="275" y="484" text-anchor="middle">Rank 1</text>
+  <text class="ts" x="275" y="504" text-anchor="middle">执行前向</text>
+  <rect class="node" x="360" y="458" width="130" height="68" rx="8"/>
+  <text class="th" x="425" y="484" text-anchor="middle">Rank 2</text>
+  <text class="ts" x="425" y="504" text-anchor="middle">执行前向</text>
+  <rect class="node" x="510" y="458" width="130" height="68" rx="8"/>
+  <text class="th" x="575" y="484" text-anchor="middle">Rank 3</text>
+  <text class="ts" x="575" y="504" text-anchor="middle">执行前向</text>
+
+  <path class="arr" d="M190 492 H206" marker-end="url(#a)"/>
+  <path class="arr" d="M340 492 H356" marker-end="url(#a)"/>
+  <path class="arr" d="M490 492 H506" marker-end="url(#a)"/>
+  <text class="ts" x="52" y="546">NCCL / HCCL：Rank 0 广播 batch 与元信息，层内并行结果 all-reduce 合并</text>
+
+  <text class="ts" x="52" y="586">调度与组批全部在 CPU 侧完成，GPU 只负责前向与采样 —— 两者互不抢占</text>
+</svg>

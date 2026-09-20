@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="FCFS 调度与缓存感知调度的对比">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .grpP { fill: #4B3FE3; }
+    .grpQ { fill: #A9AEFF; }
+    .lost { fill: #FFFFFF; stroke: #52525B; stroke-dasharray: 5 4; }
+    .axis { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="40" width="656" height="198" rx="12"/>
+  <text class="th" x="52" y="66">FCFS · 严格按到达顺序执行</text>
+  <text class="ts" x="52" y="92">同前缀的三个请求被中间的差异请求拆散</text>
+
+  <text class="ts" x="60" y="136">R1</text>
+  <rect class="grpP" x="60" y="146" width="110" height="44" rx="6"/>
+  <text class="tw" x="115" y="173" text-anchor="middle">前缀 P</text>
+  <rect class="grpQ" x="194" y="146" width="110" height="44" rx="6"/>
+  <text class="th" x="249" y="173" text-anchor="middle">前缀 Q</text>
+  <rect class="grpP" x="328" y="146" width="110" height="44" rx="6"/>
+  <text class="tw" x="383" y="173" text-anchor="middle">前缀 P</text>
+  <rect class="grpP" x="462" y="146" width="110" height="44" rx="6"/>
+  <text class="tw" x="517" y="173" text-anchor="middle">前缀 P</text>
+
+  <path class="axis" d="M60 204 H580" marker-end="url(#a)"/>
+  <text class="ts" x="60" y="222">执行时间 →</text>
+
+  <text class="ts" x="52" y="150">R2/R4 与 R1 共享前缀 P，但被 Q 隔开</text>
+  <text class="ts" x="52" y="170">轮到它们时 P 的 KV 可能已被驱逐 → 重新完整 prefill</text>
+  <text class="ts" x="52" y="230">同一段前缀被重复算了多次，TTFT 与算力双双浪费</text>
+
+  <rect class="panel" x="32" y="258" width="656" height="206" rx="12"/>
+  <text class="th" x="52" y="284">Cache-aware · 按前缀命中长度排优先级</text>
+  <text class="ts" x="52" y="310">把共享同一前缀的请求聚拢处理，让它始终保持「热」</text>
+
+  <rect class="grpP" x="60" y="336" width="110" height="44" rx="6"/>
+  <text class="tw" x="115" y="363" text-anchor="middle">前缀 P</text>
+  <rect class="grpP" x="194" y="336" width="110" height="44" rx="6"/>
+  <text class="tw" x="249" y="363" text-anchor="middle">前缀 P</text>
+  <rect class="grpP" x="328" y="336" width="110" height="44" rx="6"/>
+  <text class="tw" x="383" y="363" text-anchor="middle">前缀 P</text>
+  <rect class="grpQ" x="462" y="336" width="110" height="44" rx="6"/>
+  <text class="th" x="517" y="363" text-anchor="middle">前缀 Q</text>
+
+  <path class="axis" d="M60 394 H580" marker-end="url(#a)"/>
+  <text class="ts" x="60" y="412">执行时间 →</text>
+
+  <text class="ts" x="52" y="440">调度器给等待队列排序：命中越长优先级越高，趁 P 还在缓存里把三个请求连着跑完</text>
+  <text class="ts" x="52" y="460">收益：重复 prefill 大幅减少、总吞吐提升；代价：单个请求的等待顺序不再严格公平</text>
+</svg>

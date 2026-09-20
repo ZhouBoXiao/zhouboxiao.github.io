@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 660" width="720" height="660" role="img" aria-label="RadixAttention 前缀树结构：节点共享与 match_prefix 命中">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #171717; font: 500 12px "JetBrains Mono", Consolas, Menlo, monospace; }
+    .bt { fill: #1A1759; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arxiv { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .node-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .hit { fill: #4B3FE3; }
+    .miss { fill: #FFFFFF; stroke: #4B3FE3; stroke-dasharray: 5 3; }
+    .brace { stroke: #52525B; stroke-width: 1.5; fill: none; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="660" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="40" width="656" height="352" rx="12"/>
+  <text class="th" x="52" y="66">RadixAttention：KV 缓存按 token 内容组织成一棵前缀树</text>
+
+  <rect class="node" x="320" y="88" width="80" height="30" rx="15"/>
+  <text class="ts" x="360" y="108" text-anchor="middle">树根</text>
+  <path class="arr" d="M360 118 V130" marker-end="url(#a)"/>
+
+  <rect class="node-brand" x="200" y="132" width="320" height="48" rx="8"/>
+  <text class="bt" x="360" y="156" text-anchor="middle">You are a helpful assistant</text>
+  <text class="ts" x="360" y="172" text-anchor="middle">系统提示 · 被所有请求共享 · KV 只算一次</text>
+
+  <path class="arr" d="M360 180 V200 H190 V208" marker-end="url(#a)"/>
+  <path class="arr" d="M360 180 V200 H530 V208" marker-end="url(#a)"/>
+
+  <rect class="node" x="60" y="210" width="260" height="48" rx="8"/>
+  <text class="th" x="190" y="232" text-anchor="middle">Q1 / A1</text>
+  <text class="ts" x="190" y="250" text-anchor="middle">用户 A 的第一轮问答</text>
+  <rect class="node" x="400" y="210" width="260" height="48" rx="8"/>
+  <text class="th" x="530" y="232" text-anchor="middle">Q1′ / A1′</text>
+  <text class="ts" x="530" y="250" text-anchor="middle">用户 B 的第一轮问答</text>
+
+  <path class="arr" d="M190 258 V278 H115 V294" marker-end="url(#a)"/>
+  <path class="arr" d="M190 258 V278 H305 V294" marker-end="url(#a)"/>
+  <path class="arr" d="M530 258 V294" marker-end="url(#a)"/>
+
+  <rect class="node" x="40" y="296" width="150" height="44" rx="8"/>
+  <text class="th" x="115" y="324" text-anchor="middle">Q2</text>
+  <rect class="node" x="230" y="296" width="150" height="44" rx="8"/>
+  <text class="th" x="305" y="324" text-anchor="middle">Q2″</text>
+  <rect class="node" x="430" y="296" width="200" height="44" rx="8"/>
+  <text class="th" x="530" y="324" text-anchor="middle">Q2′</text>
+
+  <text class="ts" x="52" y="366">每个节点 = 一段连续 token + 它自己的一组物理 KV 块</text>
+  <text class="ts" x="52" y="384">从树根到叶子的每一条路径 = 一条完整序列的历史</text>
+
+  <rect class="panel" x="32" y="412" width="656" height="216" rx="12"/>
+  <text class="th" x="52" y="438">新请求到达：match_prefix</text>
+  <text class="ts" x="52" y="466">请求 token 序列</text>
+
+  <rect class="hit" x="52" y="478" width="56" height="36" rx="6"/>
+  <text class="tw" x="80" y="501" text-anchor="middle">t1</text>
+  <rect class="hit" x="118" y="478" width="56" height="36" rx="6"/>
+  <text class="tw" x="146" y="501" text-anchor="middle">t2</text>
+  <rect class="hit" x="184" y="478" width="56" height="36" rx="6"/>
+  <text class="tw" x="212" y="501" text-anchor="middle">t3</text>
+  <rect class="hit" x="250" y="478" width="56" height="36" rx="6"/>
+  <text class="tw" x="278" y="501" text-anchor="middle">t4</text>
+  <rect class="hit" x="316" y="478" width="56" height="36" rx="6"/>
+  <text class="tw" x="344" y="501" text-anchor="middle">t5</text>
+  <rect class="miss" x="382" y="478" width="56" height="36" rx="6"/>
+  <text class="tc" x="410" y="501" text-anchor="middle" style="fill:#4B3FE3;">t6</text>
+  <rect class="miss" x="448" y="478" width="56" height="36" rx="6"/>
+  <text class="tc" x="476" y="501" text-anchor="middle" style="fill:#4B3FE3;">t7</text>
+  <rect class="miss" x="514" y="478" width="56" height="36" rx="6"/>
+  <text class="tc" x="542" y="501" text-anchor="middle" style="fill:#4B3FE3;">t8</text>
+
+  <path class="brace" d="M52 528 V538 H368 V528"/>
+  <path class="brace" d="M382 528 V538 H570 V528"/>
+  <text class="ts" x="210" y="558" text-anchor="middle">命中：KV 直接复用</text>
+  <text class="ts" x="476" y="558" text-anchor="middle">未命中：才需要计算</text>
+
+  <text class="ts" x="52" y="592">命中部分跳过 prefill，只为最后 3 个 token 新建树节点</text>
+  <text class="ts" x="52" y="610">这就是多轮对话越聊越快、同一 system prompt 只算一次的来源</text>
+</svg>

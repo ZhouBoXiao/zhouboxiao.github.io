@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="720" height="560" role="img" aria-label="Ring AllReduce 两阶段流程">
+  <style>
+    .t { fill: #171717; font: 400 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 13px "SF Mono", Consolas, monospace; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.8; stroke-linecap: round; fill: none; }
+    .arr-dim { stroke: rgba(23,23,23,0.25); stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="ab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="560" fill="#FFFFFF"/>
+
+  <text class="t" x="40" y="34" style="font-weight:500;">阶段一 · Reduce-Scatter：每个 rank 归约出一份完整分片</text>
+
+  <g>
+    <rect x="70" y="60" width="90" height="40" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+    <text class="mono" x="115" y="85" text-anchor="middle">R0</text>
+    <rect x="290" y="60" width="90" height="40" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+    <text class="mono" x="335" y="85" text-anchor="middle">R1</text>
+    <rect x="510" y="60" width="90" height="40" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+    <text class="mono" x="555" y="85" text-anchor="middle">R2</text>
+
+    <path class="arr" d="M160 72 L284 72" marker-end="url(#ab)"/>
+    <text class="ts" x="222" y="64" text-anchor="middle">切分 A</text>
+    <path class="arr" d="M380 80 L504 80" marker-end="url(#ab)"/>
+    <text class="ts" x="442" y="72" text-anchor="middle">切分 B</text>
+    <path class="arr-detail" d="M555 104 L555 128 L115 128 L115 104" stroke="#4B3FE3" stroke-width="1.8" stroke-linecap="round" fill="none" stroke-dasharray="5 5" marker-end="url(#ab)"/>
+    <text class="ts" x="335" y="146" text-anchor="middle">切分 C 绕环一圈回到 R0</text>
+  </g>
+
+  <rect x="40" y="164" width="640" height="14" rx="7" fill="#F7F7F8"/>
+  <text class="ts" x="40" y="200">每步沿环传递一份分片，经过的 rank 立即累加。N-1 步后，每个 rank 手上一份完整归约分片。</text>
+
+  <text class="t" x="40" y="248" style="font-weight:500;">阶段二 · All-Gather：各分片绕环广播，所有人拿齐</text>
+
+  <g>
+    <rect x="70" y="274" width="90" height="40" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+    <text class="mono" x="115" y="299" text-anchor="middle">R0</text>
+    <rect x="290" y="274" width="90" height="40" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+    <text class="mono" x="335" y="299" text-anchor="middle">R1</text>
+    <rect x="510" y="274" width="90" height="40" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+    <text class="mono" x="555" y="299" text-anchor="middle">R2</text>
+
+    <path class="arr" d="M160 286 L284 286" marker-end="url(#ab)"/>
+    <path class="arr" d="M380 294 L504 294" marker-end="url(#ab)"/>
+    <path d="M555 318 L555 342 L115 342 L115 318" stroke="#4B3FE3" stroke-width="1.8" stroke-linecap="round" fill="none" stroke-dasharray="5 5" marker-end="url(#ab)"/>
+    <text class="ts" x="335" y="360" text-anchor="middle">分片逐跳复制，R0 补齐 B / C，R1 补齐 A / C，R2 补齐 A / B</text>
+  </g>
+
+  <text class="t" x="40" y="404" style="font-weight:500;">结果：所有 rank 持有完全一致的归约张量</text>
+  <g>
+    <rect x="70" y="422" width="140" height="38" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+    <text class="mono" x="140" y="446" text-anchor="middle">R0 · A+B+C</text>
+    <rect x="290" y="422" width="140" height="38" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+    <text class="mono" x="360" y="446" text-anchor="middle">R1 · A+B+C</text>
+    <rect x="510" y="422" width="140" height="38" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+    <text class="mono" x="580" y="446" text-anchor="middle">R2 · A+B+C</text>
+  </g>
+
+  <text class="ts" x="40" y="494">通信量 ≈ 2×(N-1)/N×S ≈ 2S，与 rank 数基本无关</text>
+  <text class="ts" x="40" y="518">代价：2×(N-1) 步串行，N 越大延迟越高 → 适合大张量、中等规模</text>
+  <text class="ts" x="40" y="542">HCCL 在跨机、拓扑不规整时倾向 Ring</text>
+</svg>

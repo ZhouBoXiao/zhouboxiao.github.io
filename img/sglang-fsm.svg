@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="720" height="560" role="img" aria-label="压缩状态机约束解码：状态压缩与 token 掩码采样流程">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tilabel { fill: #52525B; font: 500 12px "JetBrains Mono", Consolas, Menlo, monospace; }
+    .bt { fill: #1A1759; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .panel-brand { fill: #F2F7FF; stroke: #4B3FE3; }
+    .node { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); }
+    .st { fill: #FFFFFF; stroke: #52525B; stroke-width: 1.5; }
+    .st-brand { fill: #4B3FE3; }
+    .st-merged { fill: #F2F7FF; stroke: #4B3FE3; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="560" fill="#FFFFFF"/>
+
+  <rect class="panel" x="32" y="40" width="656" height="272" rx="12"/>
+  <text class="th" x="52" y="66">压缩状态机：合并等价状态与安全跳转</text>
+
+  <text class="th" x="52" y="102">朴素 FSM · 每生成一个 token 推进一次</text>
+  <text class="ts" x="52" y="122">约束目标：产出 {"key": 1} 这样的合法 JSON 片段</text>
+
+  <circle class="st" cx="80" cy="166" r="22"/>
+  <text class="ts" x="80" y="171" text-anchor="middle">q0</text>
+  <path class="arr" d="M102 166 H152" marker-end="url(#a)"/>
+  <text class="tilabel" x="127" y="152" text-anchor="middle">{</text>
+  <circle class="st" cx="180" cy="166" r="22"/>
+  <text class="ts" x="180" y="171" text-anchor="middle">q1</text>
+  <path class="arr" d="M202 166 H252" marker-end="url(#a)"/>
+  <text class="tilabel" x="227" y="152" text-anchor="middle">"</text>
+  <circle class="st" cx="280" cy="166" r="22"/>
+  <text class="ts" x="280" y="171" text-anchor="middle">q2</text>
+  <path class="arr" d="M302 166 H352" marker-end="url(#a)"/>
+  <text class="tilabel" x="327" y="152" text-anchor="middle">k</text>
+  <circle class="st" cx="380" cy="166" r="22"/>
+  <text class="ts" x="380" y="171" text-anchor="middle">q3</text>
+  <path class="arr" d="M402 166 H452" marker-end="url(#a)"/>
+  <text class="tilabel" x="427" y="152" text-anchor="middle">e</text>
+  <circle class="st" cx="480" cy="166" r="22"/>
+  <text class="ts" x="480" y="171" text-anchor="middle">q4</text>
+  <path class="arr" d="M502 166 H548" marker-end="url(#a)"/>
+  <text class="tilabel" x="525" y="152" text-anchor="middle">…</text>
+  <text class="ts" x="566" y="171">后续还要若干步</text>
+  <text class="ts" x="52" y="212">代价：推进 N 次状态，每次都要做一次词表级掩码</text>
+
+  <text class="th" x="52" y="248">压缩后 · 一次跨过多个 token</text>
+  <rect class="st-merged" x="52" y="264" width="200" height="36" rx="8"/>
+  <text class="bt" x="152" y="287" text-anchor="middle">合并入口 q_entry</text>
+  <path class="arr" d="M252 282 H336" marker-end="url(#a)"/>
+  <text class="tilabel" x="294" y="272" text-anchor="middle">一次跨越</text>
+  <rect class="st-merged" x="336" y="264" width="200" height="36" rx="8"/>
+  <text class="bt" x="436" y="287" text-anchor="middle">合并态 q_merged</text>
+  <text class="ts" x="556" y="287">多步唯一路径一次跑完</text>
+
+  <rect class="panel" x="32" y="328" width="656" height="200" rx="12"/>
+  <text class="th" x="52" y="354">解码一步：状态机 → 允许集合 → 掩码 → 采样</text>
+
+  <rect class="node" x="52" y="376" width="130" height="60" rx="8"/>
+  <text class="th" x="117" y="402" text-anchor="middle">当前状态</text>
+  <text class="ts" x="117" y="422" text-anchor="middle">FSM 推进到 q</text>
+
+  <path class="arr" d="M182 406 H210" marker-end="url(#a)"/>
+
+  <rect class="node" x="214" y="376" width="130" height="60" rx="8"/>
+  <text class="th" x="279" y="402" text-anchor="middle">允许 token 集</text>
+  <text class="ts" x="279" y="422" text-anchor="middle">远小于完整词表</text>
+
+  <path class="arr" d="M344 406 H372" marker-end="url(#a)"/>
+
+  <rect class="panel-brand" x="376" y="376" width="130" height="60" rx="8"/>
+  <text class="bt" x="441" y="402" text-anchor="middle">logits 掩码</text>
+  <text class="ts" x="441" y="422" text-anchor="middle" style="fill:#3F3A8C;">非法位置 → −inf</text>
+
+  <path class="arr" d="M506 406 H534" marker-end="url(#a)"/>
+
+  <rect class="node" x="538" y="376" width="130" height="60" rx="8"/>
+  <text class="th" x="603" y="402" text-anchor="middle">softmax 采样</text>
+  <text class="ts" x="603" y="422" text-anchor="middle">结果必然合法</text>
+
+  <text class="ts" x="52" y="466">收益：唯一路径被合并成一次跳转，状态推进与正则匹配次数大幅下降</text>
+  <text class="ts" x="52" y="490">代价：被 mask 掉的分支改变了 KV 的复用关系，部分场景需调整 RadixAttention 的共享粒度</text>
+</svg>

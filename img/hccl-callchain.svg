@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" role="img" aria-label="一次 AllReduce 的完整调用链路">
+  <style>
+    .t { fill: #171717; font: 400 13.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 12px "SF Mono", Consolas, monospace; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="c1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="400" fill="#FFFFFF"/>
+
+  <g>
+    <rect x="60" y="24" width="480" height="42" rx="9" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+    <circle cx="82" cy="45" r="12" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="82" y="50" text-anchor="middle">1</text>
+    <text class="t" x="106" y="43">框架层：dist.all_reduce(tensor)</text>
+    <text class="ts" x="106" y="59">PyTorch c10d ProcessGroup → torch_npu HCCL 后端翻译语义</text>
+  </g>
+
+  <g>
+    <rect x="60" y="80" width="480" height="42" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+    <circle cx="82" cy="101" r="12" fill="#FFFFFF" stroke="#4B3FE3"/>
+    <text class="mono" x="82" y="106" text-anchor="middle">2</text>
+    <text class="t" x="106" y="99">HCCL Executor：按数据量 / 拓扑 / rank 数选算法</text>
+    <text class="ts" x="106" y="115" style="fill:#1A1759;">Ring · HD · 多环并行 · 树形</text>
+  </g>
+
+  <g>
+    <rect x="60" y="136" width="480" height="42" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.6"/>
+    <circle cx="82" cy="157" r="12" fill="#FFFFFF" stroke="#4B3FE3"/>
+    <text class="mono" x="82" y="162" text-anchor="middle">3</text>
+    <text class="t" x="106" y="155">切分与编排：切片 + 规划步序</text>
+    <text class="ts" x="106" y="171" style="fill:#1A1759;">每片的目标 rank 与发送顺序</text>
+  </g>
+
+  <g>
+    <rect x="60" y="192" width="480" height="52" rx="9" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+    <circle cx="82" cy="218" r="12" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="82" y="223" text-anchor="middle">4</text>
+    <text class="t" x="106" y="211">下发搬运任务到硬件引擎</text>
+    <text class="ts" x="106" y="230">机内 → SDMA（HCCS / PCIe）　跨机 → RDMA（RoCE）</text>
+  </g>
+
+  <g>
+    <rect x="60" y="258" width="480" height="42" rx="9" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+    <circle cx="82" cy="279" r="12" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="82" y="284" text-anchor="middle">5</text>
+    <text class="t" x="106" y="277">按步序执行，步间依赖同步</text>
+    <text class="ts" x="106" y="293">显存地址已在通信域初始化时完成注册</text>
+  </g>
+
+  <g>
+    <rect x="60" y="314" width="480" height="42" rx="9" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+    <circle cx="82" cy="335" r="12" fill="#FFFFFF" stroke="rgba(23,23,23,0.2)"/>
+    <text class="mono" x="82" y="340" text-anchor="middle">6</text>
+    <text class="t" x="106" y="333">结果回流框架，继续后续计算</text>
+    <text class="ts" x="106" y="349">所有 rank 持有一致的归约张量</text>
+  </g>
+
+  <path class="arr" d="M300 66 L300 76" marker-end="url(#c1)"/>
+  <path class="arr" d="M300 122 L300 132" marker-end="url(#c1)"/>
+  <path class="arr" d="M300 178 L300 188" marker-end="url(#c1)"/>
+  <path class="arr" d="M300 244 L300 254" marker-end="url(#c1)"/>
+  <path class="arr" d="M300 300 L300 310" marker-end="url(#c1)"/>
+
+  <rect x="564" y="80" width="132" height="114" rx="10" fill="#FFF1F2" stroke="rgba(159,18,57,0.25)"/>
+  <text class="ts" x="630" y="102" text-anchor="middle" style="fill:#9F1239; font-weight:500;">瓶颈定位</text>
+  <text class="ts" x="576" y="126">步骤 1 → 建链失败</text>
+  <text class="ts" x="576" y="146">步骤 2 → 算法不适配</text>
+  <text class="ts" x="576" y="166">步骤 4 → 链路或网卡</text>
+  <text class="ts" x="576" y="186">耗时与数据量脱钩</text>
+</svg>
