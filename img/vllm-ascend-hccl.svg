@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 640" width="720" height="640" role="img" aria-label="HCCL 软硬件原理与 Server 间通信算法">
+  <style>
+    .th { fill: #171717; font: 600 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .brand-t { fill: #1A1759; }
+    .arr { stroke: #52525B; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .arr2 { stroke: #3C2ECA; stroke-width: 1.8; stroke-dasharray: 6 4; stroke-linecap: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.1); }
+    .srv { fill: #FFFFFF; stroke: #171717; }
+    .npu { fill: #EFEFF2; stroke: rgba(23,23,23,0.15); }
+    .lbl { fill: #F5F1FF; stroke: #3C2ECA; }
+    .algo { fill: #FFFFFF; stroke: rgba(23,23,23,0.16); }
+    .strip { fill: #EFEFF2; stroke: rgba(23,23,23,0.12); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#3C2ECA"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="640" fill="#FFFFFF"/>
+
+  <text class="th" x="360" y="26" text-anchor="middle">HCCL 软硬件原理：分级通信</text>
+
+  <rect class="srv" x="52" y="46" width="180" height="74" rx="8"/>
+  <text class="tb" x="142" y="64" text-anchor="middle">Server A</text>
+  <rect class="npu" x="62" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="102" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="142" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="182" y="74" width="36" height="34" rx="4"/>
+
+  <rect class="srv" x="270" y="46" width="180" height="74" rx="8"/>
+  <text class="tb" x="360" y="64" text-anchor="middle">Server B</text>
+  <rect class="npu" x="280" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="320" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="360" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="400" y="74" width="36" height="34" rx="4"/>
+
+  <rect class="srv" x="488" y="46" width="180" height="74" rx="8"/>
+  <text class="tb" x="578" y="64" text-anchor="middle">Server C</text>
+  <rect class="npu" x="498" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="538" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="578" y="74" width="36" height="34" rx="4"/>
+  <rect class="npu" x="618" y="74" width="36" height="34" rx="4"/>
+
+  <path class="arr" d="M92 108 V128" marker-end="url(#a)"/>
+  <path class="arr" d="M112 108 V128" marker-end="url(#a)"/>
+  <path class="arr" d="M132 108 V128" marker-end="url(#a)"/>
+
+  <path class="arr2" d="M360 128 H60" />
+  <path class="arr2" d="M360 128 H660" />
+  <text class="ts" x="360" y="150" text-anchor="middle">Server 间 · RoCE 高速网络（超节点 SuperPod）</text>
+
+  <rect class="lbl" x="52" y="168" width="292" height="26" rx="6"/>
+  <text class="tw" x="198" y="186" text-anchor="middle">第一级：Server 内归约（HCCS 板内高速互联）</text>
+  <rect class="lbl" x="376" y="168" width="292" height="26" rx="6"/>
+  <text class="tw" x="522" y="186" text-anchor="middle">第二级：跨 Server 归约（避免慢速跨机链路浪费板内带宽）</text>
+
+  <text class="th" x="360" y="224" text-anchor="middle">Server 间通信算法（HCCL 自适应选择 · 也可 HCCL_ALGO 指定）</text>
+
+  <rect class="algo" x="52" y="238" width="100" height="120" rx="8"/>
+  <text class="th brand-t" x="102" y="258" text-anchor="middle">Ring</text>
+  <text class="ts" x="102" y="278" text-anchor="middle">步数·线性</text>
+  <text class="ts" x="102" y="294" text-anchor="middle">时延偏高</text>
+  <text class="ts" x="102" y="318" text-anchor="middle">Server 少、</text>
+  <text class="ts" x="102" y="334" text-anchor="middle">数据量小、</text>
+  <text class="ts" x="102" y="350" text-anchor="middle">抗网络拥塞</text>
+
+  <rect class="algo" x="168" y="238" width="100" height="120" rx="8"/>
+  <text class="th brand-t" x="218" y="258" text-anchor="middle">RHD</text>
+  <text class="ts" x="218" y="278" text-anchor="middle">递归二分倍增</text>
+  <text class="ts" x="218" y="294" text-anchor="middle">步数·对数</text>
+  <text class="ts" x="218" y="312" text-anchor="middle">时延低</text>
+  <text class="ts" x="218" y="330" text-anchor="middle">适合 2 的整数次幂</text>
+  <text class="ts" x="218" y="348" text-anchor="middle">Server 数</text>
+
+  <rect class="algo" x="284" y="238" width="100" height="120" rx="8"/>
+  <text class="th brand-t" x="334" y="258" text-anchor="middle">NHR</text>
+  <text class="ts" x="334" y="278" text-anchor="middle">非均衡层次环</text>
+  <text class="ts" x="334" y="294" text-anchor="middle">步数·对数</text>
+  <text class="ts" x="334" y="312" text-anchor="middle">时延低</text>
+  <text class="ts" x="334" y="330" text-anchor="middle">适合 Server 较多</text>
+
+  <rect class="algo" x="400" y="238" width="100" height="120" rx="8"/>
+  <text class="th brand-t" x="450" y="258" text-anchor="middle">NB</text>
+  <text class="ts" x="450" y="278" text-anchor="middle">非均匀 Bruck</text>
+  <text class="ts" x="450" y="294" text-anchor="middle">步数·对数</text>
+  <text class="ts" x="450" y="312" text-anchor="middle">时延低</text>
+  <text class="ts" x="450" y="330" text-anchor="middle">适合 Server 较多</text>
+
+  <rect class="algo" x="516" y="238" width="152" height="120" rx="8"/>
+  <text class="th brand-t" x="592" y="258" text-anchor="middle">Pipeline</text>
+  <text class="ts" x="592" y="278" text-anchor="middle">流水切块逐份传</text>
+  <text class="ts" x="592" y="296" text-anchor="middle">并发用 Server 内</text>
+  <text class="ts" x="592" y="312" text-anchor="middle">与 Server 间链路</text>
+  <text class="ts" x="592" y="330" text-anchor="middle">适合数据量大</text>
+  <text class="ts" x="592" y="346" text-anchor="middle">且每机多卡</text>
+
+  <rect class="algo" x="52" y="368" width="616" height="72" rx="8"/>
+  <text class="th brand-t" x="102" y="390" text-anchor="middle">Pairwise</text>
+  <text class="ts" x="220" y="392" text-anchor="middle">逐对通信 · 仅用于 AlltoAll / AlltoAllV / AlltoAllVC</text>
+  <text class="ts" x="220" y="410" text-anchor="middle">线性步数、时延高，但规避“一打多”（一个 rank 经同一端口向多 rank 发数据）</text>
+  <text class="ts" x="220" y="428" text-anchor="middle">适合数据量大、需规避一打多的场景 · 大集群 AlltoAll 的优选</text>
+
+  <rect class="strip" x="52" y="452" width="616" height="88" rx="12"/>
+  <text class="tb" x="72" y="476">选择逻辑</text>
+  <text class="ts" x="72" y="496">HCCL 依产品形态 / 数据量 / Server 数自动选算法，默认无需配置（Ring 等也可通过环境变量</text>
+  <text class="ts" x="72" y="514">HCCL_ALGO 强制指定）· Server 内另有 Mesh / Ring / Double-Ring / Star，按硬件拓扑自动选择，不可配置</text>
+</svg>

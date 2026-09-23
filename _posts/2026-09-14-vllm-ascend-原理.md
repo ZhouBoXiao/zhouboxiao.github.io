@@ -230,6 +230,25 @@ TP 是把倍速换通信：每层都 all-reduce 一次，卡间带宽是硬约�
 
 > 上：TP=2、PP=2 的 4 卡切分，层内走 TP all-reduce、层间走 PP；下：HCCL 集合通信与针对 MoE 的 TBO、EPLB。
 
+**HCCL 软硬件原理**。HCCL（Huawei Collective Communication Library）是昇腾的原生集合通信库，提供 AllReduce、Broadcast、AllGather、ReduceScatter、AlltoAll 等原语，支撑数据并行、模型并行、专家并行、流水并行、序列并行等多种方案，910 上由 PyNPUCommunicator 封装[$TRAE_REF](https://www.hiascend.com/app-forum/topic-detail/0272158203532861553)。它的硬件拓扑分两级：**Server 内**多张 NPU 通过板内高速互联（HCCS，相当于 NVLink 的角色）直连；**Server 间**通过 RoCE 高速网组网，超节点（SuperPod）形态下动辄几百上千张 NPU 互联[$TRAE_REF](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/910beta3/API/hcclug/docs/zh/user_guide/hccl_env/inter_superpod_algo_support.md)。
+
+HCCL 因此在算法上采用**分级通信**：先做第一级 Server 内归约、再做第二级跨 Server 归约——板内带宽快、跨机慢，先在快链路上把数据汇总起来，避免把昂贵的板内带宽浪费在慢速跨机链路上。归约类操作（AllReduce/ReduceScatter/Reduce）还支持随路（in-line）完成，不占用计算资源，让通信与计算并发执行，整体执行时长大幅下降[$TRAE_REF](https://www.hiascend.com/developer/blog/details/02178213886519017043)。
+
+**Server 间通信算法**。第一级归约之后，真正的跨 Server 大块数据用哪个算法传，HCCL 会按产品形态、数据量、Server 数量自动选择（默认即可，也可用环境变量 `HCCL_ALGO` 强制指定），常用六种[$TRAE_REF](https://www.hiascend.com/document/detail/zh/CANNCommercialEdition/Run%20Environment/BaiTEXDs/HCCL/HCCL%20%E4%BC%9A%E8%AF%9D%E8%80%85/9279.csvw)：
+
+- **Ring**：环结构，通信步数与规模线性、时延偏高，但通信关系简单、抗网络拥塞，适合 Server 少、数据量小、网络拥塞明显且 Pipeline 不适用的场景；
+- **RHD**（Recursive Halving-Doubling，递归二分倍增）：通信步数按对数增长、时延低，但非 2 次幂规模会引入额外通信量，适合 Server 数为 2 的整数次幂且 Pipeline 不适用的场景，或非 2 次幂但数据量小的场景[$TRAE_REF](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/81RC1alpha002/apiref/envref/envref_07_0079.html)；
+- **NHR**（Nonuniform Hierarchical Ring，非均衡层次环）：步数对数、时延低，适合 Server 较多且 Pipeline 不适用的场景；
+- **NB**（Nonuniform Bruck，非均匀 Bruck）：非均匀分块的通信，步数对数、时延低，同样适合 Server 较多且 Pipeline 不适用的场景；
+- **Pipeline**：流水线并行，把大数据切块逐份传递，能并发使用 Server 内与 Server 间的链路，适合数据量大且每机多卡的场景；
+- **Pairwise**：逐对通信，仅用于 AlltoAll / AlltoAllV / AlltoAllVC，步数线性、时延高，但规避"一打多"（一个 rank 经同一个端口向多个 rank 发数据致拥塞），适合数据量大、需规避一打多的场景，是大规模集群 AlltoAll 的优选方案[$TRAE_REF](https://www.hiascend.com/developer/blog/details/02178213886519017043)。
+
+> 注：Server 内另有 Mesh、Ring、Double-Ring、Star 等算法，按硬件拓扑自动选择、不可配置；跨机算法默认自适应，指定 `HCCL_ALGO` 后以用户指定为准。
+
+![HCCL 软硬件原理与 Server 间通信算法](../img/vllm-ascend-hccl.svg)
+
+> 上：两级硬件拓扑与分级通信（Server 内 HCCS / Server 间 RoCE）；下：Ring、RHD、NHR、NB、Pipeline、Pairwise 六个跨 Server 算法的复杂度与适用场景。
+
 **推测解码**。decode 的根本约束是串行：第 i+1 个 token 依赖第 i 个，每步前向只产出 1 个。推测解码的关键洞察是验证比生成便宜——一次前向同时算 k 个位置，权重和 KV 仍然只读一遍，成本几乎等于算 1 个。于是让"猜"和"验"分工：轻量提议者先猜 k 个草稿，目标模型一次前向全部验证，一轮产出多个 token。
 
 一轮分三步。**提议**：`vllm_ascend/spec_decode/` 里的提议者生成草稿——n-gram 直接从 prompt 或历史输出匹配（零模型开销，适合复制型任务），EAGLE 在主干上加轻量草稿头、复用隐状态预测。**验证**：k 个草稿拼成一段 mini-prefill 走目标模型，逐位得到目标分布 p，草稿的 KV 同时写入。**裁决**：`vllm_ascend/sample/` 的拒绝采样器逐位比较草稿分布 q 与目标分布 p——随机数小于 min(1, p/q) 则接受并继续看下一位；首个被拒的位置从修正分布 max(0, p−q) 重采样一个替代 token，其后草稿整体丢弃；全部接受则再从目标分布白送一个 bonus token。无论走哪条分支，最终输出分布都与目标模型完全一致，这是无损加速。

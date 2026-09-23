@@ -1,0 +1,323 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 860" width="1380" height="860" role="img" lang="zh-CN" aria-labelledby="archify-diagram-title archify-diagram-description">
+  <style>
+    .c-grid       { stroke: #e2e8f0; fill: none; }
+    .c-mask       { fill: #ffffff; stroke: none; }
+    .c-backend    { fill: rgba(52, 211, 153, 0.18); stroke: #059669; }
+    .c-cloud      { fill: rgba(251, 191, 36, 0.18); stroke: #d97706; }
+    .c-external   { fill: rgba(148, 163, 184, 0.18); stroke: #64748b; }
+    .c-messagebus { fill: rgba(251, 146, 60, 0.15); stroke: #ea580c; }
+    .c-security   { fill: rgba(251, 113, 133, 0.15); stroke: #e11d48; }
+    .t-primary    { fill: #0f172a; }
+    .t-muted      { fill: #64748b; }
+    .t-backend    { fill: #059669; }
+    .t-cloud      { fill: #d97706; }
+    .t-external   { fill: #64748b; }
+    .t-messagebus { fill: #ea580c; }
+    .t-security   { fill: #e11d48; }
+    .a-default    { stroke: #94a3b8; fill: none; }
+    .a-emphasis   { stroke: #059669; fill: none; }
+    .a-security   { stroke: #e11d48; fill: none; stroke-dasharray: 5,5; }
+    .a-dashed     { stroke: #7c3aed; fill: none; stroke-dasharray: 4,4; }
+    .m-default    { fill: #94a3b8; }
+    .m-emphasis   { fill: #059669; }
+    .m-security   { fill: #e11d48; }
+    .m-dashed     { fill: #7c3aed; }
+    svg .semantic-sigil { fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round; opacity: 0.76; pointer-events: none; }
+    svg .semantic-sigil > * { vector-effect: non-scaling-stroke; }
+    svg .semantic-sigil .sigil-fill { fill: currentColor; stroke: none; }
+    svg .s-backend    { color: #059669; }
+    svg .s-cloud      { color: #d97706; }
+    svg .s-database   { color: #7c3aed; }
+    svg .s-external   { color: #64748b; }
+    svg .s-security   { color: #e11d48; }
+    svg .s-messagebus { color: #ea580c; }
+    text { font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif; }
+  </style>
+        <title id="archify-diagram-title">Mesh 路由器内部流水线</title>
+        <desc id="archify-diagram-description">由 Archify 生成的架构图。</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- Boundaries (behind everything) -->
+
+
+        <!-- Connection paths (before components for correct z-order) -->
+        <path data-edge-from="west_in" data-edge-to="input_buf" data-edge-label="Flit 流" data-edge-key="0" data-composition-points="125,272.5;180,272.5" d="M 125 272.5 L 180 272.5" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="input_buf" data-edge-to="rc" data-edge-label="出队" data-edge-key="1" data-composition-points="340,272.5;400,272.5" d="M 340 272.5 L 400 272.5" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="rc" data-edge-to="va" data-edge-label="方向" data-edge-key="2" data-composition-points="540,272.5;600,272.5" d="M 540 272.5 L 600 272.5" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="va" data-edge-to="sa" data-edge-label="锁定输出 VC" data-edge-key="3" data-composition-points="730,272.5;800,272.5" d="M 730 272.5 L 800 272.5" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="sa" data-edge-to="crossbar" data-edge-label="占用端口 1 拍" data-edge-key="4" data-composition-points="930,272.5;1000,272.5" d="M 930 272.5 L 1000 272.5" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="crossbar" data-edge-to="north_out" data-edge-label="路由转发" data-edge-key="5" data-composition-points="1140,272.5;1187.5,272.5;1187.5,132.5;1235,132.5" d="M 1140 272.5 L 1179.5 272.5 Q 1187.5 272.5 1187.5 264.5 L 1187.5 140.5 Q 1187.5 132.5 1195.5 132.5 L 1235 132.5" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="crossbar" data-edge-to="east_out" data-edge-label="路由转发" data-edge-key="6" data-composition-points="1140,272.5;1235,272.5" d="M 1140 272.5 L 1235 272.5" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="crossbar" data-edge-to="south_out" data-edge-label="路由转发" data-edge-key="7" data-composition-points="1140,272.5;1187.5,272.5;1187.5,412.5;1235,412.5" d="M 1140 272.5 L 1179.5 272.5 Q 1187.5 272.5 1187.5 280.5 L 1187.5 404.5 Q 1187.5 412.5 1195.5 412.5 L 1235 412.5" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="crossbar" data-edge-to="local_out" data-edge-label="本节点交付" data-edge-key="8" data-composition-points="1140,272.5;1187.5,272.5;1187.5,552.5;1235,552.5" d="M 1140 272.5 L 1179.5 272.5 Q 1187.5 272.5 1187.5 280.5 L 1187.5 544.5 Q 1187.5 552.5 1195.5 552.5 L 1235 552.5" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="credit" data-edge-to="input_buf" data-edge-label="有空间才发送" data-edge-key="9" data-composition-points="260,435;260,370;260,370;260,305" d="M 260 435 L 260 370 L 260 370 L 260 305" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="congestion" data-edge-to="rc" data-edge-label="链路状态" data-edge-key="10" data-composition-points="600,467.5;600,386.25;470,386.25;470,305" d="M 600 467.5 L 600 394.25 Q 600 386.25 592 386.25 L 478 386.25 Q 470 386.25 470 378.25 L 470 305" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="arb_policy" data-edge-to="sa" data-edge-label="仲裁优先级" data-edge-key="11" data-composition-points="800,467.5;800,386.25;865,386.25;865,305" d="M 800 467.5 L 800 394.25 Q 800 386.25 808 386.25 L 857 386.25 Q 865 386.25 865 378.25 L 865 305" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+
+        <!-- Components -->
+        <g id="node-west_in" data-node-id="west_in" data-node-label="West 输入" tabindex="0" role="button" aria-label="聚焦West 输入，来自上游路由器, 架构组件" aria-pressed="false" data-node-kind="external" data-node-sublabel="来自上游路由器" data-node-tag="入口" data-node-context="架构组件">
+          <title>West 输入 · 来自上游路由器 · 架构组件 · 入口</title>
+          <rect x="0" y="245" width="125" height="55" rx="6" class="c-mask"/>
+          <rect x="0" y="245" width="125" height="55" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(6 251) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="62.5" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">West 输入</text>
+        <text data-detail="context" x="62.5" y="286.5" class="t-muted" font-size="9" text-anchor="middle">来自上游路由器</text>
+        <text data-detail="fine" x="62.5" y="292" class="t-external" font-size="7" text-anchor="middle">入口</text>
+        </g>
+
+        <g id="node-input_buf" data-node-id="input_buf" data-node-label="输入缓冲 / VC 队列" tabindex="0" role="button" aria-label="聚焦输入缓冲 / VC 队列，普通 · 响应 · 同步, 架构组件" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="普通 · 响应 · 同步" data-node-tag="多队列隔离" data-node-context="架构组件">
+          <title>输入缓冲 / VC 队列 · 普通 · 响应 · 同步 · 架构组件 · 多队列隔离</title>
+          <rect x="180" y="240" width="160" height="65" rx="6" class="c-mask"/>
+          <rect x="180" y="240" width="160" height="65" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(186 246) scale(0.6875)">
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
+            <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
+            <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
+            <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="260" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">输入缓冲 / VC 队列</text>
+        <text data-detail="context" x="260" y="286.5" class="t-muted" font-size="9" text-anchor="middle">普通 · 响应 · 同步</text>
+        <text data-detail="fine" x="260" y="297" class="t-messagebus" font-size="7" text-anchor="middle">多队列隔离</text>
+        </g>
+
+        <g id="node-rc" data-node-id="rc" data-node-label="RC 路由计算" tabindex="0" role="button" aria-label="聚焦RC 路由计算，解析 Header 选路, 架构组件" aria-pressed="false" data-node-kind="backend" data-node-sublabel="解析 Header 选路" data-node-tag="每报文" data-node-context="架构组件">
+          <title>RC 路由计算 · 解析 Header 选路 · 架构组件 · 每报文</title>
+          <rect x="400" y="240" width="140" height="65" rx="6" class="c-mask"/>
+          <rect x="400" y="240" width="140" height="65" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(406 246) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="470" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">RC 路由计算</text>
+        <text data-detail="context" x="470" y="286.5" class="t-muted" font-size="9" text-anchor="middle">解析 Header 选路</text>
+        <text data-detail="fine" x="470" y="297" class="t-backend" font-size="7" text-anchor="middle">每报文</text>
+        </g>
+
+        <g id="node-va" data-node-id="va" data-node-label="VA 虚通道分配" tabindex="0" role="button" aria-label="聚焦VA 虚通道分配，申请输出 VC, 架构组件" aria-pressed="false" data-node-kind="backend" data-node-sublabel="申请输出 VC" data-node-tag="两级仲裁之一" data-node-context="架构组件">
+          <title>VA 虚通道分配 · 申请输出 VC · 架构组件 · 两级仲裁之一</title>
+          <rect x="600" y="240" width="130" height="65" rx="6" class="c-mask"/>
+          <rect x="600" y="240" width="130" height="65" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(606 246) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="665" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">VA 虚通道分配</text>
+        <text data-detail="context" x="665" y="286.5" class="t-muted" font-size="9" text-anchor="middle">申请输出 VC</text>
+        <text data-detail="fine" x="665" y="297" class="t-backend" font-size="7" text-anchor="middle">两级仲裁之一</text>
+        </g>
+
+        <g id="node-sa" data-node-id="sa" data-node-label="SA 交换仲裁" tabindex="0" role="button" aria-label="聚焦SA 交换仲裁，争抢 Crossbar 输出, 架构组件" aria-pressed="false" data-node-kind="backend" data-node-sublabel="争抢 Crossbar 输出" data-node-tag="两级仲裁之二" data-node-context="架构组件">
+          <title>SA 交换仲裁 · 争抢 Crossbar 输出 · 架构组件 · 两级仲裁之二</title>
+          <rect x="800" y="240" width="130" height="65" rx="6" class="c-mask"/>
+          <rect x="800" y="240" width="130" height="65" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(806 246) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="865" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">SA 交换仲裁</text>
+        <text data-detail="context" x="865" y="286.5" class="t-muted" font-size="9" text-anchor="middle">争抢 Crossbar 输出</text>
+        <text data-detail="fine" x="865" y="297" class="t-backend" font-size="7" text-anchor="middle">两级仲裁之二</text>
+        </g>
+
+        <g id="node-crossbar" data-node-id="crossbar" data-node-label="Crossbar 交换阵列" tabindex="0" role="button" aria-label="聚焦Crossbar 交换阵列，输入 × 输出交叉开关, 架构组件" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="输入 × 输出交叉开关" data-node-tag="ST" data-node-context="架构组件">
+          <title>Crossbar 交换阵列 · 输入 × 输出交叉开关 · 架构组件 · ST</title>
+          <rect x="1000" y="240" width="140" height="65" rx="6" class="c-mask"/>
+          <rect x="1000" y="240" width="140" height="65" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(1006 246) scale(0.6875)">
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
+            <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
+            <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
+            <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1070" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Crossbar 交换阵列</text>
+        <text data-detail="context" x="1070" y="286.5" class="t-muted" font-size="9" text-anchor="middle">输入 × 输出交叉开关</text>
+        <text data-detail="fine" x="1070" y="297" class="t-messagebus" font-size="7" text-anchor="middle">ST</text>
+        </g>
+
+        <g id="node-north_out" data-node-id="north_out" data-node-label="North 输出" tabindex="0" role="button" aria-label="聚焦North 输出，发往相邻路由器, 架构组件" aria-pressed="false" data-node-kind="external" data-node-sublabel="发往相邻路由器" data-node-tag="出口" data-node-context="架构组件">
+          <title>North 输出 · 发往相邻路由器 · 架构组件 · 出口</title>
+          <rect x="1235" y="105" width="125" height="55" rx="6" class="c-mask"/>
+          <rect x="1235" y="105" width="125" height="55" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(1241 111) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1297.5" y="130.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">North 输出</text>
+        <text data-detail="context" x="1297.5" y="146.5" class="t-muted" font-size="9" text-anchor="middle">发往相邻路由器</text>
+        <text data-detail="fine" x="1297.5" y="152" class="t-external" font-size="7" text-anchor="middle">出口</text>
+        </g>
+
+        <g id="node-east_out" data-node-id="east_out" data-node-label="East 输出" tabindex="0" role="button" aria-label="聚焦East 输出，发往相邻路由器, 架构组件" aria-pressed="false" data-node-kind="external" data-node-sublabel="发往相邻路由器" data-node-tag="出口" data-node-context="架构组件">
+          <title>East 输出 · 发往相邻路由器 · 架构组件 · 出口</title>
+          <rect x="1235" y="245" width="125" height="55" rx="6" class="c-mask"/>
+          <rect x="1235" y="245" width="125" height="55" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(1241 251) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1297.5" y="270.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">East 输出</text>
+        <text data-detail="context" x="1297.5" y="286.5" class="t-muted" font-size="9" text-anchor="middle">发往相邻路由器</text>
+        <text data-detail="fine" x="1297.5" y="292" class="t-external" font-size="7" text-anchor="middle">出口</text>
+        </g>
+
+        <g id="node-south_out" data-node-id="south_out" data-node-label="South 输出" tabindex="0" role="button" aria-label="聚焦South 输出，发往相邻路由器, 架构组件" aria-pressed="false" data-node-kind="external" data-node-sublabel="发往相邻路由器" data-node-tag="出口" data-node-context="架构组件">
+          <title>South 输出 · 发往相邻路由器 · 架构组件 · 出口</title>
+          <rect x="1235" y="385" width="125" height="55" rx="6" class="c-mask"/>
+          <rect x="1235" y="385" width="125" height="55" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(1241 391) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1297.5" y="410.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">South 输出</text>
+        <text data-detail="context" x="1297.5" y="426.5" class="t-muted" font-size="9" text-anchor="middle">发往相邻路由器</text>
+        <text data-detail="fine" x="1297.5" y="432" class="t-external" font-size="7" text-anchor="middle">出口</text>
+        </g>
+
+        <g id="node-local_out" data-node-id="local_out" data-node-label="Local 输出" tabindex="0" role="button" aria-label="聚焦Local 输出，本节点 AI Core / NI, 架构组件" aria-pressed="false" data-node-kind="external" data-node-sublabel="本节点 AI Core / NI" data-node-tag="本节点端口" data-node-context="架构组件">
+          <title>Local 输出 · 本节点 AI Core / NI · 架构组件 · 本节点端口</title>
+          <rect x="1235" y="525" width="125" height="55" rx="6" class="c-mask"/>
+          <rect x="1235" y="525" width="125" height="55" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(1241 531) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1297.5" y="550.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Local 输出</text>
+        <text data-detail="context" x="1297.5" y="566.5" class="t-muted" font-size="9" text-anchor="middle">本节点 AI Core / NI</text>
+        <text data-detail="fine" x="1297.5" y="572" class="t-external" font-size="7" text-anchor="middle">本节点端口</text>
+        </g>
+
+        <g id="node-credit" data-node-id="credit" data-node-label="Credit 流控" tabindex="0" role="button" aria-label="聚焦Credit 流控，上游确认下游 VC 有空间, 架构组件" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="上游确认下游 VC 有空间" data-node-tag="不阻塞下游" data-node-context="架构组件">
+          <title>Credit 流控 · 上游确认下游 VC 有空间 · 架构组件 · 不阻塞下游</title>
+          <rect x="180" y="435" width="160" height="65" rx="6" class="c-mask"/>
+          <rect x="180" y="435" width="160" height="65" rx="6" class="c-cloud" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(186 441) scale(0.6875)">
+            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="260" y="465.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Credit 流控</text>
+        <text data-detail="context" x="260" y="481.5" class="t-muted" font-size="9" text-anchor="middle">上游确认下游 VC 有空间</text>
+        <text data-detail="fine" x="260" y="492" class="t-cloud" font-size="7" text-anchor="middle">不阻塞下游</text>
+        </g>
+
+        <g id="node-congestion" data-node-id="congestion" data-node-label="拥塞监测" tabindex="0" role="button" aria-label="聚焦拥塞监测，队列深度 / 链路占用, 架构组件" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="队列深度 / 链路占用" data-node-tag="辅助自适应路由" data-node-context="架构组件">
+          <title>拥塞监测 · 队列深度 / 链路占用 · 架构组件 · 辅助自适应路由</title>
+          <rect x="600" y="435" width="160" height="65" rx="6" class="c-mask"/>
+          <rect x="600" y="435" width="160" height="65" rx="6" class="c-cloud" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(606 441) scale(0.6875)">
+            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="680" y="465.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">拥塞监测</text>
+        <text data-detail="context" x="680" y="481.5" class="t-muted" font-size="9" text-anchor="middle">队列深度 / 链路占用</text>
+        <text data-detail="fine" x="680" y="492" class="t-cloud" font-size="7" text-anchor="middle">辅助自适应路由</text>
+        </g>
+
+        <g id="node-arb_policy" data-node-id="arb_policy" data-node-label="仲裁与 QoS 策略" tabindex="0" role="button" aria-label="聚焦仲裁与 QoS 策略，优先级 / 轮询 / 防饿死, 架构组件" aria-pressed="false" data-node-kind="security" data-node-sublabel="优先级 / 轮询 / 防饿死" data-node-tag="SA 输入" data-node-context="架构组件">
+          <title>仲裁与 QoS 策略 · 优先级 / 轮询 / 防饿死 · 架构组件 · SA 输入</title>
+          <rect x="800" y="435" width="160" height="65" rx="6" class="c-mask"/>
+          <rect x="800" y="435" width="160" height="65" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(806 441) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="880" y="465.5" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">仲裁与 QoS 策略</text>
+        <text data-detail="context" x="880" y="481.5" class="t-muted" font-size="9" text-anchor="middle">优先级 / 轮询 / 防饿死</text>
+        <text data-detail="fine" x="880" y="492" class="t-security" font-size="7" text-anchor="middle">SA 输入</text>
+        </g>
+
+        <!-- Connection labels -->
+        <g data-detail="context" data-edge-from="west_in" data-edge-to="input_buf" data-edge-label="Flit 流" data-edge-key="0">
+          <rect x="130.7" y="228.5" width="43.6" height="14" rx="3" class="c-mask"/>
+          <text x="152.5" y="238.5" class="t-backend" font-size="8" text-anchor="middle">Flit 流</text>
+        </g>
+        <g data-detail="context" data-edge-from="input_buf" data-edge-to="rc" data-edge-label="出队" data-edge-key="1">
+          <rect x="355" y="252.5" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="370" y="262.5" class="t-muted" font-size="8" text-anchor="middle">出队</text>
+        </g>
+        <g data-detail="context" data-edge-from="rc" data-edge-to="va" data-edge-label="方向" data-edge-key="2">
+          <rect x="555" y="252.5" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="570" y="262.5" class="t-muted" font-size="8" text-anchor="middle">方向</text>
+        </g>
+        <g data-detail="context" data-edge-from="va" data-edge-to="sa" data-edge-label="锁定输出 VC" data-edge-key="3">
+          <rect x="733.6" y="252.5" width="62.8" height="14" rx="3" class="c-mask"/>
+          <text x="765" y="262.5" class="t-muted" font-size="8" text-anchor="middle">锁定输出 VC</text>
+        </g>
+        <g data-detail="context" data-edge-from="sa" data-edge-to="crossbar" data-edge-label="占用端口 1 拍" data-edge-key="4">
+          <rect x="928.8" y="252.5" width="72.4" height="14" rx="3" class="c-mask"/>
+          <text x="965" y="262.5" class="t-backend" font-size="8" text-anchor="middle">占用端口 1 拍</text>
+        </g>
+        <g data-detail="context" data-edge-from="crossbar" data-edge-to="north_out" data-edge-label="路由转发" data-edge-key="5">
+          <rect x="1155.8" y="140" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="1180" y="150" class="t-muted" font-size="8" text-anchor="middle">路由转发</text>
+        </g>
+        <g data-detail="context" data-edge-from="crossbar" data-edge-to="east_out" data-edge-label="路由转发" data-edge-key="6">
+          <rect x="1115.8" y="195" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="1140" y="205" class="t-muted" font-size="8" text-anchor="middle">路由转发</text>
+        </g>
+        <g data-detail="context" data-edge-from="crossbar" data-edge-to="south_out" data-edge-label="路由转发" data-edge-key="7">
+          <rect x="1105.8" y="420" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="1130" y="430" class="t-muted" font-size="8" text-anchor="middle">路由转发</text>
+        </g>
+        <g data-detail="context" data-edge-from="crossbar" data-edge-to="local_out" data-edge-label="本节点交付" data-edge-key="8">
+          <rect x="1151" y="560" width="58" height="14" rx="3" class="c-mask"/>
+          <text x="1180" y="570" class="t-messagebus" font-size="8" text-anchor="middle">本节点交付</text>
+        </g>
+        <g data-detail="context" data-edge-from="credit" data-edge-to="input_buf" data-edge-label="有空间才发送" data-edge-key="9">
+          <rect x="226.2" y="350" width="67.6" height="14" rx="3" class="c-mask"/>
+          <text x="260" y="360" class="t-security" font-size="8" text-anchor="middle">有空间才发送</text>
+        </g>
+        <g data-detail="context" data-edge-from="congestion" data-edge-to="rc" data-edge-label="链路状态" data-edge-key="10">
+          <rect x="510.8" y="366.25" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="535" y="376.25" class="t-messagebus" font-size="8" text-anchor="middle">链路状态</text>
+        </g>
+        <g data-detail="context" data-edge-from="arb_policy" data-edge-to="sa" data-edge-label="仲裁优先级" data-edge-key="11">
+          <rect x="803.5" y="366.25" width="58" height="14" rx="3" class="c-mask"/>
+          <text x="832.5" y="376.25" class="t-security" font-size="8" text-anchor="middle">仲裁优先级</text>
+        </g>
+
+        <!-- Boundary labels (foreground masks keep routes out of titles) -->
+
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="824" class="t-primary" font-size="12" font-weight="650">图例</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="后端" data-legend-x="40" data-legend-baseline="844" data-legend-width="63">
+            <rect x="40" y="835" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="62" y="844" class="t-muted" font-size="10" font-weight="500">后端</text>
+          </g>
+          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="云服务" data-legend-x="125" data-legend-baseline="844" data-legend-width="73">
+            <rect x="125" y="835" width="16" height="10" rx="2.5" class="c-cloud" stroke-width="1"/>
+            <text x="147" y="844" class="t-muted" font-size="10" font-weight="500">云服务</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="安全" data-legend-x="220" data-legend-baseline="844" data-legend-width="63">
+            <rect x="220" y="835" width="16" height="10" rx="2.5" class="c-security" stroke-width="1"/>
+            <text x="242" y="844" class="t-muted" font-size="10" font-weight="500">安全</text>
+          </g>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="消息总线" data-legend-x="305" data-legend-baseline="844" data-legend-width="83">
+            <rect x="305" y="835" width="16" height="10" rx="2.5" class="c-messagebus" stroke-width="1"/>
+            <text x="327" y="844" class="t-muted" font-size="10" font-weight="500">消息总线</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="外部系统" data-legend-x="410" data-legend-baseline="844" data-legend-width="83">
+            <rect x="410" y="835" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="432" y="844" class="t-muted" font-size="10" font-weight="500">外部系统</text>
+          </g>
+        </g>
+      </svg>
