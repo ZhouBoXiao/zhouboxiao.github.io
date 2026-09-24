@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="Task Cache 的录制与回放：骨架加地址槽">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .hd { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+    .hint { stroke: #4B3FE3; stroke-width: 1.2; stroke-dasharray: 3 3; fill: none; }
+  </style>
+  <defs>
+    <marker id="t1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="t2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">Task Cache：像「录屏 + 回放」</text>
+  <text class="ts" x="30" y="50">第一次边跑边录，第二次连「拆单子」都不做了 —— 只改地址，直接放</text>
+
+  <!-- ===== 第一次：录制 ===== -->
+  <text class="th" x="30" y="80">第一次调用（miss）：录制</text>
+
+  <rect x="40" y="92" width="104" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="92" y="112" text-anchor="middle">Lookup</text>
+  <text class="ns" x="92" y="130" text-anchor="middle">没录过</text>
+  <path class="arr" d="M148 120 L158 120" marker-end="url(#t1)"/>
+
+  <rect x="162" y="92" width="92" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="208" y="112" text-anchor="middle">Start</text>
+  <text class="ns" x="208" y="130" text-anchor="middle">开始录</text>
+  <path class="arr" d="M258 120 L268 120" marker-end="url(#t1)"/>
+
+  <rect x="272" y="92" width="126" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="335" y="112" text-anchor="middle">Orchestrate</text>
+  <text class="ns" x="335" y="130" text-anchor="middle">正常拆单子</text>
+  <path class="arr" d="M402 120 L412 120" marker-end="url(#t1)"/>
+
+  <rect x="416" y="92" width="132" height="56" rx="7" fill="#4B3FE3"/>
+  <text class="hd" x="482" y="112" text-anchor="middle">EnforceLaunchTask</text>
+  <text class="hd" x="482" y="130" text-anchor="middle">先按一次铃，补录最后一批</text>
+  <path class="arr" d="M552 120 L562 120" marker-end="url(#t1)"/>
+
+  <rect x="566" y="92" width="52" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="592" y="112" text-anchor="middle">End</text>
+  <text class="ns" x="592" y="130" text-anchor="middle">停止录</text>
+  <path class="arr" d="M622 120 L632 120" marker-end="url(#t1)"/>
+
+  <rect x="636" y="92" width="44" height="56" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="bd" x="658" y="112" text-anchor="middle" style="fill:#171717;">存 entry</text>
+  <text class="ns" x="658" y="130" text-anchor="middle">归档</text>
+
+  <text class="ns" x="482" y="162" text-anchor="middle" style="fill:#991B1B;">少了这步：最后一批还躺在托盘里没送出去，录出来的是残缺的</text>
+
+  <!-- ===== 第二次：回放 ===== -->
+  <text class="th" x="30" y="196">第二次调用（hit）：回放 —— 全程不碰 Orchestrate</text>
+
+  <rect x="40" y="208" width="104" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="92" y="228" text-anchor="middle">Lookup</text>
+  <text class="ns" x="92" y="246" text-anchor="middle">命中</text>
+  <path class="arr" d="M148 236 L158 236" marker-end="url(#t1)"/>
+
+  <rect x="162" y="208" width="92" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="208" y="228" text-anchor="middle">Execute</text>
+  <text class="ns" x="208" y="246" text-anchor="middle">调录像</text>
+  <path class="arr" d="M258 236 L268 236" marker-end="url(#t1)"/>
+
+  <rect x="272" y="208" width="140" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="342" y="228" text-anchor="middle">改地址</text>
+  <text class="ns" x="342" y="246" text-anchor="middle">基址 + offset</text>
+  <path class="arr" d="M416 236 L426 236" marker-end="url(#t1)"/>
+
+  <rect x="430" y="208" width="120" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="490" y="228" text-anchor="middle">领钥匙 / 改取件码</text>
+  <text class="ns" x="490" y="246" text-anchor="middle">token + pi</text>
+  <path class="arr" d="M554 236 L564 236" marker-end="url(#t1)"/>
+
+  <rect x="568" y="208" width="112" height="56" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="624" y="228" text-anchor="middle">按 launchOrder_</text>
+  <text class="ns" x="624" y="246" text-anchor="middle">顺序回放送出</text>
+
+  <!-- ===== entry 结构 ===== -->
+  <rect x="40" y="284" width="640" height="116" rx="10" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="56" y="306">录下来的到底是什么：骨架（顺序不变） + 地址槽（待填的占位符）</text>
+
+  <g stroke="rgba(23,23,23,0.20)" stroke-width="1">
+    <rect x="60" y="320" width="88" height="32" rx="5" fill="#FFFFFF"/>
+    <text class="ns" x="104" y="340" text-anchor="middle">SQE</text>
+
+    <rect x="158" y="320" width="88" height="32" rx="5" fill="#C7D2FE"/>
+    <text class="ns" x="202" y="340" text-anchor="middle">SQE 地址槽</text>
+
+    <rect x="256" y="320" width="88" height="32" rx="5" fill="#F2F7FF"/>
+    <text class="ns" x="300" y="340" text-anchor="middle">WQE</text>
+
+    <rect x="354" y="320" width="88" height="32" rx="5" fill="#C7D2FE"/>
+    <text class="ns" x="398" y="340" text-anchor="middle">WQE 地址槽</text>
+
+    <rect x="452" y="320" width="88" height="32" rx="5" fill="#FFFFFF"/>
+    <text class="ns" x="496" y="340" text-anchor="middle">SQE DB</text>
+
+    <rect x="550" y="320" width="88" height="32" rx="5" fill="#FFFFFF"/>
+    <text class="ns" x="594" y="340" text-anchor="middle">SQE</text>
+  </g>
+
+  <path class="hint" d="M202 356 L202 370"/>
+  <text class="ns" x="160" y="384" style="fill:#1A1759;">输入基址 + 0x1234</text>
+  <path class="hint" d="M398 356 L398 370"/>
+  <text class="ns" x="352" y="384" style="fill:#1A1759;">输出基址 + 0x88</text>
+
+  <text class="ns" x="470" y="384">记的是「第 k 个地址 = 输入 + 0x1234」，不是绝对地址</text>
+
+  <text class="ts" x="30" y="424">所以同一份录像能服务不同的张量：换一批货，只要把占位符换成新基址，格式、路由、顺序都不用重做。</text>
+  <text class="ts" x="30" y="446" style="fill:#1A1759;">hit 分支根本不调用 Orchestrate —— 没有 executor、没有算法计算、没有切片遍历。这就是它比 BatchMode 更狠的地方。</text>
+</svg>

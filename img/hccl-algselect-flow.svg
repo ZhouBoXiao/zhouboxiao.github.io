@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="HCCL 算法选择的整体流程：展开模式、插件、两套选择器">
+  <style>
+    .tb { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .nt { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 9.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #1A1759; font: 500 10px "SF Mono", Consolas, monospace; }
+    .step { fill: #171717; font: 500 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="f1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="f2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="28">一次调用里，算法是被怎么挑出来的</text>
+  <text class="ts" x="30" y="48">先定「用哪类引擎」，再由两套完全不同的选择器决定具体算法名 —— 4 卡单机走中间那条</text>
+
+  <!-- 顶部：模式 -->
+  <rect x="230" y="64" width="260" height="46" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="nt" x="360" y="84" text-anchor="middle">HcclGetOpExpansionMode</text>
+  <text class="ns" x="360" y="100" text-anchor="middle">读出 opExecuteConfig：CCU / AIV / AICPU_TS ...</text>
+  <path class="arrg" d="M360 110 L360 120" marker-end="url(#f2)"/>
+
+  <rect x="230" y="124" width="260" height="40" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="nt" x="360" y="144" text-anchor="middle" style="fill:#1A1759;">Selector()</text>
+  <text class="ns" x="360" y="159" text-anchor="middle">op_common.cc:159</text>
+
+  <!-- 分支线 -->
+  <path class="arrg" d="M360 164 L360 176 L108 176 L108 190" marker-end="url(#f2)"/>
+  <path class="arr" d="M360 164 L360 176 L360 190" marker-end="url(#f1)"/>
+  <path class="arrg" d="M360 164 L360 176 L612 176 L612 190" marker-end="url(#f2)"/>
+
+  <!-- 左：插件 -->
+  <rect x="30" y="194" width="156" height="88" rx="8" fill="#FFF9EC" stroke="#E0A82E" stroke-width="1.2"/>
+  <text class="nt" x="108" y="214" text-anchor="middle">① 算法插件</text>
+  <text class="ns" x="42" y="232">libhccl_plugin_</text>
+  <text class="ns" x="42" y="246">{op}_selector.so</text>
+  <text class="ns" x="42" y="264">命中即用；未命中继续往右</text>
+
+  <!-- 中：SelectorEngine -->
+  <rect x="200" y="194" width="320" height="240" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="nt" x="360" y="214" text-anchor="middle" style="fill:#1A1759;">② SelectorEngine（代价模型打分）</text>
+  <text class="ns" x="360" y="229" text-anchor="middle">level0Topo == MESH_1D 或 960 机型</text>
+
+  <rect x="216" y="240" width="288" height="30" rx="5" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="0.9"/>
+  <text class="step" x="228" y="259">1 · InitCostModel：每个 executor 交出自己的 A/B/C/D</text>
+  <rect x="216" y="276" width="288" height="30" rx="5" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="0.9"/>
+  <text class="step" x="228" y="295">2 · FilterCmByEngine：砍掉不在降级链上的引擎</text>
+  <rect x="216" y="312" width="288" height="30" rx="5" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="0.9"/>
+  <text class="step" x="228" y="331">3 · FilterCmByHcclAlgo：按 HCCL_ALGO 再砍一遍</text>
+  <rect x="216" y="348" width="288" height="30" rx="5" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="0.9"/>
+  <text class="step" x="228" y="367">4 · CostTableGen：算出每个算法的耗时估值</text>
+  <rect x="216" y="384" width="288" height="30" rx="5" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="0.9"/>
+  <text class="step" x="228" y="403">5 · tuner 微调 → SelectMinCost 取最小者</text>
+
+  <!-- 右：ExecuteSelector -->
+  <rect x="534" y="194" width="156" height="240" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="nt" x="612" y="214" text-anchor="middle">③ ExecuteSelector</text>
+  <text class="ns" x="612" y="229" text-anchor="middle">其他拓扑</text>
+
+  <rect x="546" y="240" width="132" height="42" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="step" x="612" y="257" text-anchor="middle">按 priority</text>
+  <text class="step" x="612" y="272" text-anchor="middle">遍历 selector</text>
+  <rect x="546" y="290" width="132" height="42" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="step" x="612" y="307" text-anchor="middle">每个内部走</text>
+  <text class="step" x="612" y="322" text-anchor="middle">if-else 降级链</text>
+  <rect x="546" y="340" width="132" height="42" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="step" x="612" y="357" text-anchor="middle">看拓扑条件</text>
+  <text class="step" x="612" y="372" text-anchor="middle">逐个试引擎</text>
+  <text class="ns" x="612" y="404" text-anchor="middle">命中首个即返回</text>
+
+  <text class="ts" x="30" y="458">两套并存不是冗余：右边是「拓扑对了就用」的硬规则，左边是「算一算哪个快」的软决策。</text>
+  <text class="ts" x="30" y="478" style="fill:#1A1759;">判断走哪套只看一行代码 —— op_common.cc:184 的 level0Topo == MESH_1D || IsDevType960()。</text>
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 392" width="720" height="392" role="img" aria-label="AlltoAllV 的 Write 模式与 Read 模式对比">
+  <style>
+    .tb { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .nt { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .card { fill: #71717A; font: 500 10.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .blk { fill: #171717; font: 500 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; text-anchor: middle; }
+    .mono { fill: #1A1759; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.8; stroke-linecap: round; fill: none; }
+    .arrl { stroke: #9CA3AF; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="r1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="r2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="392" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="28">同一个数据流，两种走法：Write 和 Read</text>
+  <text class="ts" x="30" y="48">差别不在「搬几次」，而在「本地那一次拷贝发生在发送前还是接收后」</text>
+
+  <!-- ============ WRITE ============ -->
+  <text class="nt" x="30" y="80">Write 模式（默认，非 PCIe 链路）</text>
+  <text class="ns" x="270" y="80">isDmaRead_ = false</text>
+
+  <rect x="30" y="90" width="300" height="104" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="card" x="44" y="108">本卡 rank0</text>
+  <rect x="44" y="118" width="84" height="30" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="blk" x="86" y="137" style="fill:#1A1759;">input</text>
+  <rect x="142" y="118" width="84" height="30" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="blk" x="184" y="137" style="fill:#A1A1AA;">ccl buff</text>
+  <rect x="240" y="118" width="76" height="30" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="blk" x="278" y="137" style="fill:#A1A1AA;">output</text>
+
+  <rect x="390" y="90" width="300" height="104" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="card" x="404" y="108">对端 rank1</text>
+  <rect x="404" y="118" width="84" height="30" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="blk" x="446" y="137" style="fill:#A1A1AA;">input</text>
+  <rect x="502" y="118" width="84" height="30" rx="5" fill="#FFF9EC" stroke="#E0A82E" stroke-width="1.2"/>
+  <text class="blk" x="544" y="137" style="fill:#B45309;">ccl buff</text>
+  <rect x="600" y="118" width="76" height="30" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="blk" x="638" y="137" style="fill:#1A1759;">output</text>
+
+  <path class="arr" d="M128 133 L496 133" marker-end="url(#r1)"/>
+  <text class="mono" x="300" y="126" text-anchor="middle">SendRecvWrite（跨卡写）</text>
+  <path class="arrl" d="M544 152 L544 168 L638 168 L638 152" marker-end="url(#r2)"/>
+  <text class="ns" x="591" y="182" text-anchor="middle">PostCopy</text>
+  <text class="ns" x="591" y="192" text-anchor="middle">落地后再本地拷一次</text>
+
+  <!-- ============ READ ============ -->
+  <text class="nt" x="30" y="228">Read 模式（PCIe 链路，或对称内存 + Concurrent 算法）</text>
+  <text class="ns" x="330" y="228">isDmaRead_ = true</text>
+
+  <rect x="30" y="238" width="300" height="104" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="card" x="44" y="256">本卡 rank0</text>
+  <rect x="44" y="266" width="84" height="30" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="blk" x="86" y="285" style="fill:#1A1759;">input</text>
+  <rect x="142" y="266" width="84" height="30" rx="5" fill="#FFF9EC" stroke="#E0A82E" stroke-width="1.2"/>
+  <text class="blk" x="184" y="285" style="fill:#B45309;">ccl buff</text>
+  <rect x="240" y="266" width="76" height="30" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="blk" x="278" y="285" style="fill:#A1A1AA;">output</text>
+
+  <rect x="390" y="238" width="300" height="104" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="card" x="404" y="256">对端 rank1</text>
+  <rect x="404" y="266" width="84" height="30" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="blk" x="446" y="285" style="fill:#A1A1AA;">input</text>
+  <rect x="502" y="266" width="84" height="30" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="blk" x="544" y="285" style="fill:#A1A1AA;">ccl buff</text>
+  <rect x="600" y="266" width="76" height="30" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="blk" x="638" y="285" style="fill:#1A1759;">output</text>
+
+  <path class="arrl" d="M86 300 L86 316 L184 316 L184 300" marker-end="url(#r2)"/>
+  <text class="ns" x="135" y="330" text-anchor="middle">PreCopy</text>
+  <path class="arr" d="M226 281 L594 281" marker-end="url(#r1)"/>
+  <text class="mono" x="410" y="274" text-anchor="middle">对端主动来读（RecvRead）</text>
+  <text class="ns" x="410" y="296" text-anchor="middle">直接落到 output，省掉接收端的回拷</text>
+
+  <text class="ts" x="30" y="360">两种模式都是「一次跨卡搬运 + 一次本地拷贝」，但本地拷贝的位置换了边 —</text>
+  <text class="ts" x="30" y="378" style="fill:#1A1759;">Write 把拷贝留在接收端（PostCopy），Read 把拷贝挪到发送端（PreCopy）。源码只给了切换条件，没写原因。</text>
+</svg>

@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 496" width="720" height="496" role="img" aria-label="AlltoAllV 变长参数 varData 的内存布局与指针过河还原">
+  <style>
+    .tb { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .nt { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #1A1759; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .cell { fill: #3F3F46; font: 500 10px "SF Mono", Consolas, monospace; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.8; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="v1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="496" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="28">四个数组怎么过河：打包 → 整块拷贝 → 按偏移还原</text>
+  <text class="ts" x="30" y="48">关键是「一起打包」而不是「各分配一块」——只有相对偏移能活过拷贝</text>
+
+  <!-- ============ HOST 侧 ============ -->
+  <text class="nt" x="40" y="72">HOST 侧：打包</text>
+  <text class="ns" x="128" y="72">四个指针此刻存的是 host 地址</text>
+
+  <rect x="40" y="82" width="152" height="120" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="mono" x="52" y="100" style="fill:#171717;">OpParam</text>
+  <text class="ns" x="52" y="118">inputPtr</text>
+  <text class="ns" x="52" y="136">outputPtr</text>
+  <text class="ns" x="52" y="154">varMemSize = 128</text>
+  <text class="ns" x="52" y="172">varData ──────┐</text>
+
+  <text class="mono" x="52" y="196" style="font-size:9px;">+0×4 +1×4</text>
+
+  <rect x="204" y="82" width="476" height="120" rx="8" fill="#FAFAFA" stroke="rgba(23,23,23,0.18)"/>
+  <text class="mono" x="216" y="99" style="fill:#171717;">varData（紧贴 OpParam 后面，128 字节 = 16 个 u64）</text>
+
+  <!-- 行 0 sendCounts -->
+  <rect x="216" y="106" width="64" height="20" rx="3" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+  <text class="ns" x="224" y="120" style="fill:#1D4ED8;font-size:8.5px;">sendCounts</text>
+  <g>
+    <rect x="292" y="106" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="338" y="120" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+    <rect x="388" y="106" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="434" y="120" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+    <rect x="484" y="106" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="530" y="120" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+    <rect x="580" y="106" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="624" y="120" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+  </g>
+
+  <!-- 行 1 recvCounts -->
+  <rect x="216" y="130" width="64" height="20" rx="3" fill="#F5F3FF" stroke="#7C3AED" stroke-width="0.8"/>
+  <text class="ns" x="224" y="144" style="fill:#6D28D9;font-size:8.5px;">recvCounts</text>
+  <g>
+    <rect x="292" y="130" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="338" y="144" text-anchor="middle" style="fill:#6D28D9;">1</text>
+    <rect x="388" y="130" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="434" y="144" text-anchor="middle" style="fill:#6D28D9;">1</text>
+    <rect x="484" y="130" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="530" y="144" text-anchor="middle" style="fill:#6D28D9;">1</text>
+    <rect x="580" y="130" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="624" y="144" text-anchor="middle" style="fill:#6D28D9;">1</text>
+  </g>
+
+  <!-- 行 2 sdispls -->
+  <rect x="216" y="154" width="64" height="20" rx="3" fill="#ECFDF5" stroke="#059669" stroke-width="0.8"/>
+  <text class="ns" x="224" y="168" style="fill:#047857;font-size:8.5px;">sdispls</text>
+  <g>
+    <rect x="292" y="154" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="338" y="168" text-anchor="middle" style="fill:#047857;">0</text>
+    <rect x="388" y="154" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="434" y="168" text-anchor="middle" style="fill:#047857;">1</text>
+    <rect x="484" y="154" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="530" y="168" text-anchor="middle" style="fill:#047857;">2</text>
+    <rect x="580" y="154" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="624" y="168" text-anchor="middle" style="fill:#047857;">3</text>
+  </g>
+
+  <!-- 行 3 rdispls -->
+  <rect x="216" y="178" width="64" height="20" rx="3" fill="#FFFBEB" stroke="#D97706" stroke-width="0.8"/>
+  <text class="ns" x="224" y="192" style="fill:#B45309;font-size:8.5px;">rdispls</text>
+  <g>
+    <rect x="292" y="178" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="338" y="192" text-anchor="middle" style="fill:#B45309;">0</text>
+    <rect x="388" y="178" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="434" y="192" text-anchor="middle" style="fill:#B45309;">1</text>
+    <rect x="484" y="178" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="530" y="192" text-anchor="middle" style="fill:#B45309;">2</text>
+    <rect x="580" y="178" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="624" y="192" text-anchor="middle" style="fill:#B45309;">3</text>
+  </g>
+
+  <!-- ============ 过河 ============ -->
+  <path class="arr" d="M360 206 L360 254" marker-end="url(#v1)"/>
+  <text class="ts" x="376" y="224">整块按值拷贝：sizeof(OpParam) + 128</text>
+  <text class="ts" x="376" y="242">值全部跟过去，相对偏移一点没动</text>
+  <rect x="40" y="206" width="240" height="52" rx="7" fill="#FEF2F2" stroke="#DC2626" stroke-width="1"/>
+  <text class="ns" x="52" y="224" style="fill:#B91C1C;">✗ 若只拷贝指针不拷贝数据</text>
+  <text class="ns" x="52" y="242" style="fill:#B91C1C;">device 拿到的仍是 host 地址 = 野指针</text>
+
+  <!-- ============ DEVICE 侧 ============ -->
+  <text class="nt" x="40" y="290">DEVICE 侧：还原</text>
+  <text class="ns" x="140" y="290">同一段赋值再写一遍，基址换成 device 的 varData</text>
+
+  <rect x="40" y="300" width="152" height="120" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="52" y="318">OpParam（副本）</text>
+  <text class="ns" x="52" y="336">inputPtr ✓</text>
+  <text class="ns" x="52" y="354">varMemSize = 128</text>
+  <text class="ns" x="52" y="372">varData ──────┐</text>
+  <text class="mono" x="52" y="396" style="font-size:9.5px;">+ 0×4 / +1×4</text>
+  <text class="mono" x="52" y="411" style="font-size:9.5px;">+ 2×4 / +3×4</text>
+
+  <rect x="204" y="300" width="476" height="120" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="216" y="317">varData（device 地址，内容一模一样）</text>
+
+  <g>
+    <rect x="216" y="324" width="64" height="20" rx="3" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="ns" x="224" y="338" style="fill:#1D4ED8;font-size:8.5px;">sendCounts</text>
+    <rect x="292" y="324" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="338" y="338" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+    <rect x="388" y="324" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="434" y="338" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+    <rect x="484" y="324" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="530" y="338" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+    <rect x="580" y="324" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="cell" x="624" y="338" text-anchor="middle" style="fill:#1D4ED8;">1</text>
+
+    <rect x="216" y="348" width="64" height="20" rx="3" fill="#F5F3FF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="ns" x="224" y="362" style="fill:#6D28D9;font-size:8.5px;">recvCounts</text>
+    <rect x="292" y="348" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="338" y="362" text-anchor="middle" style="fill:#6D28D9;">1</text>
+    <rect x="388" y="348" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="434" y="362" text-anchor="middle" style="fill:#6D28D9;">1</text>
+    <rect x="484" y="348" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="530" y="362" text-anchor="middle" style="fill:#6D28D9;">1</text>
+    <rect x="580" y="348" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="0.8"/>
+    <text class="cell" x="624" y="362" text-anchor="middle" style="fill:#6D28D9;">1</text>
+
+    <rect x="216" y="372" width="64" height="20" rx="3" fill="#ECFDF5" stroke="#059669" stroke-width="0.8"/>
+    <text class="ns" x="224" y="386" style="fill:#047857;font-size:8.5px;">sdispls</text>
+    <rect x="292" y="372" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="338" y="386" text-anchor="middle" style="fill:#047857;">0</text>
+    <rect x="388" y="372" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="434" y="386" text-anchor="middle" style="fill:#047857;">1</text>
+    <rect x="484" y="372" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="530" y="386" text-anchor="middle" style="fill:#047857;">2</text>
+    <rect x="580" y="372" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="0.8"/>
+    <text class="cell" x="624" y="386" text-anchor="middle" style="fill:#047857;">3</text>
+
+    <rect x="216" y="396" width="64" height="20" rx="3" fill="#FFFBEB" stroke="#D97706" stroke-width="0.8"/>
+    <text class="ns" x="224" y="410" style="fill:#B45309;font-size:8.5px;">rdispls</text>
+    <rect x="292" y="396" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="338" y="410" text-anchor="middle" style="fill:#B45309;">0</text>
+    <rect x="388" y="396" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="434" y="410" text-anchor="middle" style="fill:#B45309;">1</text>
+    <rect x="484" y="396" width="92" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="530" y="410" text-anchor="middle" style="fill:#B45309;">2</text>
+    <rect x="580" y="396" width="88" height="20" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="0.8"/>
+    <text class="cell" x="624" y="410" text-anchor="middle" style="fill:#B45309;">3</text>
+  </g>
+
+  <text class="ts" x="30" y="446">两侧写的赋值语句几乎一模一样，只有基址不同 —</text>
+  <text class="ts" x="30" y="464" style="fill:#1A1759;">host 用 SEND_COUNT_IDX 那套常量，device 用 ALL_TO_ALL_V_OFFSET_* 那套，值是同一套 0/1/2/3。</text>
+  <text class="ts" x="30" y="482">这是一份「隐式契约」：改一边忘改另一边，数据就会整体错位一格，而且不报错。</text>
+</svg>

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" role="img" aria-label="BatchMode 攒批：几百次按铃压缩成一次按铃">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+    .bell { stroke: #DC2626; stroke-width: 1.4; fill: none; }
+  </style>
+  <defs>
+    <marker id="b1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="b2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="400" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">BatchMode：省的是「按铃次数」，不是「填单子次数」</text>
+  <text class="ts" x="30" y="50">单子还是那几百张，区别只在于写一张送一张，还是攒够了一起送</text>
+
+  <!-- ===== 上：逐个提交 ===== -->
+  <text class="th" x="30" y="86">① 逐个提交（EAGER）：每张单子按一次铃</text>
+
+  <g>
+    <rect x="40" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="66" y="121" text-anchor="middle">单1</text>
+    <rect x="102" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="128" y="121" text-anchor="middle">单2</text>
+    <rect x="164" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="190" y="121" text-anchor="middle">单3</text>
+    <rect x="226" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="252" y="121" text-anchor="middle">单4</text>
+    <rect x="288" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="314" y="121" text-anchor="middle">单5</text>
+    <rect x="350" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="376" y="121" text-anchor="middle">单6</text>
+    <rect x="412" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="438" y="121" text-anchor="middle">单7</text>
+    <rect x="474" y="100" width="52" height="34" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="500" y="121" text-anchor="middle">单8</text>
+  </g>
+
+  <!-- 8 个向下箭头 -->
+  <g class="bell">
+    <path d="M66 136 L66 148"/><path d="M128 136 L128 148"/><path d="M190 136 L190 148"/><path d="M252 136 L252 148"/>
+    <path d="M314 136 L314 148"/><path d="M376 136 L376 148"/><path d="M438 136 L438 148"/><path d="M500 136 L500 148"/>
+  </g>
+  <g fill="#DC2626">
+    <circle cx="66" cy="153" r="3"/><circle cx="128" cy="153" r="3"/><circle cx="190" cy="153" r="3"/><circle cx="252" cy="153" r="3"/>
+    <circle cx="314" cy="153" r="3"/><circle cx="376" cy="153" r="3"/><circle cx="438" cy="153" r="3"/><circle cx="500" cy="153" r="3"/>
+  </g>
+
+  <line x1="40" y1="163" x2="526" y2="163" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text class="ns" x="283" y="180" text-anchor="middle" style="fill:#991B1B;">按铃 × 8（每次：更新 tail + 通知硬件）</text>
+
+  <rect x="556" y="100" width="134" height="72" rx="8" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.1"/>
+  <text class="ns" x="570" y="122" style="fill:#991B1B;">几百张单子 =</text>
+  <text class="bd" x="570" y="142" style="fill:#991B1B; font-size:13px;">几百次按铃</text>
+  <text class="ns" x="570" y="160" style="fill:#991B1B;">这就是 host bound 的来源</text>
+
+  <!-- ===== 下：BatchMode ===== -->
+  <text class="th" x="30" y="224">② BatchMode：攒在托盘里，最后一次送走</text>
+
+  <rect x="40" y="238" width="90" height="34" rx="5" fill="#4B3FE3"/>
+  <text class="ns" x="85" y="259" text-anchor="middle" style="fill:#FFFFFF;">Start（BATCH）</text>
+
+  <!-- 托盘 -->
+  <rect x="140" y="230" width="386" height="50" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)" stroke-dasharray="4 3"/>
+  <text class="ns" x="150" y="246">托盘 locBuf（摞在这，不按铃）</text>
+  <g>
+    <rect x="150" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="169" y="266" text-anchor="middle">1</text>
+    <rect x="192" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="211" y="266" text-anchor="middle">2</text>
+    <rect x="234" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="253" y="266" text-anchor="middle">3</text>
+    <rect x="276" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="295" y="266" text-anchor="middle">4</text>
+    <rect x="318" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="337" y="266" text-anchor="middle">5</text>
+    <rect x="360" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="379" y="266" text-anchor="middle">6</text>
+    <rect x="402" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="421" y="266" text-anchor="middle">7</text>
+    <rect x="444" y="252" width="38" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="463" y="266" text-anchor="middle">8</text>
+    <rect x="486" y="252" width="30" height="20" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="501" y="266" text-anchor="middle">…</text>
+  </g>
+
+  <rect x="536" y="238" width="90" height="34" rx="5" fill="#4B3FE3"/>
+  <text class="ns" x="581" y="259" text-anchor="middle" style="fill:#FFFFFF;">End（EAGER）</text>
+
+  <path class="arr" d="M581 276 L581 292" marker-end="url(#b1)"/>
+
+  <rect x="380" y="296" width="150" height="34" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="455" y="317" text-anchor="middle">copy 到收件箱 + 更新一次 tail</text>
+
+  <path class="arr" d="M534 313 L546 313" marker-end="url(#b1)"/>
+  <rect x="550" y="296" width="76" height="34" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="588" y="317" text-anchor="middle">按铃 × 1</text>
+
+  <rect x="40" y="296" width="300" height="34" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ns" x="54" y="317">攒批的最小单位是 thread（传送带），End 时按 thread 一次性提交</text>
+
+  <text class="ts" x="30" y="356">代价是什么：几乎没有。单子照样要一张张写，只是先摞在手边的托盘（locBuf）里；</text>
+  <text class="ts" x="30" y="376">收益是什么：从「写一张 → 更新 tail → 按铃」× N，变成「写 N 张 → 更新一次 tail → 按一次铃」。</text>
+</svg>

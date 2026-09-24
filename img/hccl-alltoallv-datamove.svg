@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 372" width="720" height="372" role="img" aria-label="AlltoAllV 四卡数据转置示意">
+  <style>
+    .tb { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .nt { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .hdr { fill: #71717A; font: 500 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .c { font: 500 12px "SF Mono", Consolas, monospace; text-anchor: middle; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.8; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="d1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="372" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="28">AlltoAllV 就是一次矩阵转置</text>
+  <text class="ts" x="30" y="48">颜色 = 这块数据的「目的地」。发送端每一行都是花的，接收端每一行都是纯的 — 这正是转置</text>
+
+  <!-- 左：sendBuf -->
+  <text class="nt" x="70" y="74">发送前：sendBuf（每个 rank 一块）</text>
+  <text class="hdr" x="86" y="96">发给→</text>
+  <text class="hdr" x="130" y="96" text-anchor="middle">rank0</text>
+  <text class="hdr" x="190" y="96" text-anchor="middle">rank1</text>
+  <text class="hdr" x="250" y="96" text-anchor="middle">rank2</text>
+  <text class="hdr" x="310" y="96" text-anchor="middle">rank3</text>
+
+  <!-- 行 0 -->
+  <text class="ns" x="30" y="130">rank0</text>
+  <rect x="100" y="112" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="130" y="131" style="fill:#1D4ED8;">0</text>
+  <rect x="160" y="112" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="190" y="131" style="fill:#6D28D9;">0</text>
+  <rect x="220" y="112" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="250" y="131" style="fill:#047857;">0</text>
+  <rect x="280" y="112" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="310" y="131" style="fill:#B45309;">0</text>
+  <!-- 行 1 -->
+  <text class="ns" x="30" y="168">rank1</text>
+  <rect x="100" y="150" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="130" y="169" style="fill:#1D4ED8;">1</text>
+  <rect x="160" y="150" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="190" y="169" style="fill:#6D28D9;">1</text>
+  <rect x="220" y="150" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="250" y="169" style="fill:#047857;">1</text>
+  <rect x="280" y="150" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="310" y="169" style="fill:#B45309;">1</text>
+  <!-- 行 2 -->
+  <text class="ns" x="30" y="206">rank2</text>
+  <rect x="100" y="188" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="130" y="207" style="fill:#1D4ED8;">2</text>
+  <rect x="160" y="188" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="190" y="207" style="fill:#6D28D9;">2</text>
+  <rect x="220" y="188" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="250" y="207" style="fill:#047857;">2</text>
+  <rect x="280" y="188" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="310" y="207" style="fill:#B45309;">2</text>
+  <!-- 行 3 -->
+  <text class="ns" x="30" y="244">rank3</text>
+  <rect x="100" y="226" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="130" y="245" style="fill:#1D4ED8;">3</text>
+  <rect x="160" y="226" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="190" y="245" style="fill:#6D28D9;">3</text>
+  <rect x="220" y="226" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="250" y="245" style="fill:#047857;">3</text>
+  <rect x="280" y="226" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="310" y="245" style="fill:#B45309;">3</text>
+
+  <!-- 中间箭头 -->
+  <path class="arr" d="M352 180 L410 180" marker-end="url(#d1)"/>
+  <text class="nt" x="381" y="166" text-anchor="middle" style="fill:#1A1759;">转置</text>
+  <text class="ns" x="381" y="200" text-anchor="middle">沿对角线翻转</text>
+
+  <!-- 右：recvBuf -->
+  <text class="nt" x="440" y="74">接收后：recvBuf</text>
+  <text class="hdr" x="456" y="96">来自↓</text>
+  <text class="hdr" x="500" y="96" text-anchor="middle">rank0</text>
+  <text class="hdr" x="560" y="96" text-anchor="middle">rank1</text>
+  <text class="hdr" x="620" y="96" text-anchor="middle">rank2</text>
+  <text class="hdr" x="680" y="96" text-anchor="middle">rank3</text>
+
+  <text class="ns" x="400" y="130">rank0</text>
+  <rect x="470" y="112" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="500" y="131" style="fill:#1D4ED8;">0</text>
+  <rect x="530" y="112" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="560" y="131" style="fill:#1D4ED8;">1</text>
+  <rect x="590" y="112" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="620" y="131" style="fill:#1D4ED8;">2</text>
+  <rect x="650" y="112" width="60" height="28" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/><text class="c" x="680" y="131" style="fill:#1D4ED8;">3</text>
+
+  <text class="ns" x="400" y="168">rank1</text>
+  <rect x="470" y="150" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="500" y="169" style="fill:#6D28D9;">0</text>
+  <rect x="530" y="150" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="560" y="169" style="fill:#6D28D9;">1</text>
+  <rect x="590" y="150" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="620" y="169" style="fill:#6D28D9;">2</text>
+  <rect x="650" y="150" width="60" height="28" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/><text class="c" x="680" y="169" style="fill:#6D28D9;">3</text>
+
+  <text class="ns" x="400" y="206">rank2</text>
+  <rect x="470" y="188" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="500" y="207" style="fill:#047857;">0</text>
+  <rect x="530" y="188" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="560" y="207" style="fill:#047857;">1</text>
+  <rect x="590" y="188" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="620" y="207" style="fill:#047857;">2</text>
+  <rect x="650" y="188" width="60" height="28" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/><text class="c" x="680" y="207" style="fill:#047857;">3</text>
+
+  <text class="ns" x="400" y="244">rank3</text>
+  <rect x="470" y="226" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="500" y="245" style="fill:#B45309;">0</text>
+  <rect x="530" y="226" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="560" y="245" style="fill:#B45309;">1</text>
+  <rect x="590" y="226" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="620" y="245" style="fill:#B45309;">2</text>
+  <rect x="650" y="226" width="60" height="28" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/><text class="c" x="680" y="245" style="fill:#B45309;">3</text>
+
+  <text class="ts" x="30" y="286">所以 4 个 rank 打印出来的结果完全一样，都是 [0, 1, 2, 3] — 结果跟「我是谁」无关，这才是转置语义正确的证据。</text>
+  <text class="ts" x="30" y="308">变长体现在：每一行的 4 块可以不等长，行与行之间也可以不等长 — 长度由 sendCounts 定，起点由 sdispls 定。</text>
+  <text class="ts" x="30" y="330">等长（每块都是 1）时，AlltoAllV 退化成 AlltoAll；这就是 06 和 07 两个例子输出相同的原因。</text>
+  <text class="ts" x="30" y="352" style="fill:#B91C1C;">注意：sendBuf 和 recvBuf 不能是同一块内存 — AlltoAllV 不支持原地（all_to_all_v.cc:545 直接报错返回）。</text>
+</svg>

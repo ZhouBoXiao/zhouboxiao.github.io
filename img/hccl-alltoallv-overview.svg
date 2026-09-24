@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 552" width="720" height="552" role="img" aria-label="AlltoAllV 从示例到 SQE 的六层链路总览">
+  <style>
+    .tb { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .nt { fill: #171717; font: 500 12.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #1A1759; font: 500 11px "SF Mono", Consolas, monospace; }
+    .lane { fill: #71717A; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="o1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="o2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="552" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">一次 AlltoAllV 要走过六层</text>
+  <text class="ts" x="30" y="50">上面三层在 host（服务器 CPU），下面三层在 device（AI CPU）——中间那条虚线就是「过河」</text>
+
+  <!-- 泳道标签 -->
+  <rect x="30" y="66" width="52" height="196" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)"/>
+  <text class="lane" x="56" y="150" text-anchor="middle">HOST</text>
+  <text class="lane" x="56" y="168" text-anchor="middle" style="font-size:9.5px;">服务器 CPU</text>
+  <rect x="30" y="292" width="52" height="196" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="lane" x="56" y="376" text-anchor="middle" style="fill:#1A1759;">DEVICE</text>
+  <text class="lane" x="56" y="394" text-anchor="middle" style="fill:#1A1759;font-size:9.5px;">AI CPU</text>
+
+  <!-- ① -->
+  <g>
+    <rect x="94" y="66" width="596" height="56" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+    <text class="nt" x="110" y="88">① 用户调用</text>
+    <text class="mono" x="110" y="106" style="font-size:10.5px;">HcclAlltoAllV(sendBuf, sendCounts, sdispls, ..., recvBuf, recvCounts, rdispls, ...)</text>
+    <text class="ns" x="600" y="106" text-anchor="end">main.cc:92</text>
+  </g>
+  <path class="arrg" d="M392 126 L392 132" marker-end="url(#o2)"/>
+
+  <!-- ② -->
+  <g>
+    <rect x="94" y="136" width="596" height="56" rx="8" fill="#FFF9EC" stroke="#E0A82E" stroke-width="1.2"/>
+    <text class="nt" x="110" y="158">② 把 4 个变长数组拍进一块连续内存</text>
+    <text class="mono" x="110" y="176" style="font-size:10.5px;">varData = [ sendCounts ×4 | recvCounts ×4 | sdispls ×4 | rdispls ×4 ]</text>
+    <text class="ns" x="600" y="176" text-anchor="end">all_to_all_v.cc:616</text>
+  </g>
+  <path class="arrg" d="M392 196 L392 202" marker-end="url(#o2)"/>
+
+  <!-- ③ -->
+  <g>
+    <rect x="94" y="206" width="596" height="56" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+    <text class="nt" x="110" y="228">③ 选引擎 + 选算法，然后下发一个 kernel</text>
+    <text class="ns" x="110" y="246">整块（OpParam + varData）按值拷到 device，资源另走序列化</text>
+    <text class="ns" x="600" y="246" text-anchor="end">:811 / :833</text>
+  </g>
+
+  <!-- 分界 -->
+  <line x1="94" y1="278" x2="690" y2="278" stroke="#4B3FE3" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text class="ts" x="392" y="272" text-anchor="middle" style="fill:#1A1759;">↑ 过河：从这一刻起，host 侧的一切地址都失效</text>
+
+  <!-- ④ -->
+  <g>
+    <rect x="94" y="292" width="596" height="56" rx="8" fill="#FFF9EC" stroke="#E0A82E" stroke-width="1.2"/>
+    <text class="nt" x="110" y="314">④ 把野指针救回来</text>
+    <text class="mono" x="110" y="332" style="font-size:10.5px;">sendCounts = varData + 0×4;  recvCounts = +1×4;  sdispls = +2×4;  rdispls = +3×4</text>
+    <text class="ns" x="600" y="332" text-anchor="end">kernel_launch.cc:962</text>
+  </g>
+  <path class="arr" d="M392 352 L392 358" marker-end="url(#o1)"/>
+
+  <!-- ⑤ -->
+  <g>
+    <rect x="94" y="362" width="596" height="56" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="110" y="384" style="fill:#1A1759;">⑤ 分片：算 loopTimes，每轮喂给模板一批偏移</text>
+    <text class="ns" x="110" y="402">受 UB_MAX_DATA_SIZE 与 ccl buffer 双重约束；本例数据量极小，loopTimes = 1</text>
+    <text class="ns" x="600" y="402" text-anchor="end">executor:319</text>
+  </g>
+  <path class="arr" d="M392 422 L392 428" marker-end="url(#o1)"/>
+
+  <!-- ⑥ -->
+  <g>
+    <rect x="94" y="432" width="596" height="56" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="110" y="454" style="fill:#1A1759;">⑥ 模板展开：本地拷贝 + 逐远端 rank 收发 → 一堆 task → SQE</text>
+    <text class="ns" x="110" y="472">本例约 20 个 task，攒批后只按一次 doorbell</text>
+    <text class="ns" x="600" y="472" text-anchor="end">mesh_1D.cc:248</text>
+  </g>
+
+  <text class="ts" x="30" y="518">注意 ② 和 ④ 是同一段逻辑写了两遍——host 存一次、device 再算一次。</text>
+  <text class="ts" x="30" y="538" style="fill:#1A1759;">这不是重复劳动，是因为「指针」这个东西过不了河，能过河的只有「相对偏移」。</text>
+</svg>
