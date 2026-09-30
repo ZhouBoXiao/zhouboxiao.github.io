@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 380" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="940" height="380" fill="#fbfbfd"/>
+  <text x="470" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">一条 AICPU 任务的完整生命周期（SQE / CQE 闭环）</text>
+
+  <!-- boxes -->
+  <g font-size="15" fill="#1e293b" text-anchor="middle">
+    <rect x="40" y="80" width="190" height="58" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="135" y="105">用户线程</text>
+    <text x="135" y="125" font-size="12" fill="#6d28d9">TaskInfo 挂到 Stream</text>
+
+    <rect x="300" y="80" width="210" height="58" rx="10" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="405" y="105">SQ 环形缓冲</text>
+    <text x="405" y="125" font-size="12" fill="#0369a1">提交队列（写 SQE）</text>
+
+    <rect x="600" y="80" width="220" height="58" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="710" y="105">设备执行引擎</text>
+    <text x="710" y="125" font-size="12" fill="#15803d">TS 固件 / AICPU</text>
+
+    <rect x="600" y="240" width="220" height="58" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="710" y="265">CQ 环形缓冲</text>
+    <text x="710" y="285" font-size="12" fill="#b45309">完成队列（写 CQE）</text>
+
+    <rect x="300" y="240" width="210" height="58" rx="10" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+    <text x="405" y="265">监听 CQ / 回收</text>
+    <text x="405" y="285" font-size="12" fill="#b91c1c">TaskRecycle 释放资源</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M230 109 H295"/>
+    <path d="M510 109 H595"/>
+    <path d="M710 138 V235"/>
+    <path d="M600 269 H515"/>
+    <path d="M300 269 H245"/>
+  </g>
+  <!-- sync dashed back -->
+  <path d="M135 138 C135 200, 230 240, 295 262" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4" fill="none" marker-end="url(#arrowV)"/>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrowV" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <text x="470" y="350" text-anchor="middle" font-size="13" fill="#64748b">「能生成 SQE」只解决把任务派出去；必须产出 CQE 上层才知道任务结束、可回收资源、释放同步事件</text>
+</svg>

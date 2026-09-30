@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 460" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="940" height="460" fill="#fbfbfd"/>
+  <text x="470" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">核心心智模型：三层划分（按「通信距离 + 角色」）</text>
+
+  <!-- Column 1: 路 -->
+  <rect x="30" y="70" width="280" height="46" rx="8" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="170" y="99" text-anchor="middle" font-size="17" font-weight="700" fill="#0369a1">路 · 互联介质</text>
+  <text x="170" y="138" text-anchor="middle" font-size="13" fill="#475569">数据物理上怎么走</text>
+  <g font-size="14" fill="#1e293b">
+    <rect x="50" y="158" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="170" y="180" text-anchor="middle">HCCS</text>
+    <rect x="50" y="200" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="170" y="222" text-anchor="middle">PCIe（卡↔Host）</text>
+    <rect x="50" y="242" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="170" y="264" text-anchor="middle">RoCE（以太网）</text>
+    <rect x="50" y="284" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="170" y="306" text-anchor="middle">UB（灵衢互联）</text>
+  </g>
+
+  <!-- Column 2: 车 -->
+  <rect x="330" y="70" width="280" height="46" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="470" y="99" text-anchor="middle" font-size="17" font-weight="700" fill="#15803d">车 · 搬运引擎</text>
+  <text x="470" y="138" text-anchor="middle" font-size="13" fill="#475569">谁搬、同步还是异步</text>
+  <g font-size="14" fill="#1e293b">
+    <rect x="350" y="158" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="470" y="180" text-anchor="middle">MTE（AI Core 亲搬）</text>
+    <rect x="350" y="200" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="470" y="222" text-anchor="middle">SDMA</text>
+    <rect x="350" y="242" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="470" y="264" text-anchor="middle">URMA</text>
+    <rect x="350" y="284" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="470" y="306" text-anchor="middle">RoCE DMA Engine</text>
+    <rect x="350" y="326" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="470" y="348" text-anchor="middle">UB 引擎 / CCU</text>
+  </g>
+
+  <!-- Column 3: 调度器 -->
+  <rect x="630" y="70" width="280" height="46" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="770" y="99" text-anchor="middle" font-size="17" font-weight="700" fill="#b45309">调度器 · 谁派活</text>
+  <text x="770" y="138" text-anchor="middle" font-size="13" fill="#475569">算子展开在哪、任务发给谁</text>
+  <g font-size="14" fill="#1e293b">
+    <rect x="650" y="158" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="770" y="180" text-anchor="middle">Host CPU + TS</text>
+    <rect x="650" y="200" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="770" y="222" text-anchor="middle">AI CPU + TS（默认 AICPU_TS）</text>
+    <rect x="650" y="242" width="240" height="34" rx="6" fill="#fff" stroke="#cbd5e1"/>
+    <text x="770" y="264" text-anchor="middle">CCU_SCHED</text>
+  </g>
+
+  <text x="470" y="430" text-anchor="middle" font-size="13" fill="#64748b">SQE/CQE 是「提交队列」层闭环；WQE+Doorbell+CQE 仅出现在需要网卡/专用引擎做 DMA 的路径</text>
+</svg>

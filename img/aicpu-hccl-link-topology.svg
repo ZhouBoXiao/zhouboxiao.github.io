@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 470" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="980" height="470" fill="#fbfbfd"/>
+  <text x="490" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">通信链路全景（8 机 × 8 卡 = 64 卡 AllReduce 示例）</text>
+
+  <!-- Server A -->
+  <rect x="70" y="70" width="300" height="300" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+  <text x="220" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">服务器 A（8 卡，示意 4 卡）</text>
+  <g font-size="13" fill="#1e293b" text-anchor="middle">
+    <rect x="120" y="115" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="220" y="140">NPU0</text>
+    <rect x="120" y="170" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="220" y="195">NPU1</text>
+    <rect x="120" y="225" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="220" y="250">NPU2</text>
+    <rect x="120" y="280" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="220" y="305">NPU3</text>
+  </g>
+  <!-- HCCS chain A -->
+  <path d="M220 155 V170 M220 210 V225 M220 265 V280" stroke="#22c55e" stroke-width="3"/>
+  <text x="340" y="215" font-size="11" fill="#15803d">HCCS</text>
+  <text x="340" y="229" font-size="11" fill="#15803d">SDMA/URMA</text>
+  <!-- Host A -->
+  <rect x="90" y="392" width="260" height="30" rx="6" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="220" y="412" text-anchor="middle" font-size="12" fill="#6d28d9">Host CPU（PCIe）</text>
+  <path d="M150 382 V392 M220 382 V392 M290 382 V392" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- Server B -->
+  <rect x="430" y="70" width="300" height="300" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+  <text x="580" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">服务器 B（8 卡，示意 4 卡）</text>
+  <g font-size="13" fill="#1e293b" text-anchor="middle">
+    <rect x="480" y="115" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="580" y="140">NPU4</text>
+    <rect x="480" y="170" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="580" y="195">NPU5</text>
+    <rect x="480" y="225" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="580" y="250">NPU6</text>
+    <rect x="480" y="280" width="200" height="40" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/><text x="580" y="305">NPU7</text>
+  </g>
+  <path d="M580 155 V170 M580 210 V225 M580 265 V280" stroke="#22c55e" stroke-width="3"/>
+  <text x="700" y="215" font-size="11" fill="#15803d">HCCS</text>
+  <text x="700" y="229" font-size="11" fill="#15803d">SDMA/URMA</text>
+  <rect x="450" y="392" width="260" height="30" rx="6" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="580" y="412" text-anchor="middle" font-size="12" fill="#6d28d9">Host CPU（PCIe）</text>
+  <path d="M510 382 V392 M580 382 V392 M650 382 V392" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- RoCE between servers -->
+  <path d="M370 210 H430" stroke="#ef4444" stroke-width="3" marker-end="url(#arR)"/>
+  <text x="400" y="200" text-anchor="middle" font-size="12" fill="#b91c1c">RoCE（跨机 Scale-out）</text>
+
+  <!-- Legend -->
+  <rect x="770" y="70" width="190" height="300" rx="10" fill="#fff" stroke="#cbd5e1"/>
+  <text x="865" y="92" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">五类链路</text>
+  <g font-size="11.5" fill="#1e293b">
+    <circle cx="788" cy="120" r="6" fill="#0ea5e9"/><text x="802" y="124">卡内：MTE</text>
+    <circle cx="788" cy="160" r="6" fill="#22c55e"/><text x="802" y="164">卡间：HCCS(SDMA/URMA)</text>
+    <circle cx="788" cy="200" r="6" fill="#7c3aed"/><text x="802" y="204">卡↔Host：PCIe</text>
+    <circle cx="788" cy="240" r="6" fill="#ef4444"/><text x="802" y="244">跨机：RoCE（以太网）</text>
+    <circle cx="788" cy="280" r="6" fill="#f59e0b"/><text x="802" y="284">超节点：UB（灵衢）</text>
+    <text x="788" y="320" font-size="10.5" fill="#64748b">URMA 归 UB：与 SDMA</text>
+    <text x="788" y="336" font-size="10.5" fill="#64748b">平级、与 RoCE 互补</text>
+  </g>
+
+  <defs>
+    <marker id="arR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#ef4444"/></marker>
+  </defs>
+</svg>

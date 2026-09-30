@@ -31,6 +31,12 @@ tags:								#标签
 
 > 关键结论：**SQE / CQE** 是"提交队列"层的闭环；**WQE + Doorbell + CQE** 这套"提交-门铃-收条"只在需要网卡/专用引擎做 DMA 的路径（RoCE 跨机、UB 引擎/CCU 模式）才出现；卡间 HCCS 直拷走 SDMA 任务，Host↔Device 走 PCIe 拷贝，都不下钻成 WQE。
 
+<div align="center">
+  <img src="../img/aicpu-hccl-3layer.svg" alt="三层心智模型" width="760"/>
+  <br/><span style="font-size:13px;color:#64748b">图1：核心心智模型——路 / 车 / 调度器三层划分</span>
+</div>
+
+
 ---
 
 ## 2. AICPU 任务调度：SQE 与 CQE（成对队列）
@@ -53,6 +59,12 @@ tags:								#标签
           → 监听 CQ ← 执行完毕后写回 CQE
           → 回收任务资源（TaskRecycle）
   ```
+
+<div align="center">
+  <img src="../img/aicpu-hccl-lifecycle.svg" alt="AICPU 任务生命周期" width="680"/>
+  <br/><span style="font-size:13px;color:#64748b">图2：一条 AICPU 任务的完整生命周期（SQE/CQE 环形缓冲闭环）</span>
+</div>
+
 
 ### 相关结构（服务于 SQE/CQE 的解析与执行）
 
@@ -82,6 +94,12 @@ AICPU 在 HCCL 里是**承上启下的中间调度层**，处在两级队列之�
      ▼
    AICPU / Host 回收、通知完成
   ```
+
+<div align="center">
+  <img src="../img/aicpu-hccl-queue-in-queue.svg" alt="HCCL 队列套队列" width="620"/>
+  <br/><span style="font-size:13px;color:#64748b">图3：HCCL 队列套队列——Host 下发 SQE → AICPU 展开 WQE+Doorbell → 网卡/引擎回 CQE</span>
+</div>
+
 
 ### 四件套角色对照
 
@@ -239,6 +257,13 @@ WQE / Doorbell 是**网卡队列层**的东西。AICPU 不直接手写 WQE，而
   跨机卡间：  NodeA-NPU ↔ NodeB-NPU → RoCE 链路 + RoCE DMA 引擎（WQE+Doorbell+CQE）
   超节点内：  多机直连           → UB（灵衢）+ UB 引擎 / CCU（硬件 AllReduce 卸载）
   ```
+
+<div align="center">
+  <img src="../img/aicpu-hccl-link-topology.svg" alt="通信链路全景拓扑" width="820"/>
+  <br/><span style="font-size:13px;color:#64748b">图4：通信链路全景拓扑（卡内 MTE / 卡间 HCCS / 卡↔Host PCIe / 跨机 RoCE / 超节点 UB）</span>
+</div>
+
+
 
 > HCCL 启动时查拓扑，自动给每一跳选最合适的链路+引擎；写 `HcclAllReduce` 时完全不用管这些——这就是它"复杂但对你透明"的原因。
 
