@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" role="img" aria-label="灵衢计算系统四层架构与 UB Service Core 五大服务">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="s" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="460" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">灵衢计算系统四层：硬件 → OS 组件 → Service Core → 应用适配</text>
+
+  <rect class="panel" x="40" y="44" width="640" height="52" rx="10"/>
+  <text class="tb" x="58" y="68">灵衢应用适配（开箱即用）</text>
+  <text class="tc" x="58" y="88">大数据灵衢适配 · 智算训推灵衢适配 · 云化 K8s 适配</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 96 V106" marker-end="url(#s)"/>
+
+  <rect class="panel" x="40" y="110" width="640" height="100" rx="10"/>
+  <text class="tb" x="58" y="132">灵衢系统高阶服务 UB Service Core（5 大集群级系统服务）</text>
+  <rect class="chip" x="58" y="142" width="112" height="44" rx="8"/>
+  <text class="tc" x="114" y="162" text-anchor="middle">UBS Engine</text>
+  <text class="td" x="114" y="178" text-anchor="middle">池化调度·控制面</text>
+  <rect class="chip" x="180" y="142" width="112" height="44" rx="8"/>
+  <text class="tc" x="236" y="162" text-anchor="middle">UBS Mem</text>
+  <text class="td" x="236" y="178" text-anchor="middle">共享·借用内存</text>
+  <rect class="chip" x="302" y="142" width="112" height="44" rx="8"/>
+  <text class="tc" x="358" y="162" text-anchor="middle">UBS Comm</text>
+  <text class="td" x="358" y="178" text-anchor="middle">通信协议栈</text>
+  <rect class="chip" x="424" y="142" width="112" height="44" rx="8"/>
+  <text class="tc" x="480" y="162" text-anchor="middle">UBS IO</text>
+  <text class="td" x="480" y="178" text-anchor="middle">全局读写缓存</text>
+  <rect class="chip" x="546" y="142" width="112" height="44" rx="8"/>
+  <text class="tc" x="602" y="162" text-anchor="middle">UBS Virt</text>
+  <text class="td" x="602" y="178" text-anchor="middle">虚拟化加速</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 210 V220" marker-end="url(#s)"/>
+
+  <rect class="panel" x="40" y="224" width="640" height="72" rx="10"/>
+  <text class="tb" x="58" y="246">操作系统灵衢组件 UB OS Component（扩展 Linux 内核）</text>
+  <rect class="chip" x="58" y="256" width="142" height="30" rx="8"/>
+  <text class="td" x="129" y="275" text-anchor="middle">Device Mgmt</text>
+  <rect class="chip" x="212" y="256" width="142" height="30" rx="8"/>
+  <text class="td" x="283" y="275" text-anchor="middle">Memory Mgmt</text>
+  <rect class="chip" x="366" y="256" width="142" height="30" rx="8"/>
+  <text class="td" x="437" y="275" text-anchor="middle">Communication</text>
+  <rect class="chip" x="520" y="256" width="142" height="30" rx="8"/>
+  <text class="td" x="591" y="275" text-anchor="middle">Virtualization</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 296 V306" marker-end="url(#s)"/>
+
+  <rect x="40" y="310" width="640" height="40" rx="10" fill="#4B3FE3"/>
+  <text class="tw" x="58" y="335">灵衢硬件系统：UnifiedBus（UB / UB Firmware / BMC）· 互连结构管理器 UBFM</text>
+
+  <rect class="strip" x="40" y="364" width="640" height="78" rx="10"/>
+  <text class="tc" x="58" y="388">OS 组件：扩展 Linux 内核、保持 POSIX 兼容，让存量应用直接迁移；</text>
+  <text class="tc" x="58" y="410">Service Core：封装 UB 能力与集群拓扑，屏蔽 EID/CNA，让应用像用本地资源一样用超节点；</text>
+  <text class="tc" x="58" y="432">应用适配：主流开源开箱即用，使能应用加速 30~50%（材料口径 25%+ 起）。</text>
+</svg>

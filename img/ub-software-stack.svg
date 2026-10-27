@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="灵衢软件配套全景：UB OS Component 与 UB Service Core">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="38">灵衢软件配套：OS 组件打底座，Service Core 做高阶服务</text>
+
+  <rect class="panel" x="40" y="56" width="640" height="56" rx="10"/>
+  <text class="tb" x="58" y="80">应用层</text>
+  <text class="tc" x="58" y="98">大模型训练 / 推理 · HPC · 数据库 · 大数据 · 虚拟化 · Agentic AI</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 112 V122" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="126" width="640" height="96" rx="10"/>
+  <text class="tb" x="58" y="150">UB Service Core（灵衢系统高阶服务，开源至 openEuler）</text>
+  <rect class="chip" x="58" y="162" width="118" height="40" rx="8"/>
+  <text class="tc" x="117" y="180" text-anchor="middle">UBS Engine</text>
+  <text class="tc" x="117" y="196" text-anchor="middle">池化 + 调度</text>
+  <rect class="chip" x="186" y="162" width="118" height="40" rx="8"/>
+  <text class="tc" x="245" y="180" text-anchor="middle">UBS Mem</text>
+  <text class="tc" x="245" y="196" text-anchor="middle">共享 / 借用</text>
+  <rect class="chip" x="314" y="162" width="118" height="40" rx="8"/>
+  <text class="tc" x="373" y="180" text-anchor="middle">UBS Comm</text>
+  <text class="tc" x="373" y="196" text-anchor="middle">Socket / Verbs</text>
+  <rect class="chip" x="442" y="162" width="118" height="40" rx="8"/>
+  <text class="tc" x="501" y="180" text-anchor="middle">UBS IO</text>
+  <text class="tc" x="501" y="196" text-anchor="middle">直访 SSU</text>
+  <rect class="chip" x="570" y="162" width="92" height="40" rx="8"/>
+  <text class="tc" x="616" y="180" text-anchor="middle">UBS Virt</text>
+  <text class="tc" x="616" y="196" text-anchor="middle">极速热迁移</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 222 V232" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="236" width="640" height="96" rx="10"/>
+  <text class="tb" x="58" y="260">UB OS Component（操作系统灵衢组件）</text>
+  <rect class="chip" x="58" y="272" width="150" height="40" rx="8"/>
+  <text class="tc" x="133" y="290" text-anchor="middle">Device Mgmt</text>
+  <text class="tc" x="133" y="306" text-anchor="middle">UB 总线 / 设备 / 热插拔</text>
+  <rect class="chip" x="218" y="272" width="150" height="40" rx="8"/>
+  <text class="tc" x="293" y="290" text-anchor="middle">Memory Mgmt</text>
+  <text class="tc" x="293" y="306" text-anchor="middle">NUMA / DMA-SVA 扩展</text>
+  <rect class="chip" x="378" y="272" width="150" height="40" rx="8"/>
+  <text class="tc" x="453" y="290" text-anchor="middle">Communication</text>
+  <text class="tc" x="453" y="306" text-anchor="middle">UBComm Lib / socket</text>
+  <rect class="chip" x="538" y="272" width="124" height="40" rx="8"/>
+  <text class="tc" x="600" y="290" text-anchor="middle">Virtualization</text>
+  <text class="tc" x="600" y="306" text-anchor="middle">vfio-ub / KVM</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 332 V342" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="346" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="370">驱动与框架</text>
+  <text class="tc" x="58" y="388">udma / ummu / unic / NPU / SSU / DPU 驱动 · UB User Driver · sysfs / udev · libvirt / QEMU / edk2</text>
+  <text class="tc" x="58" y="402">承载 KV 语义：bus / device / driver 模型向 UB 总线扩展</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 408 V418" marker-end="url(#b)"/>
+
+  <rect x="40" y="422" width="640" height="34" rx="10" fill="#4B3FE3"/>
+  <text class="tw" x="58" y="444">硬件：UBPU（CPU / NPU / GPU / Memory / DPU / SSU / Switch）· UB Firmware · BMC/UBM · UnifiedBus</text>
+</svg>

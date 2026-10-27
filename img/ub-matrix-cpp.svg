@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="超节点编程编译：并发编程、毕昇编译与运行时三层">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 400 11px "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="p" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">超节点编程编译：并发编程 · 毕昇编译 · 运行时</text>
+
+  <rect class="panel" x="40" y="44" width="640" height="92" rx="10"/>
+  <text class="tb" x="58" y="68">C++ 超节点并发编程（标准 C++ 语法扩展）</text>
+  <rect class="chip" x="58" y="78" width="143" height="48" rx="8"/>
+  <text class="tc" x="129" y="98" text-anchor="middle">标准 C++ 兼容</text>
+  <text class="td" x="129" y="116" text-anchor="middle">核心代码无需改</text>
+  <rect class="chip" x="211" y="78" width="143" height="48" rx="8"/>
+  <text class="tc" x="282" y="98" text-anchor="middle">异步任务</text>
+  <text class="td" x="282" y="116" text-anchor="middle">async / future</text>
+  <rect class="chip" x="364" y="78" width="143" height="48" rx="8"/>
+  <text class="tc" x="435" y="98" text-anchor="middle">超节点 STL 容器</text>
+  <text class="td" x="435" y="116" text-anchor="middle">partitioned_vector</text>
+  <rect class="chip" x="517" y="78" width="145" height="48" rx="8"/>
+  <text class="tc" x="589" y="98" text-anchor="middle">STL 并行算法</text>
+  <text class="td" x="589" y="116" text-anchor="middle">execution::supernode</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 136 V146" marker-end="url(#p)"/>
+
+  <rect class="panel" x="40" y="150" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="174">毕昇超节点编译</text>
+  <rect class="chip" x="58" y="182" width="193" height="22" rx="6"/>
+  <text class="td" x="154" y="197" text-anchor="middle">单机编译优化</text>
+  <rect class="chip" x="263" y="182" width="193" height="22" rx="6"/>
+  <text class="td" x="359" y="197" text-anchor="middle">内存池化优化</text>
+  <rect class="chip" x="468" y="182" width="194" height="22" rx="6"/>
+  <text class="td" x="565" y="197" text-anchor="middle">灵衢特定优化</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 212 V222" marker-end="url(#p)"/>
+
+  <rect class="panel" x="40" y="226" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="250">C++ 超节点运行时</text>
+  <rect class="chip" x="58" y="258" width="143" height="22" rx="6"/>
+  <text class="td" x="129" y="273" text-anchor="middle">全局亲和任务调度</text>
+  <rect class="chip" x="211" y="258" width="143" height="22" rx="6"/>
+  <text class="td" x="282" y="273" text-anchor="middle">分布式数据布局</text>
+  <rect class="chip" x="364" y="258" width="143" height="22" rx="6"/>
+  <text class="td" x="435" y="273" text-anchor="middle">灵衢亲和任务分发</text>
+  <rect class="chip" x="517" y="258" width="145" height="22" rx="6"/>
+  <text class="td" x="589" y="273" text-anchor="middle">超节点调试调优</text>
+
+  <rect class="panel" x="40" y="300" width="640" height="74" rx="10"/>
+  <text class="td" x="58" y="322">存量代码改造形态（完全基于标准 C++ 语法）</text>
+  <text class="mono" x="58" y="344">bisheng::future&lt;int32_t&gt; f = bisheng::async&lt;Action&gt;(desc);  // 拉起远程异步任务</text>
+  <text class="mono" x="58" y="364">bisheng::wait_all(futures);                                // 等待完成</text>
+
+  <rect class="strip" x="40" y="386" width="640" height="66" rx="10"/>
+  <text class="tc" x="58" y="410">存量多线程应用：继承 component_base + 注册 action + async/wait_all，迁移工作量 &lt; 1 周；</text>
+  <text class="tc" x="58" y="432">开源：gitee.com/openeuler/llvm-ub，首期 3.5KLOC（25 年 11 月）→ 二期 15KLOC（26H1）→ 三期调优。</text>
+</svg>

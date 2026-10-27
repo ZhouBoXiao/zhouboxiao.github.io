@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="720" height="560" role="img" aria-label="UB 一次 Write 事务的端到端流程">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+    .num { fill: #4B3FE3; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ring { fill: none; stroke: #A9AEFF; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+    <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="560" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="38">一次 Write 事务：从 User 的一段数据到 Home 的一段内存</text>
+
+  <rect class="panel" x="40" y="56" width="560" height="48" rx="10"/>
+  <circle class="ring" cx="66" cy="80" r="14"/>
+  <text class="num" x="66" y="85" text-anchor="middle">1</text>
+  <text class="tb" x="92" y="76">应用下发 SQE</text>
+  <text class="tc" x="92" y="94">携带 UBMD（EID + TokenID + UBA）、长度与源数据</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M320 104 V118" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="120" width="560" height="48" rx="10"/>
+  <circle class="ring" cx="66" cy="144" r="14"/>
+  <text class="num" x="66" y="149" text-anchor="middle">2</text>
+  <text class="tb" x="92" y="140">UB Controller 封装事务层包</text>
+  <text class="tc" x="92" y="158">BTAH（TAOpcode=Write、TASSN、INI_RC_ID）+ MAETAH（地址 / 长度 / TokenID）</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M320 168 V182" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="184" width="560" height="48" rx="10"/>
+  <circle class="ring" cx="66" cy="208" r="14"/>
+  <text class="num" x="66" y="213" text-anchor="middle">3</text>
+  <text class="tb" x="92" y="204">事务层选择服务模式 + 传输层切片</text>
+  <text class="tc" x="92" y="222">ROI / ROT / ROL → RTP 端到端重传、CTP 借下层可靠性、TP Bypass 走极简路径</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M320 232 V246" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="248" width="560" height="48" rx="10"/>
+  <circle class="ring" cx="66" cy="272" r="14"/>
+  <text class="num" x="66" y="277" text-anchor="middle">4</text>
+  <text class="tb" x="92" y="268">网络层寻址与选路</text>
+  <text class="tc" x="92" y="286">NTH 填 SCNA / DCNA、RT 决定逐包或逐流、SL 定优先级，尾部附 ICRC</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M320 296 V310" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="312" width="560" height="48" rx="10"/>
+  <circle class="ring" cx="66" cy="336" r="14"/>
+  <text class="num" x="66" y="341" text-anchor="middle">5</text>
+  <text class="tb" x="92" y="332">链路层成帧 → 物理层上 Lane</text>
+  <text class="tc" x="92" y="350">DLLDP 切成 Flit（20B），信用证控流、VL 隔离，LLR 负责点到点重传</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M320 360 V374" marker-end="url(#b)"/>
+
+  <rect x="40" y="376" width="560" height="48" rx="10" fill="#4B3FE3"/>
+  <circle cx="66" cy="400" r="14" fill="#FFFFFF"/>
+  <text class="num" x="66" y="405" text-anchor="middle">6</text>
+  <text class="tw" x="92" y="396" font-weight="500">Target 侧 UMMU：UBMD → PA + 权限</text>
+  <text class="tw" x="92" y="414">EID 查 TECT → TokenID 查 TCT → UBA 查 MATT / MAPT</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M320 424 V438" marker-end="url(#b)"/>
+
+  <rect class="panel" x="40" y="440" width="560" height="48" rx="10"/>
+  <circle class="ring" cx="66" cy="464" r="14"/>
+  <text class="num" x="66" y="469" text-anchor="middle">7</text>
+  <text class="tb" x="92" y="460">写内存并返回 TAACK</text>
+  <text class="tc" x="92" y="478">ATAH.RSPST 回传完成状态，CQE 上报完成，异常则触发事务层重试</text>
+
+  <rect class="strip" x="40" y="504" width="640" height="42" rx="10"/>
+  <text class="tc" x="60" y="530">Write / Writeback 只回一个轻量确认；Read / Atomic 需要携带数据响应；Send 消耗 Target 的 RQE</text>
+</svg>

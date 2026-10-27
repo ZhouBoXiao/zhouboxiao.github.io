@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="灵衢通信库 UMDK 分层与 URMA 使用流程">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="520" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="34">通信：UMDK 分层与 URMA 四步使用流程</text>
+
+  <rect class="panel" x="40" y="52" width="640" height="208" rx="10"/>
+  <text class="tb" x="58" y="76">灵衢通信库 UMDK 分层</text>
+  <rect class="chip" x="58" y="86" width="624" height="28" rx="8"/>
+  <text class="tc" x="70" y="105">应用：urma_* / urpc_* / socket(AF_UB, SOCK_STREAM) 或 ums_run 启动</text>
+  <rect class="chip" x="58" y="120" width="624" height="28" rx="8"/>
+  <text class="tc" x="70" y="139">用户态：liburma · liburpc · UMS lib（UBComm Lib 北向接口）</text>
+  <rect class="chip" x="58" y="154" width="624" height="28" rx="8"/>
+  <text class="tc" x="70" y="173">内核：ubcore（建链 / Jetty / Segment 管理）· uburma · kurpc · UMS</text>
+  <rect class="chip" x="58" y="188" width="624" height="28" rx="8"/>
+  <text class="tc" x="70" y="207">驱动：UDMA driver / User UDMA driver（厂商提供，可内核态或用户态接入）</text>
+  <rect x="58" y="222" width="624" height="28" rx="8" fill="#4B3FE3"/>
+  <text fill="#FFFFFF" font-size="12" x="70" y="241" font-family="PingFang SC, Microsoft YaHei, Noto Sans SC, sans-serif">硬件：UB 设备 —— Jetty 队列 · Segment 权限表 · Token 校验 · JFC 完成队列</text>
+
+  <text class="tb" x="40" y="296">URMA 四步使用流程</text>
+
+  <rect class="strip" x="58" y="308" width="137" height="56" rx="8"/>
+  <text class="tc" x="126" y="330" text-anchor="middle">① 创建 Jetty</text>
+  <text class="td" x="126" y="350" text-anchor="middle">urma_create_jetty</text>
+
+  <rect class="strip" x="209" y="308" width="137" height="56" rx="8"/>
+  <text class="tc" x="277" y="330" text-anchor="middle">② Segment</text>
+  <text class="td" x="277" y="350" text-anchor="middle">register / import</text>
+
+  <rect class="strip" x="360" y="308" width="137" height="56" rx="8"/>
+  <text class="tc" x="428" y="330" text-anchor="middle">③ 三类操作</text>
+  <text class="td" x="428" y="350" text-anchor="middle">双边 / 单边 / 原子</text>
+
+  <rect class="strip" x="511" y="308" width="137" height="56" rx="8"/>
+  <text class="tc" x="579" y="330" text-anchor="middle">④ 完成记录</text>
+  <text class="td" x="579" y="350" text-anchor="middle">urma_poll_jfc</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M195 336 H205" marker-end="url(#c)"/>
+  <path class="arr" stroke="#4B3FE3" d="M346 336 H356" marker-end="url(#c)"/>
+  <path class="arr" stroke="#4B3FE3" d="M497 336 H507" marker-end="url(#c)"/>
+
+  <rect class="panel" x="40" y="382" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="406">Jetty 家族与 Segment</text>
+  <text class="td" x="58" y="426">JFS 发送 · JFR 接收 · JFC 完成 · JFCE 完成事件；Segment 是连续 VA + 物理内存，靠 Token 校验保护</text>
+
+  <rect x="40" y="458" width="640" height="44" rx="10" fill="#F2F7FF" stroke="#A9AEFF"/>
+  <text class="tc" x="58" y="482">双边：JFS 发 + JFR 收，接收端须显式 post recv；单边：read / write 无需对端感知；原子：CAS / FAA</text>
+</svg>

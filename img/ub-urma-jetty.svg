@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 540" width="720" height="540" role="img" aria-label="URMA 异步编程模型与 Jetty 队列机制">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+    .lane { fill: #FFFFFF; stroke: rgba(23,23,23,0.12); stroke-dasharray: 5 4; }
+    .box { fill: #FFFFFF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+    <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="540" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="38">URMA 异步编程模型：Jetty 与四类队列如何串起来</text>
+
+  <rect class="lane" x="40" y="56" width="640" height="140" rx="12"/>
+  <text class="ts" x="58" y="80">UBPU A · Initiator（User 侧）</text>
+
+  <rect class="box" x="60" y="92" width="180" height="56" rx="10"/>
+  <text class="tb" x="78" y="116">应用下发 WR</text>
+  <text class="tc" x="78" y="134">含 UBMD / 目标 Jetty 信息</text>
+
+  <rect class="box" x="270" y="92" width="180" height="56" rx="10"/>
+  <text class="tb" x="288" y="116">SQ 发送队列</text>
+  <text class="tc" x="288" y="134">SQE 承载请求 · RCID 标识上下文</text>
+
+  <rect class="box" x="480" y="92" width="180" height="56" rx="10"/>
+  <text class="tb" x="498" y="116">Jetty / JFS</text>
+  <text class="tc" x="498" y="134">URMA 基本通信单元</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M244 120 H264" marker-end="url(#b)"/>
+  <path class="arr" stroke="#4B3FE3" d="M454 120 H474" marker-end="url(#b)"/>
+  <path class="arr" stroke="#4B3FE3" d="M570 148 V168 H110 V180" marker-end="url(#b)"/>
+
+  <rect x="40" y="182" width="640" height="50" rx="10" fill="#4B3FE3"/>
+  <text class="tw" x="60" y="206" font-weight="500">UB 事务穿越 UB Fabric</text>
+  <text class="tw" x="60" y="224">Write / Read / Atomic / Send → 网络层选路 → 传输层切片 → 链路层 Flit → 物理层 Lane</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M110 232 V244" marker-end="url(#b)"/>
+
+  <rect class="lane" x="40" y="246" width="640" height="140" rx="12"/>
+  <text class="ts" x="58" y="270">UBPU B · Target（Home 侧）</text>
+
+  <rect class="box" x="60" y="282" width="180" height="56" rx="10"/>
+  <text class="tb" x="78" y="306">UMMU 地址转换</text>
+  <text class="tc" x="78" y="324">UBMD → PA + 权限校验</text>
+
+  <rect class="box" x="270" y="282" width="180" height="56" rx="10"/>
+  <text class="tb" x="288" y="306">RQ / RQ Group</text>
+  <text class="tc" x="288" y="324">RQE 收包 · TCID / TC Group ID</text>
+
+  <rect class="box" x="480" y="282" width="180" height="56" rx="10"/>
+  <text class="tb" x="498" y="306">JFR / Jetty Group</text>
+  <text class="tc" x="498" y="324">Hint 哈希 · RR · 按 RQ 深度</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M244 310 H264" marker-end="url(#b)"/>
+  <path class="arr" stroke="#4B3FE3" d="M454 310 H474" marker-end="url(#b)"/>
+  <path class="arr" stroke="#4B3FE3" d="M570 338 V358 H110 V370" marker-end="url(#b)"/>
+
+  <rect class="lane" x="40" y="372" width="640" height="90" rx="12"/>
+  <text class="ts" x="58" y="396">完成与通知</text>
+  <rect class="box" x="60" y="406" width="180" height="40" rx="10"/>
+  <text class="tb" x="78" y="424">CQ 完成队列</text>
+  <text class="tc" x="78" y="440">CQE 记录执行状态</text>
+  <rect class="box" x="270" y="406" width="180" height="40" rx="10"/>
+  <text class="tb" x="288" y="424">JFC 轮询</text>
+  <text class="tc" x="288" y="440">多个 Jetty 可共享一个 CQ</text>
+  <rect class="box" x="480" y="406" width="180" height="40" rx="10"/>
+  <text class="tb" x="498" y="424">JFCE / JFAE → EQ</text>
+  <text class="tc" x="498" y="440">中断或阈值触发异步事件</text>
+  <path class="arr" stroke="#4B3FE3" d="M244 426 H264" marker-end="url(#b)"/>
+  <path class="arr" stroke="#4B3FE3" d="M454 426 H474" marker-end="url(#b)"/>
+
+  <rect class="strip" x="40" y="478" width="640" height="44" rx="10"/>
+  <text class="tc" x="60" y="504">同队列内可做保序，跨队列无保序要求；Jetty Group 把请求分发卸载到硬件，免 CPU 参与</text>
+</svg>

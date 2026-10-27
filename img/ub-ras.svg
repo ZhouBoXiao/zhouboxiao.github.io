@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="灵衢可靠性 RAS：三类故障分级与五条检测恢复路径">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="r" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">RAS：三类故障分级 × 五条检测与恢复路径</text>
+  <text class="tb" x="40" y="48">故障分级（基础规范 10.6.2）</text>
+
+  <rect class="chip" x="40" y="56" width="192" height="68" rx="8"/>
+  <text class="tc" x="52" y="80">A 类</text>
+  <text class="td" x="52" y="100">对应到单个事务</text>
+  <text class="td" x="52" y="116">不影响其它事务</text>
+
+  <rect class="chip" x="248" y="56" width="192" height="68" rx="8"/>
+  <text class="tc" x="260" y="80">B 类</text>
+  <text class="td" x="260" y="100">无法对应单个事务</text>
+  <text class="td" x="260" y="116">只到 Entity / Jetty 级</text>
+
+  <rect class="chip" x="456" y="56" width="224" height="68" rx="8"/>
+  <text class="tc" x="468" y="80">C 类</text>
+  <text class="td" x="468" y="100">设备级或端口级</text>
+  <text class="td" x="468" y="116">公共资源发生错误</text>
+
+  <rect class="panel" x="40" y="140" width="140" height="52" rx="8"/>
+  <text class="tb" x="52" y="162">UB 设备故障</text>
+  <text class="td" x="52" y="182">Entity / BusCtrl</text>
+  <text class="td" x="178" y="162">A&amp;B：Entity 驱动读配置空间状态寄存器</text>
+  <text class="td" x="178" y="182">C：Firmware → APEI → traceevent → rasdaemon</text>
+  <rect class="chip" x="480" y="140" width="200" height="52" rx="8"/>
+  <text class="td" x="490" y="162">可纠正：记录日志即可</text>
+  <text class="td" x="490" y="182">不可纠正：复位端口 + 通知驱动</text>
+
+  <rect class="panel" x="40" y="198" width="140" height="52" rx="8"/>
+  <text class="tb" x="52" y="220">远端内存故障</text>
+  <text class="td" x="52" y="240">Home + User 双侧</text>
+  <text class="td" x="178" y="220">Home：内存控制器 → APEI → OBMM 标记</text>
+  <text class="td" x="178" y="240">User：读 SEA/SEI；写 UB event → sysSentry</text>
+  <rect class="chip" x="480" y="198" width="200" height="52" rx="8"/>
+  <text class="td" x="490" y="220">上线 NUMA：隔离 + SIGBUS</text>
+  <text class="td" x="490" y="240">char dev：事件通知 UBPRM</text>
+
+  <rect class="panel" x="40" y="256" width="140" height="52" rx="8"/>
+  <text class="tb" x="52" y="278">通信故障</text>
+  <text class="td" x="52" y="298">URMA 管理面 / 数据面</text>
+  <text class="td" x="178" y="278">管理面：UDMA 状态寄存器 → uburma → 业务</text>
+  <text class="td" x="178" y="298">数据面（ACK 超时等）：走同一上报路径</text>
+  <rect class="chip" x="480" y="256" width="200" height="52" rx="8"/>
+  <text class="td" x="490" y="278">urma_get_async_event</text>
+  <text class="td" x="490" y="298">poll_jfc 取异常后分类处理</text>
+
+  <rect class="panel" x="40" y="314" width="140" height="52" rx="8"/>
+  <text class="tb" x="52" y="336">OOM 预防</text>
+  <text class="td" x="52" y="356">水位检测兜底</text>
+  <text class="td" x="178" y="336">OOM 通知链 → sysSentry → Service → UBPRM</text>
+  <text class="td" x="178" y="356">UBPRM 周期水位检测之外的紧急通道</text>
+  <rect class="chip" x="480" y="314" width="200" height="52" rx="8"/>
+  <text class="td" x="490" y="336">紧急借用其它节点内存</text>
+  <text class="td" x="490" y="356">上线到业务节点 OS</text>
+
+  <rect class="panel" x="40" y="372" width="140" height="52" rx="8"/>
+  <text class="tb" x="52" y="394">节点故障</text>
+  <text class="td" x="52" y="414">Panic / reboot</text>
+  <text class="td" x="178" y="394">Home panic → sysSentry → URMA/UVB 广播</text>
+  <text class="td" x="178" y="414">管理节点 sysSentry Service → UBPRM</text>
+  <rect class="chip" x="480" y="372" width="200" height="52" rx="8"/>
+  <text class="td" x="490" y="394">迁移 Home 内存、解除借用</text>
+  <text class="td" x="490" y="414">回执后 Home 才继续复位</text>
+
+  <rect class="strip" x="40" y="436" width="640" height="48" rx="10"/>
+  <text class="tc" x="58" y="460">枢纽：sysSentry / sysSentry Service 劫持 OOM、Panic、reboot 等紧急事件并统一上报，</text>
+  <text class="tc" x="58" y="476">UBPRM 做最终决策；运维侧由 rasdaemon 订阅 traceevent 的 non_standard_event 闭环。</text>
+</svg>

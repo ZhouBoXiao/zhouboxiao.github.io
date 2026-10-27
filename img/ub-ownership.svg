@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" width="720" height="380" role="img" aria-label="灵衢 Ownership 三态与一致性操作">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tl { fill: #3F3A8C; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="o" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="380" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="34">OWNERSHIP：没有跨节点硬件一致性，就把责任交给软件</text>
+
+  <rect class="panel" x="40" y="52" width="300" height="230" rx="10"/>
+  <text class="tb" x="58" y="76">状态机（每个节点本地一份）</text>
+
+  <rect x="120" y="92" width="140" height="40" rx="20" fill="#4B3FE3"/>
+  <text class="tw" x="190" y="117" text-anchor="middle">Write 可读写</text>
+
+  <rect class="strip" x="60" y="180" width="124" height="40" rx="20"/>
+  <text class="tc" x="122" y="205" text-anchor="middle">Read 只读</text>
+
+  <rect x="200" y="180" width="124" height="40" rx="20" fill="#FFFFFF" stroke="#A9AEFF"/>
+  <text class="tc" x="262" y="205" text-anchor="middle">Invalid 禁访问</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M162 132 Q136 156 128 176" marker-end="url(#o)"/>
+  <text class="tl" x="150" y="150" text-anchor="end">Clean</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M220 132 Q246 156 256 176" marker-end="url(#o)"/>
+  <text class="tl" x="252" y="150" text-anchor="start">Clean+Inv</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M122 224 Q190 262 256 224" marker-end="url(#o)"/>
+  <text class="tl" x="190" y="268" text-anchor="middle">Invalidate</text>
+
+  <rect class="panel" x="360" y="52" width="320" height="230" rx="10"/>
+  <text class="tb" x="378" y="76">规则与操作</text>
+  <text class="tc" x="378" y="102">任意粒度内存段，每个节点都有独立的本地状态</text>
+  <text class="tc" x="378" y="126">同一时刻仅一个节点可 Write，其余须 Invalid</text>
+  <text class="td" x="378" y="150">Clean：脏 CacheLine 写回内存，行仍保留</text>
+  <text class="td" x="378" y="174">Invalidate：失效 CacheLine，下次读直取内存</text>
+  <text class="tc" x="378" y="200">Write → Read：执行 Clean</text>
+  <text class="tc" x="378" y="224">Write → Invalid：Clean &amp; Invalidate</text>
+  <text class="tc" x="378" y="248">Read → Invalid：执行 Invalidate</text>
+  <text class="td" x="378" y="270">其余迁移（NA）：不作任何处理</text>
+
+  <rect x="40" y="300" width="640" height="52" rx="10" fill="#F2F7FF" stroke="#A9AEFF"/>
+  <text class="tc" x="58" y="324">共享内存读写前后各调一次 obmm_set_ownership（仅 Cacheable 模式需要）；</text>
+  <text class="tc" x="58" y="344">这正是「无跨节点一致性」的含义 —— 一致性由软件按段显式维护，而不是由硬件嗅探保证。</text>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="UMMU 基于 UBMD 的三级查表流程">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+    .key { fill: #FFFFFF; stroke: #4B3FE3; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+    <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="38">Home-User 内存模型：UBMD 如何在 Home 侧被翻译成物理地址</text>
+
+  <rect class="panel" x="40" y="56" width="200" height="66" rx="10"/>
+  <text class="tb" x="58" y="80">User 侧 UBMD</text>
+  <text class="tc" x="58" y="100">EID + TokenID + UBA</text>
+  <text class="tc" x="58" y="116">64-bit UBA 虚拟视图</text>
+
+  <rect class="panel" x="40" y="56" width="0" height="0" rx="10"/>
+
+  <rect class="panel" x="270" y="60" width="120" height="58" rx="10" fill="#F2F7FF" stroke="#A9AEFF"/>
+  <text class="tb" x="286" y="84">可由 UB Decoder</text>
+  <text class="tc" x="286" y="102">由本地 PA 转换得到</text>
+
+  <rect class="panel" x="420" y="60" width="120" height="58" rx="10" fill="#F2F7FF" stroke="#A9AEFF"/>
+  <text class="tb" x="436" y="84">或由编程接口</text>
+  <text class="tc" x="436" y="102">URMA 显式提供</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M240 89 H264" marker-end="url(#b)"/>
+  <path class="arr" stroke="#4B3FE3" d="M240 89 H414" marker-end="url(#b)"/>
+
+  <text class="ts" x="40" y="152">① 配置查找（Stage 选择）</text>
+  <rect class="panel" x="40" y="162" width="640" height="56" rx="10"/>
+  <rect class="key" x="58" y="176" width="74" height="26" rx="6"/>
+  <text x="95" y="193" text-anchor="middle" fill="#4B3FE3" font-size="12" font-family="PingFang SC, Microsoft YaHei, Noto Sans SC, sans-serif">EID</text>
+  <text class="arr" x="140" y="192" fill="#52525B" font-size="14">→</text>
+  <text class="t" x="156" y="193">TECT（Target Entity Configuration Table）</text>
+  <text class="ts" x="156" y="210">取出 Stage1/Stage2 使能、内存属性、MAPT 使能、TCT 基地址 TCT_PTR</text>
+
+  <text class="ts" x="40" y="246">② 上下文查找（TokenID）</text>
+  <rect class="panel" x="40" y="256" width="640" height="56" rx="10"/>
+  <rect class="key" x="58" y="270" width="74" height="26" rx="6"/>
+  <text x="95" y="287" text-anchor="middle" fill="#4B3FE3" font-size="12" font-family="PingFang SC, Microsoft YaHei, Noto Sans SC, sans-serif">TokenID</text>
+  <text class="arr" x="140" y="286" fill="#52525B" font-size="14">→</text>
+  <text class="t" x="156" y="287">TCT（Target Context Table，线性表或两级表）</text>
+  <text class="ts" x="156" y="304">取出该 UBA 空间的 MATT 基地址与 MAPT 基地址</text>
+
+  <text class="ts" x="40" y="340">③ 地址转换 + ④ 权限校验（同一把钥匙 UBA）</text>
+  <rect class="panel" x="40" y="350" width="310" height="56" rx="10"/>
+  <rect class="key" x="58" y="364" width="74" height="26" rx="6"/>
+  <text x="95" y="381" text-anchor="middle" fill="#4B3FE3" font-size="12" font-family="PingFang SC, Microsoft YaHei, Noto Sans SC, sans-serif">UBA</text>
+  <text class="t" x="140" y="381">查 MATT → PA</text>
+  <text class="ts" x="140" y="398">UBA 空间 ↦ Home 物理地址空间</text>
+
+  <rect class="panel" x="370" y="350" width="310" height="56" rx="10"/>
+  <rect class="key" x="388" y="364" width="74" height="26" rx="6"/>
+  <text x="425" y="381" text-anchor="middle" fill="#4B3FE3" font-size="12" font-family="PingFang SC, Microsoft YaHei, Noto Sans SC, sans-serif">UBA</text>
+  <text class="t" x="470" y="381">查 MAPT → 权限</text>
+  <text class="ts" x="470" y="398">校验 TokenValue 与读写属性</text>
+
+  <rect x="40" y="426" width="640" height="50" rx="10" fill="#4B3FE3"/>
+  <text class="tw" x="60" y="450" font-weight="500">Home 侧落到真实物理内存</text>
+  <text class="tw" x="60" y="468">校验不通过 → 事务终止 + 上报事件；通过 → 执行访存并返回响应</text>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="灵衢内存池化：EXPORT 与 IMPORT 借用共享流程">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="m" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="34">内存池化：从 EXPORT 到 IMPORT 的两条上线路径</text>
+
+  <rect class="panel" x="40" y="52" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="76">① Home 侧（内存提供方）</text>
+  <text class="tc" x="58" y="98">obmm_export(EID, size)：本地内存注册进 UMMU，产出 {dest EID, UBA, TokenID}</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 114 V126" marker-end="url(#m)"/>
+
+  <rect class="panel" x="40" y="130" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="154">② UBPRM（超节点池化资源管理者）</text>
+  <text class="tc" x="58" y="176">决策借出方 / 借入方与容量，填充 {src EID, scna, dcna} 及厂商私有信息，形成 mem desc</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 192 V204" marker-end="url(#m)"/>
+
+  <rect class="panel" x="40" y="208" width="640" height="62" rx="10"/>
+  <text class="tb" x="58" y="232">③ User 侧（内存使用方）</text>
+  <text class="tc" x="58" y="254">obmm_import(mem desc)：写进 UB Decoder，打通本机 Load / Store 到远端物理地址的通路</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M195 270 V292 H152 V302" marker-end="url(#m)"/>
+  <path class="arr" stroke="#4B3FE3" d="M525 270 V292 H568 V302" marker-end="url(#m)"/>
+
+  <rect class="strip" x="40" y="306" width="310" height="130" rx="10"/>
+  <text class="tb" x="58" y="330">上线为 NUMA node</text>
+  <text class="tc" x="58" y="352">add_memory → 新增一个无 CPU 的 NUMA node</text>
+  <text class="tc" x="58" y="372">应用零修改：malloc / mbind / madvise</text>
+  <text class="tc" x="58" y="392">numa_alloc_onnode / move_pages</text>
+  <text class="td" x="58" y="416">适用：内存借用 —— 削峰填谷、超大规格虚机</text>
+
+  <rect class="strip" x="370" y="306" width="310" height="130" rx="10"/>
+  <text class="tb" x="388" y="330">上线为 char device（OBMM_DEV）</text>
+  <text class="tc" x="388" y="352">open → mmap → 直接拿到远端内存 VA</text>
+  <text class="tc" x="388" y="372">配合 obmm_set_ownership 维护一致性</text>
+  <text class="tc" x="388" y="392">Cacheable 模式才需显式维护</text>
+  <text class="td" x="388" y="416">适用：内存共享 —— 多节点读写同一段内存</text>
+
+  <rect x="40" y="452" width="640" height="36" rx="10" fill="#4B3FE3"/>
+  <text class="tw" x="58" y="475">UMMU 管 Home 侧通路 · UB Decoder 管 User 侧通路 · 两者之间的路由由 UBFM 配置，缺一不可</text>
+</svg>

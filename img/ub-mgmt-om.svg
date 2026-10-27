@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" width="720" height="430" role="img" aria-label="超节点管控运维组件与北向接口">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="g" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="430" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">管控运维：五类组件与它们的北向接口</text>
+
+  <rect class="strip" x="58" y="44" width="300" height="30" rx="8"/>
+  <text class="tc" x="208" y="63" text-anchor="middle">运维系统（O&amp;M）</text>
+  <rect class="strip" x="378" y="44" width="300" height="30" rx="8"/>
+  <text class="tc" x="528" y="63" text-anchor="middle">云管系统（K8s / OpenStack）</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M208 74 V88" marker-end="url(#g)"/>
+  <path class="arr" stroke="#4B3FE3" d="M528 74 V88" marker-end="url(#g)"/>
+
+  <rect class="panel" x="40" y="92" width="640" height="112" rx="10"/>
+  <rect class="chip" x="58" y="102" width="192" height="40" rx="8"/>
+  <text class="tc" x="154" y="118" text-anchor="middle">PoDManager</text>
+  <text class="td" x="154" y="134" text-anchor="middle">框级配置 / 部署 / 升级 / 监控</text>
+  <rect class="chip" x="264" y="102" width="192" height="40" rx="8"/>
+  <text class="tc" x="360" y="118" text-anchor="middle">UBM（灵衢总线管理）</text>
+  <text class="td" x="360" y="134" text-anchor="middle">拓扑 / 地址 / 路由 / SLA</text>
+  <rect class="chip" x="470" y="102" width="192" height="40" rx="8"/>
+  <text class="tc" x="566" y="118" text-anchor="middle">BMC</text>
+  <text class="td" x="566" y="134" text-anchor="middle">硬件带外管理与故障预警</text>
+  <rect class="chip" x="58" y="150" width="192" height="40" rx="8"/>
+  <text class="tc" x="154" y="166" text-anchor="middle">MindCluster</text>
+  <text class="td" x="154" y="182" text-anchor="middle">AI 任务调度与集群运维</text>
+  <rect class="chip" x="264" y="150" width="192" height="40" rx="8"/>
+  <text class="tc" x="360" y="166" text-anchor="middle">UBS Engine</text>
+  <text class="td" x="360" y="182" text-anchor="middle">池化资源管理与调度</text>
+  <rect class="chip" x="470" y="150" width="192" height="40" rx="8"/>
+  <text class="tc" x="566" y="166" text-anchor="middle">CANN（NPU 驱动）</text>
+  <text class="td" x="566" y="182" text-anchor="middle">UBPU（NPU）归一化管理</text>
+
+  <rect class="panel" x="40" y="216" width="640" height="128" rx="10"/>
+  <text class="tb" x="58" y="238">组件</text>
+  <text class="tb" x="190" y="238">北向协议</text>
+  <text class="tb" x="410" y="238">数据模型</text>
+  <text class="td" x="58" y="262">UBM</text>
+  <text class="td" x="190" y="262">RESTCONF·NETCONF·SNMP·Telemetry</text>
+  <text class="td" x="410" y="262">Yang：总线物理资源·路由·端口·告警</text>
+  <text class="td" x="58" y="282">BMC</text>
+  <text class="td" x="190" y="282">Redfish 1.20.1·SNMP v1/2c/3·IPMI</text>
+  <text class="td" x="410" y="282">机框 / 系统 / 链路视图、灵衢线缆资产</text>
+  <text class="td" x="58" y="302">PoDManager</text>
+  <text class="td" x="190" y="302">Redfish·RESTCONF·NETCONF·SNMP</text>
+  <text class="td" x="410" y="302">框级配置·部署·升级·监控</text>
+  <text class="td" x="58" y="322">MindCluster</text>
+  <text class="td" x="190" y="322">gRPC + Protobuf·ConfigMap</text>
+  <text class="td" x="410" y="322">AI 任务状态、NPU 利用率与健康</text>
+  <text class="td" x="58" y="340">UBS Engine</text>
+  <text class="td" x="190" y="340">CLI + SDK</text>
+  <text class="td" x="410" y="340">节点与内存资源的度量与调度</text>
+
+  <rect x="40" y="356" width="640" height="56" rx="10" fill="#F2F7FF" stroke="#A9AEFF"/>
+  <text class="tc" x="58" y="380">PoD 形态：柜内 BMC / UBM 不对外，统一由 PoDManager 出接口；Server 形态由 BMC、UBM 直接对接运维。</text>
+  <text class="tc" x="58" y="402">UBM 部署位置随场景变：智算跑在主板 / 交换板 / 交换设备的专用处理器，通算跑在 HostOS。</text>
+</svg>

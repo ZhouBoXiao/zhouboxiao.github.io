@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 550" width="720" height="550" role="img" aria-label="超节点可靠性：六类故障模式与三条消减路径">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .dashed { fill: #FFFFFF; stroke: #A9AEFF; stroke-dasharray: 5 4; }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="k" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="550" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">可靠性：六类新增故障点与三条内存消减路径</text>
+
+  <rect class="dashed" x="40" y="52" width="330" height="92" rx="10"/>
+  <text class="td" x="52" y="74">借出方节点 ④ 掉电 / Panic / 计划内重启</text>
+  <rect class="chip" x="52" y="84" width="96" height="44" rx="8"/>
+  <text class="tc" x="100" y="104" text-anchor="middle">① 内存颗粒</text>
+  <text class="td" x="100" y="120" text-anchor="middle">不可纠正错</text>
+  <rect class="chip" x="156" y="84" width="96" height="44" rx="8"/>
+  <text class="tc" x="204" y="104" text-anchor="middle">② UMMU</text>
+  <text class="td" x="204" y="120" text-anchor="middle">鉴权失败</text>
+  <rect class="chip" x="260" y="84" width="96" height="44" rx="8"/>
+  <text class="tc" x="308" y="104" text-anchor="middle">③ UB 控制器</text>
+  <text class="td" x="308" y="120" text-anchor="middle">不可纠正错</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M370 106 H386" marker-end="url(#k)"/>
+
+  <rect class="chip" x="390" y="84" width="96" height="44" rx="8"/>
+  <text class="tc" x="438" y="104" text-anchor="middle">⑤ UB 链路</text>
+  <text class="td" x="438" y="120" text-anchor="middle">Down / 降 Lane</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M486 106 H502" marker-end="url(#k)"/>
+
+  <rect class="dashed" x="506" y="52" width="174" height="92" rx="10"/>
+  <text class="td" x="518" y="74">使用方节点</text>
+  <rect class="chip" x="518" y="84" width="150" height="44" rx="8"/>
+  <text class="tc" x="593" y="104" text-anchor="middle">⑥ 本端 UB 控制器</text>
+  <text class="td" x="593" y="120" text-anchor="middle">不可纠正错</text>
+
+  <text class="td" x="40" y="164">新增故障点：UB 控制器 / UB 链路 / UMMU —— 超节点中「提供方」故障会扩散到「使用方」，这是单机时代没有的。</text>
+
+  <text class="tb" x="40" y="196">内存不足场景：从换盘 / 阻塞 / OOM kill 到三条消减</text>
+
+  <rect class="strip" x="40" y="208" width="194" height="76" rx="10"/>
+  <text class="tc" x="52" y="232">主动内存借用</text>
+  <text class="td" x="52" y="252">按内存水线主动借用</text>
+  <text class="td" x="52" y="270">冷热搬移，性能下降 &lt; 10%</text>
+
+  <rect class="strip" x="246" y="208" width="194" height="76" rx="10"/>
+  <text class="tc" x="258" y="232">OOM 确定性预防</text>
+  <text class="td" x="258" y="252">事件亚秒级上报处理</text>
+  <text class="td" x="258" y="270">借用内存 10ms/GB 上线</text>
+
+  <rect class="strip" x="452" y="208" width="228" height="76" rx="10"/>
+  <text class="tc" x="464" y="232">极速热迁移</text>
+  <text class="td" x="464" y="252">内存不足触发虚机与业务迁移</text>
+  <text class="td" x="464" y="270">基于 UB 互联，中断时间 &lt; 50ms</text>
+
+  <text class="tb" x="40" y="318">Panic / Reboot 场景：故障不扩散</text>
+
+  <rect class="panel" x="40" y="330" width="640" height="70" rx="10"/>
+  <text class="td" x="58" y="354">故障通知 &lt; 100ms（sysSentry）· 借用内存上线 &lt; 10ms/GB（numa 预上线 + 高位预留）</text>
+  <text class="td" x="58" y="374">数据紧急回迁 8GB/s，搬移过程应用无感 · 虚机异地快恢 &lt; 1s · 容器迭代迁移快恢</text>
+
+  <text class="tb" x="40" y="430">异地快恢：被动容错 vs 主动容错</text>
+
+  <rect class="panel" x="40" y="442" width="640" height="60" rx="10"/>
+  <text class="tc" x="58" y="464">资源约束：冗余双份 → 无冗余　|　虚机规格：≤ 8 vCPU → 无限制</text>
+  <text class="tc" x="58" y="486">性能受损：&gt; 20% → &lt; 5%　|　设备约束：仅模拟设备 → 无限制（含直通、SPDK）</text>
+
+  <rect x="40" y="512" width="640" height="30" rx="8" fill="#4B3FE3"/>
+  <text class="tw" x="58" y="532">验证：业务恢复 0.788 秒，异地快恢执行时长 3.4 秒（原子性快照 → 确定性重放 → 一致性协同）</text>
+</svg>

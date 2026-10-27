@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 570" width="720" height="570" role="img" aria-label="灵衢 UnifiedBus 协议栈分层">
+  <style>
+    .t { fill: #171717; font: 400 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .side { fill: #F2F7FF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#52525B"/>
+    </marker>
+    <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#6F6FFF"/>
+    </marker>
+    <linearGradient id="g6" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6F6FFF"/>
+      <stop offset="1" stop-color="#3C2ECA"/>
+    </linearGradient>
+    <linearGradient id="g5" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8E8BFF"/>
+      <stop offset="1" stop-color="#6F6FFF"/>
+    </linearGradient>
+    <linearGradient id="g4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#A9AEFF"/>
+      <stop offset="1" stop-color="#8E8BFF"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C3C6FF"/>
+      <stop offset="1" stop-color="#A9AEFF"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#DCDDFF"/>
+      <stop offset="1" stop-color="#C3C6FF"/>
+    </linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#EEEFFF"/>
+      <stop offset="1" stop-color="#DCDDFF"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="720" height="570" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="40">灵衢 UnifiedBus 协议栈：六层业务面 + 三个跨层组件</text>
+
+  <rect x="40" y="62" width="410" height="60" rx="10" fill="url(#g6)"/>
+  <text class="tw" x="60" y="86" font-size="14" font-weight="500">功能层</text>
+  <text class="tw" x="60" y="106">Load/Store 同步 · URMA 异步 · URPC · 多 Entity 协同</text>
+
+  <rect x="40" y="132" width="410" height="60" rx="10" fill="url(#g5)"/>
+  <text class="tw" x="60" y="156" font-size="14" font-weight="500">事务层</text>
+  <text class="tw" x="60" y="176">内存 / 消息 / 维护 / 管理 四类事务 · ROI · ROT · ROL · UNO</text>
+
+  <rect x="40" y="202" width="410" height="60" rx="10" fill="url(#g4)"/>
+  <text class="tw" x="60" y="226" font-size="14" font-weight="500">传输层</text>
+  <text class="tw" x="60" y="246">RTP · CTP · UTP · TP Bypass · PSN 重传 · TPG 多通道</text>
+
+  <rect x="40" y="272" width="410" height="60" rx="10" fill="url(#g3)"/>
+  <text class="tw" x="60" y="296" font-size="14" font-weight="500">网络层</text>
+  <text class="tw" x="60" y="316">CNA / IP 双地址 · 逐包逐流路由 · NPI 隔离 · FECN · CAQM</text>
+
+  <rect x="40" y="342" width="410" height="60" rx="10" fill="url(#g2)"/>
+  <text class="tb" x="60" y="366" font-size="14">数据链路层</text>
+  <text class="tc" x="60" y="386">Flit 20B / DLLDB · 信用证流控 · 虚通道 VL · LLR 重传</text>
+
+  <rect x="40" y="412" width="410" height="60" rx="10" fill="url(#g1)"/>
+  <text class="tb" x="60" y="436" font-size="14">物理层</text>
+  <text class="tc" x="60" y="456">自定义速率 · NRZ / PAM4 · FEC 旁路 · 动态升降 Lane</text>
+
+  <rect class="side" x="474" y="62" width="206" height="106" rx="10"/>
+  <text class="tb" x="492" y="88">UBFM（管理面）</text>
+  <text class="tc" x="492" y="108">Device/Entity 发现</text>
+  <text class="tc" x="492" y="126">EID · 网络地址 · 路由</text>
+  <text class="tc" x="492" y="144">池化资源调度 · UB Partition</text>
+
+  <rect class="side" x="474" y="182" width="206" height="86" rx="10"/>
+  <text class="tb" x="492" y="208">UMMU（内存数据面）</text>
+  <text class="tc" x="492" y="228">UBMD → 物理地址</text>
+  <text class="tc" x="492" y="246">权限校验 · 地址隔离</text>
+
+  <rect class="side" x="474" y="282" width="206" height="106" rx="10"/>
+  <text class="tb" x="492" y="308">UB Decoder（User 侧）</text>
+  <text class="tc" x="492" y="328">本地 PA → UBMD</text>
+  <text class="tc" x="492" y="346">安全子系统</text>
+  <text class="tc" x="492" y="364">设备认证 · 访问控制</text>
+
+  <rect class="side" x="474" y="402" width="206" height="70" rx="10"/>
+  <text class="tb" x="492" y="428">UBPU 形态</text>
+  <text class="tc" x="492" y="448">CPU · NPU · GPU · Mem</text>
+  <text class="tc" x="492" y="464">DPU · SSU · Switch</text>
+
+  <path class="arr" stroke="#6F6FFF" d="M458 92 H470" marker-end="url(#b)"/>
+  <path class="arr" stroke="#6F6FFF" d="M458 235 H470" marker-end="url(#b)"/>
+  <path class="arr" stroke="#6F6FFF" d="M458 335 H470" marker-end="url(#b)"/>
+  <path class="arr" stroke="#6F6FFF" d="M458 437 H470" marker-end="url(#b)"/>
+
+  <rect class="strip" x="40" y="492" width="640" height="60" rx="10"/>
+  <text class="tb" x="60" y="516">一条总线承载四类操作</text>
+  <text class="tc" x="60" y="536">内存访问 · 消息传递 · 过程调用 · 资源管理 —— 统一协议栈，不做协议转换</text>
+</svg>
