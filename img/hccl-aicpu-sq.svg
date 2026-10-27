@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="环形提交队列 SQ 的结构与 SQE WQE 交错序列">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="q1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="q2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">单子送出去的最后一公里：环形队列</text>
+  <text class="ts" x="30" y="50">托盘攒满 → 拷进收件箱 → 更新 tail（就是那一次按铃）→ 硬件照着 head 一路消费</text>
+
+  <!-- locBuf -->
+  <rect x="40" y="84" width="150" height="76" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="54" y="104">托盘 locBuf</text>
+  <text class="ns" x="54" y="124">AI CPU 本地缓冲</text>
+  <text class="ns" x="54" y="142">攒批就发生在这</text>
+
+  <path class="arr" d="M194 122 L248 122" marker-end="url(#q1)"/>
+  <text class="ns" x="221" y="114" text-anchor="middle" style="fill:#1A1759;">copy</text>
+
+  <!-- 环形队列 -->
+  <text class="ns" x="258" y="62" style="fill:#52525B;">SQ（收件箱，硬件可见的环形队列）</text>
+  <rect x="258" y="70" width="430" height="106" rx="53" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)" stroke-width="1.2"/>
+
+  <g stroke="rgba(23,23,23,0.22)" stroke-width="1">
+    <rect x="300" y="98" width="24" height="44" fill="#E5E7EB"/>
+    <rect x="328" y="98" width="24" height="44" fill="#E5E7EB"/>
+    <rect x="356" y="98" width="24" height="44" fill="#E5E7EB"/>
+    <rect x="384" y="98" width="24" height="44" fill="#C7D2FE"/>
+    <rect x="412" y="98" width="24" height="44" fill="#C7D2FE"/>
+    <rect x="440" y="98" width="24" height="44" fill="#C7D2FE"/>
+    <rect x="468" y="98" width="24" height="44" fill="#C7D2FE"/>
+    <rect x="496" y="98" width="24" height="44" fill="#C7D2FE"/>
+    <rect x="524" y="98" width="24" height="44" fill="#C7D2FE"/>
+    <rect x="552" y="98" width="24" height="44" fill="#FFFFFF"/>
+    <rect x="580" y="98" width="24" height="44" fill="#FFFFFF"/>
+    <rect x="608" y="98" width="24" height="44" fill="#FFFFFF"/>
+  </g>
+
+  <!-- head / tail 标注 -->
+  <path class="arrg" d="M384 150 L384 162" marker-end="url(#q2)"/>
+  <text class="ns" x="392" y="164" style="fill:#52525B;">head：硬件消费到这</text>
+  <path class="arr" d="M552 150 L552 162" marker-end="url(#q1)"/>
+  <text class="ns" x="560" y="164" style="fill:#1A1759;">tail：AI CPU 写到这</text>
+
+  <!-- 图例 -->
+  <rect x="40" y="180" width="12" height="12" fill="#E5E7EB" stroke="rgba(23,23,23,0.22)"/>
+  <text class="ns" x="58" y="190">已消费</text>
+  <rect x="112" y="180" width="12" height="12" fill="#C7D2FE" stroke="rgba(23,23,23,0.22)"/>
+  <text class="ns" x="130" y="190">已提交待消费</text>
+  <rect x="214" y="180" width="12" height="12" fill="#FFFFFF" stroke="rgba(23,23,23,0.22)"/>
+  <text class="ns" x="232" y="190">空闲（还能写 3 格）</text>
+
+  <!-- 按铃 -->
+  <rect x="258" y="212" width="180" height="46" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="348" y="232" text-anchor="middle">ConfigSqTail(newTail)</text>
+  <text class="ns" x="348" y="250" text-anchor="middle">更新 tail 寄存器 = 按铃</text>
+
+  <path class="arr" d="M442 235 L490 235" marker-end="url(#q1)"/>
+
+  <rect x="494" y="212" width="194" height="46" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="bd" x="591" y="232" text-anchor="middle" style="fill:#171717;">硬件开跑</text>
+  <text class="ns" x="591" y="250" text-anchor="middle">head 前进，腾出空间</text>
+
+  <text class="ts" x="30" y="288">可用空间 = 队列深度 − (tail − head)。不够时轮询查 head 等硬件消费，有超时保护，</text>
+  <text class="ts" x="30" y="308" style="fill:#991B1B;">超时就打「rtsq full」——含义是：AI CPU 生产单子的速度超过了硬件消费单子的速度。</text>
+
+  <!-- 交错序列 -->
+  <text class="th" x="30" y="348">单子的实际顺序是交错的（SQE 走 stream，WQE 走 UB 高速通道）</text>
+
+  <g>
+    <rect x="40" y="362" width="112" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="96" y="385" text-anchor="middle">SQE 本地拷贝</text>
+    <rect x="160" y="362" width="104" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="212" y="385" text-anchor="middle">SQE 等通知</text>
+    <rect x="272" y="362" width="126" height="38" rx="6" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="bd" x="335" y="385" text-anchor="middle">WQE × N（去 jetty）</text>
+    <rect x="406" y="362" width="116" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="464" y="385" text-anchor="middle">SQE DB（pi=N）</text>
+    <rect x="530" y="362" width="112" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="586" y="385" text-anchor="middle">SQE 本地拷贝</text>
+  </g>
+  <g class="arrg">
+    <path d="M156 381 L158 381"/><path d="M268 381 L270 381"/><path d="M402 381 L404 381"/><path d="M526 381 L528 381"/>
+  </g>
+
+  <text class="ts" x="30" y="424">这个交错顺序在 Task Cache 里会被显式记成 <tspan class="ns" style="font-size:11px;">launchOrder_</tspan> —— 回放时顺序错了，就是「数据还没到就发出去了」。</text>
+</svg>

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 372" width="720" height="372" role="img" aria-label="AICPU 模式核心概念地图：从一次 AllReduce 到硬件执行">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 11px "SF Mono", Consolas, monospace; }
+    .nt { fill: #171717; font: 500 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="c1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="c2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="372" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">一张图认全 6 个核心概念</text>
+  <text class="ts" x="30" y="50">上面两条是「谁在第几步干活」——AICPU 模式改变的正是这个分工</text>
+
+  <!-- 通信域大框 -->
+  <rect x="30" y="66" width="660" height="240" rx="10" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)" stroke-dasharray="5 4"/>
+  <text class="ts" x="44" y="86">通信域 comm = 一个「群聊」：参与这次通信的一组卡 + 它们之间的连接</text>
+
+  <!-- 两条分工条 -->
+  <rect x="50" y="98" width="620" height="22" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ns" x="60" y="113" style="fill:#52525B;">HOST 模式：①②③④⑤⑥ 全都由 host CPU 干</text>
+  <rect x="155" y="126" width="515" height="22" rx="6" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="ns" x="165" y="141" style="fill:#1A1759;">AICPU 模式：只留 ① 在 host，②③④⑤⑥ 全部搬进 AI CPU</text>
+
+  <!-- 六个节点 -->
+  <g>
+    <rect x="50" y="164" width="95" height="72" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+    <text class="nt" x="97" y="186" text-anchor="middle">① 一次 AllReduce</text>
+    <text class="ns" x="97" y="205" text-anchor="middle">一句需求</text>
+    <text class="ns" x="97" y="224" text-anchor="middle">「这批货分 8 份」</text>
+  </g>
+  <path class="arrg" d="M149 200 L153 200" marker-end="url(#c2)"/>
+
+  <g>
+    <rect x="155" y="164" width="95" height="72" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="202" y="186" text-anchor="middle" style="fill:#1A1759;">② 展开</text>
+    <text class="mono" x="202" y="205" text-anchor="middle" style="font-size:10px;fill:#1A1759;">Orchestrate()</text>
+    <text class="ns" x="202" y="224" text-anchor="middle">拆成几百张单子</text>
+  </g>
+  <path class="arr" d="M254 200 L258 200" marker-end="url(#c1)"/>
+
+  <g>
+    <rect x="260" y="164" width="95" height="72" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="307" y="186" text-anchor="middle" style="fill:#1A1759;">③ task × 几百</text>
+    <text class="ns" x="307" y="205" text-anchor="middle">一张张搬运指令</text>
+    <text class="ns" x="307" y="224" text-anchor="middle">从 A 搬 N 字节到 B</text>
+  </g>
+  <path class="arr" d="M359 200 L363 200" marker-end="url(#c1)"/>
+
+  <g>
+    <rect x="365" y="164" width="95" height="72" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="412" y="186" text-anchor="middle" style="fill:#1A1759;">④ SQE / WQE</text>
+    <text class="ns" x="412" y="205" text-anchor="middle">填成标准格式单子</text>
+    <text class="ns" x="412" y="224" text-anchor="middle">普通快递 / 顺丰</text>
+  </g>
+  <path class="arr" d="M464 200 L468 200" marker-end="url(#c1)"/>
+
+  <g>
+    <rect x="470" y="164" width="95" height="72" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="517" y="186" text-anchor="middle" style="fill:#1A1759;">⑤ Thread</text>
+    <text class="ns" x="517" y="205" text-anchor="middle">一条传送带</text>
+    <text class="ns" x="517" y="224" text-anchor="middle">单子挂上去排队</text>
+  </g>
+  <path class="arr" d="M569 200 L573 200" marker-end="url(#c1)"/>
+
+  <g>
+    <rect x="575" y="164" width="95" height="72" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+    <text class="nt" x="622" y="186" text-anchor="middle" style="fill:#1A1759;">⑥ doorbell</text>
+    <text class="ns" x="622" y="205" text-anchor="middle">按铃通知硬件</text>
+    <text class="ns" x="622" y="224" text-anchor="middle">「来取件了」</text>
+  </g>
+
+  <text class="ts" x="50" y="256">前 5 步都是「写单子」，第 6 步才真正开始搬 —</text>
+  <text class="ts" x="50" y="276" style="fill:#1A1759;">HOST 模式慢，就慢在 host 每写完一张就得按一次铃（2~5 μs × 几百次）</text>
+  <text class="ts" x="50" y="296">而「写单子」本身不挑地方：host 能写，NPU 上的 AI CPU 也能写 — 这就是下沉的余地</text>
+
+  <text class="ts" x="30" y="336">混个脸熟就行的几个词：</text>
+  <text class="ts" x="30" y="356">WQE = 走 UB 高速通道的单子 · jetty = UB 上的小队列 · token = 远程取货的钥匙 · pi = 取件码 · resCtx = 通信资源清单</text>
+</svg>

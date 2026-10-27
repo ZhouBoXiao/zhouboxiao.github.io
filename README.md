@@ -42,6 +42,10 @@
 1. [HTTP协议](_posts/2020-03-19-HTTP-study.md)
 2. [计算机网络基础](_posts/2020-04-13-网络学习01.md)
 
+## AI 芯片与系统
+
+1. [Ascend NoC 学习笔记](_posts/2026-09-21-ascend-noc.md)
+
 ## 操作系统
 
 ### Linux

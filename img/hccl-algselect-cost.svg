@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 452" width="720" height="452" role="img" aria-label="HCCL 代价模型：cost 公式、带宽利用率曲线与打分表">
+  <style>
+    .tb { fill: #171717; font: 500 14px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .nt { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 9.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 13px "SF Mono", Consolas, monospace; }
+    .mono2 { fill: #1A1759; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .cell { fill: #171717; font: 500 10px "SF Mono", Consolas, monospace; }
+    .axis { fill: #A1A1AA; font: 400 9px "SF Mono", Consolas, monospace; }
+  </style>
+  <rect x="0" y="0" width="720" height="452" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="28">代价模型怎么给算法打分</text>
+  <text class="ts" x="30" y="48">每个算法自己报一串系数，选择器按同一个公式算耗时估值，取最小的那个</text>
+
+  <!-- 公式 -->
+  <rect x="30" y="64" width="420" height="86" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="48" y="96">segCost = (A / util + B) × dataSize + C</text>
+  <text class="mono" x="48" y="120">cost    = max( Σ segCost , Σ D )</text>
+  <text class="ns" x="48" y="140">每一段对应一个拓扑层级，多段按 MAX 或 SUM 聚合</text>
+
+  <rect x="466" y="64" width="224" height="86" rx="9" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ns" x="482" y="84"><tspan style="fill:#1A1759;font-weight:600;">A</tspan>  每字节传输时间（取决于带宽、卡数）</text>
+  <text class="ns" x="482" y="101"><tspan style="fill:#1A1759;font-weight:600;">B</tspan>  每字节固定开销（拷贝、协议）</text>
+  <text class="ns" x="482" y="118"><tspan style="fill:#1A1759;font-weight:600;">C</tspan>  一次启动的固定开销</text>
+  <text class="ns" x="482" y="135"><tspan style="fill:#1A1759;font-weight:600;">D</tspan>  该算法的时延下界</text>
+
+  <!-- 曲线 -->
+  <text class="nt" x="30" y="180">带宽利用率随数据量上升 —— 这是同一份数据在大小不同时会换算法的原因</text>
+
+  <line x1="90" y1="200" x2="90" y2="300" stroke="rgba(23,23,23,0.20)" stroke-width="1"/>
+  <line x1="90" y1="300" x2="660" y2="300" stroke="rgba(23,23,23,0.20)" stroke-width="1"/>
+  <text class="axis" x="84" y="203" text-anchor="end">1.0</text>
+  <text class="axis" x="84" y="253" text-anchor="end">0.5</text>
+  <text class="axis" x="84" y="303" text-anchor="end">0.0</text>
+  <text class="axis" x="90" y="316" text-anchor="middle">1M</text>
+  <text class="axis" x="230" y="316" text-anchor="middle">4M</text>
+  <text class="axis" x="370" y="316" text-anchor="middle">16M</text>
+  <text class="axis" x="510" y="316" text-anchor="middle">64M</text>
+  <text class="axis" x="650" y="316" text-anchor="middle">256M</text>
+
+  <polyline points="90,211.5 160,204.7 230,200.8 300,198.7 370,197.6 440,197.1 510,196.8 580,196.6 650,196.6"
+            fill="none" stroke="#2563EB" stroke-width="2"/>
+  <polyline points="90,269.6 160,257 230,242.8 300,231.7 370,227.5 440,218 510,211 580,208.5 650,205.9"
+            fill="none" stroke="#D97706" stroke-width="2"/>
+
+  <text class="ns" x="658" y="194" style="fill:#1D4ED8;">mesh</text>
+  <text class="ns" x="658" y="212" style="fill:#B45309;">clos</text>
+  <text class="ns" x="150" y="282" style="fill:#B45309;">小数据量时 CLOS 只能跑到 18%</text>
+  <text class="ns" x="150" y="296" style="fill:#1D4ED8;">而 mesh 一开始就有 71%</text>
+
+  <!-- 打分表 -->
+  <text class="nt" x="30" y="348">最后一步：把每个算法的 cost 排成一张表，取最小的</text>
+
+  <rect x="30" y="360" width="380" height="72" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="cell" x="44" y="378" style="fill:#52525B;">idx | algName                                 | cost</text>
+  <text class="cell" x="44" y="396">  0 | CcuSchedAllToAllVSoleMeshMultiLink      | 1.000000</text>
+  <text class="cell" x="44" y="414">  1 | AicpuAllToAllVSoleMeshConcurrent        | 3.000000</text>
+  <text class="cell" x="44" y="428" style="fill:#B45309;">→ 选中 idx 0</text>
+
+  <rect x="426" y="360" width="264" height="72" rx="7" fill="#FFF9EC" stroke="#E0A82E" stroke-width="1.2"/>
+  <text class="ns" x="440" y="378" style="fill:#B45309;">注意这张表里 cost 是常数，不是算出来的</text>
+  <text class="ns" x="440" y="396" style="fill:#B45309;">ALLTOALLV/VC 的 executor 直接返回</text>
+  <text class="mono2" x="440" y="413" style="fill:#B45309;">{A=0, B=0, C=1或3, D=0}</text>
+  <text class="ns" x="440" y="428" style="fill:#B45309;">按引擎给个先验权重，尚未真正建模</text>
+</svg>

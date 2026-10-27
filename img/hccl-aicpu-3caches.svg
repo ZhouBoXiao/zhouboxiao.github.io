@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 356" width="720" height="356" role="img" aria-label="三层缓存的生效范围对照：resCtx 缓存、BatchMode、Task Cache">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .wt { fill: #FFFFFF; font: 500 10.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .sep { stroke: #E5E7EB; stroke-width: 1; stroke-dasharray: 3 3; }
+  </style>
+  <rect x="0" y="0" width="720" height="356" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">三层缓存别搞混：它们生效的范围完全不同</text>
+  <text class="ts" x="30" y="50">横轴是训练里的三个 step，每一层「管多宽」是这张图要说明的全部</text>
+
+  <!-- 分区标题 -->
+  <text class="ns" x="230" y="76" text-anchor="middle" style="fill:#52525B;">step 1 · 第一次调用</text>
+  <text class="ns" x="410" y="76" text-anchor="middle" style="fill:#52525B;">step 2</text>
+  <text class="ns" x="600" y="76" text-anchor="middle" style="fill:#52525B;">step 3</text>
+
+  <line class="sep" x1="320" y1="86" x2="320" y2="234"/>
+  <line class="sep" x1="500" y1="86" x2="500" y2="234"/>
+
+  <!-- 层① -->
+  <text class="bd" x="30" y="104" style="fill:#171717;">① resCtx 缓存</text>
+  <text class="ns" x="30" y="120">省：重复拆「传真件」</text>
+  <g>
+    <rect x="150" y="92" width="70" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="185" y="108" text-anchor="middle">拆一次</text>
+    <rect x="330" y="92" width="70" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="365" y="108" text-anchor="middle">命中</text>
+    <rect x="510" y="92" width="70" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="545" y="108" text-anchor="middle">命中</text>
+  </g>
+  <text class="ns" x="600" y="108">作用范围：单次调用内，每次开头省一小段</text>
+
+  <!-- 层② -->
+  <text class="bd" x="30" y="158" style="fill:#171717;">② BatchMode</text>
+  <text class="ns" x="30" y="174">省：按铃次数</text>
+  <g>
+    <rect x="150" y="146" width="130" height="24" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.1"/>
+    <text class="ns" x="215" y="162" text-anchor="middle" style="fill:#1A1759;">攒批 → 按 1 次铃</text>
+    <rect x="330" y="146" width="130" height="24" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.1"/>
+    <text class="ns" x="395" y="162" text-anchor="middle" style="fill:#1A1759;">攒批 → 按 1 次铃</text>
+    <rect x="510" y="146" width="130" height="24" rx="5" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.1"/>
+    <text class="ns" x="575" y="162" text-anchor="middle" style="fill:#1A1759;">攒批 → 按 1 次铃</text>
+  </g>
+  <text class="ns" x="600" y="162">作用范围：单次调用内，覆盖整个展开阶段</text>
+
+  <!-- 层③ -->
+  <text class="bd" x="30" y="212" style="fill:#171717;">③ Task Cache</text>
+  <text class="ns" x="30" y="228">省：整个「拆单子」</text>
+  <rect x="150" y="200" width="130" height="24" rx="5" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.1"/>
+  <text class="ns" x="215" y="216" text-anchor="middle" style="fill:#1A1759;">录制（这次要真拆）</text>
+  <rect x="330" y="200" width="340" height="24" rx="5" fill="#4B3FE3"/>
+  <text class="wt" x="500" y="216" text-anchor="middle">一次录制，之后全部命中 —— 连 Orchestrate 都不跑了</text>
+
+  <text class="ns" x="150" y="252">作用范围：<tspan style="fill:#1A1759;">跨多次调用</tspan> —— 这也是它和前两层的本质区别</text>
+
+  <line class="sep" x1="30" y1="270" x2="690" y2="270"/>
+
+  <text class="ts" x="30" y="294">三层是逐层加深的「把重复工作提前做」：别重复拆传真件 → 别重复按铃 → 别重复拆单子。</text>
+  <text class="ts" x="30" y="316">注意 ③ 的前置条件最苛刻（950 + AICPU 模式 + UB 互连 + 算子白名单 + 固定 shape），动态 shape 场景基本吃不到。</text>
+  <text class="ts" x="30" y="338" style="fill:#1A1759;">cache 键里 inputSize 排在第一位 —— 数据量一变，切分方案就变，缓存必然 miss。</text>
+</svg>

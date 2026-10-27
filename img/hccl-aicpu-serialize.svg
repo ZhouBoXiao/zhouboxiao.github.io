@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 412" width="720" height="412" role="img" aria-label="通信资源序列化过河：活对象变成字节流再在 device 侧重建">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 11px "SF Mono", Consolas, monospace; }
+    .ns { fill: #52525B; font: 400 10px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .bd { fill: #1A1759; font: 500 11.5px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrr { stroke: #DC2626; stroke-width: 1.5; stroke-dasharray: 4 3; fill: none; }
+    .dash { stroke: #C7C7CC; stroke-width: 1.2; stroke-dasharray: 5 4; }
+  </style>
+  <defs>
+    <marker id="s1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="s2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#DC2626"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="412" fill="#FFFFFF"/>
+  <text class="tb" x="30" y="30">资源怎么过河：活人快递不过去，只能传真</text>
+  <text class="ts" x="30" y="50">kernel 入口只有一个参数 <tspan class="mono">OpParam*</tspan>，所以所有通信资源必须先拍扁成字节流</text>
+
+  <!-- 上排：host 活对象 -->
+  <rect x="50" y="74" width="210" height="112" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="64" y="94">HOST：活的 C++ 对象</text>
+  <rect x="64" y="104" width="86" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ns" x="107" y="119" text-anchor="middle">comm 对象</text>
+  <rect x="158" y="104" width="88" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ns" x="202" y="119" text-anchor="middle">Thread 句柄</text>
+  <rect x="64" y="134" width="86" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ns" x="107" y="149" text-anchor="middle">Channel</text>
+  <rect x="158" y="134" width="88" height="24" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ns" x="202" y="149" text-anchor="middle">拓扑信息</text>
+  <text class="ns" x="64" y="172">里面全是这个进程里的指针</text>
+
+  <path class="arr" d="M264 130 L318 130" marker-end="url(#s1)"/>
+  <text class="ns" x="291" y="122" text-anchor="middle" style="fill:#1A1759;">Serialize()</text>
+
+  <!-- 字节流（上，host 侧产物） -->
+  <rect x="322" y="80" width="196" height="100" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="336" y="100">字节流 char[]</text>
+  <g>
+    <rect x="336" y="110" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="345" y="123" text-anchor="middle">1F</text>
+    <rect x="358" y="110" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="367" y="123" text-anchor="middle">A3</text>
+    <rect x="380" y="110" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="389" y="123" text-anchor="middle">07</text>
+    <rect x="402" y="110" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="411" y="123" text-anchor="middle">C0</text>
+    <rect x="424" y="110" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="433" y="123" text-anchor="middle">9D</text>
+    <rect x="446" y="110" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="455" y="123" text-anchor="middle">…</text>
+    <rect x="468" y="110" width="36" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="486" y="123" text-anchor="middle">…</text>
+  </g>
+  <text class="ns" x="336" y="150">没有指针，只有值和偏移</text>
+  <text class="ns" x="336" y="168">类型名 → <tspan class="mono" style="font-size:10px;">AlgResourceCtxSerializable</tspan></text>
+
+  <!-- 过河竖箭头 -->
+  <path class="arr" d="M420 184 L420 226" marker-end="url(#s1)"/>
+  <text class="ns" x="432" y="210" style="fill:#1A1759;">挂在 param.resCtx 上，随 kernel 过河</text>
+
+  <!-- 边界 -->
+  <line class="dash" x1="30" y1="204" x2="690" y2="204"/>
+  <text class="ns" x="600" y="198" text-anchor="end">—— host / device 边界 ——</text>
+
+  <!-- 下排：device 重建 -->
+  <rect x="322" y="230" width="196" height="100" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="336" y="250">同一段字节流</text>
+  <g>
+    <rect x="336" y="260" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="345" y="273" text-anchor="middle">1F</text>
+    <rect x="358" y="260" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="367" y="273" text-anchor="middle">A3</text>
+    <rect x="380" y="260" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="389" y="273" text-anchor="middle">07</text>
+    <rect x="402" y="260" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="411" y="273" text-anchor="middle">C0</text>
+    <rect x="424" y="260" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="433" y="273" text-anchor="middle">9D</text>
+    <rect x="446" y="260" width="18" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="455" y="273" text-anchor="middle">…</text>
+    <rect x="468" y="260" width="36" height="18" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+    <text class="ns" x="486" y="273" text-anchor="middle">…</text>
+  </g>
+  <text class="ns" x="336" y="300">byte-for-byte 一致</text>
+  <text class="ns" x="336" y="318">（有缓存时这步可跳过）</text>
+
+  <path class="arr" d="M522 280 L568 280" marker-end="url(#s1)"/>
+  <text class="ns" x="545" y="272" text-anchor="middle" style="fill:#1A1759;">DeSerialize</text>
+
+  <rect x="572" y="230" width="118" height="100" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="584" y="250">DEVICE：重建</text>
+  <text class="ns" x="584" y="270">通信域引用</text>
+  <text class="ns" x="584" y="288">Thread 句柄</text>
+  <text class="ns" x="584" y="306">Channel</text>
+  <text class="ns" x="584" y="324">拓扑信息</text>
+
+  <!-- 错误分支 -->
+  <path class="arrr" d="M155 190 L155 240" marker-end="url(#s2)"/>
+  <rect x="60" y="244" width="192" height="48" rx="8" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.1"/>
+  <text class="ns" x="74" y="264" style="fill:#991B1B;">直接把指针传过去？</text>
+  <text class="ns" x="74" y="282" style="fill:#991B1B;">对面拿到的是野指针，必崩</text>
+
+  <text class="ts" x="30" y="366">这也是为什么 <tspan class="mono">OpParam</tspan> 里的变长数组（alltoallv 的 sendCounts / displs）不能直接用 —— 到了 device 侧同样要按 rankSize 重算偏移还原。</text>
+  <text class="ts" x="30" y="390" style="fill:#1A1759;">一句话：凡是要在 AI CPU 上用到的通信资源，都必须能被拍扁成字节流。</text>
+</svg>
