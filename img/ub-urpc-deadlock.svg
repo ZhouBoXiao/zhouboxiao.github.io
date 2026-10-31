@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" role="img" aria-label="UB 功能层 URPC 三角色三种传参与死锁避免的三个典型场景">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="460" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+
+  <text class="th" x="40" y="30">URPC：一次远程函数调用，三种搬参数的方式；再往下，是功能层防死锁的三个坑</text>
+
+  <rect class="panel" x="40" y="48" width="640" height="150" rx="10"/>
+  <text class="tb" x="56" y="72">角色链：Caller → Client → Server → Worker（→ Callee）</text>
+
+  <rect class="chip" x="56" y="86" width="80" height="30" rx="6"/>
+  <text class="tc" x="96" y="106" text-anchor="middle">Client</text>
+  <rect class="chip" x="182" y="86" width="80" height="30" rx="6"/>
+  <text class="tc" x="222" y="106" text-anchor="middle">Server</text>
+  <rect class="chip" x="308" y="86" width="80" height="30" rx="6"/>
+  <text class="tc" x="348" y="106" text-anchor="middle">Worker</text>
+
+  <line class="arr" x1="136" y1="101" x2="178" y2="101" marker-end="url(#a)"/>
+  <line class="arr" x1="262" y1="101" x2="304" y2="101" marker-end="url(#a)"/>
+
+  <text class="td" x="404" y="100">消息三种：Request（去）/ Ack（参数收讫，可省）</text>
+  <text class="td" x="404" y="118">/ Response（结果回来）</text>
+  <text class="td" x="404" y="140">Ack 与 Response 可合并成一条，由 Server 决定</text>
+
+  <text class="td" x="56" y="152">「平等」的含义：NPU 可以直接对 SSU 发起「远程存储写」的函数调用 ——</text>
+  <text class="td" x="56" y="170">数据不落 CPU，训练 / 推理结果从 NPU 直达存储。</text>
+
+  <rect class="panel" x="40" y="212" width="640" height="120" rx="10"/>
+  <text class="tb" x="56" y="236">三种传参（表 8-2 的浓缩）</text>
+
+  <rect class="chip" x="56" y="250" width="190" height="66" rx="6"/>
+  <text class="tb" x="68" y="272">值传递（内联）</text>
+  <text class="td" x="68" y="290">参数直接塞进 Request，0.5 RTT</text>
+  <text class="td" x="68" y="308">适合 ≤40K 小数据</text>
+
+  <rect class="chip" x="254" y="250" width="190" height="66" rx="6"/>
+  <text class="tb" x="266" y="272">值传递（外联）</text>
+  <text class="td" x="266" y="290">Server 收到地址后自己拉，1.5 RTT</text>
+  <text class="td" x="266" y="308">适合大数据、内存紧</text>
+
+  <rect class="chip" x="452" y="250" width="212" height="66" rx="6"/>
+  <text class="tb" x="464" y="272">引用传递</text>
+  <text class="td" x="464" y="290">Worker 执行时才拉，1.5 RTT</text>
+  <text class="td" x="464" y="308">传输和 NPU 运算互相掩盖</text>
+
+  <rect class="strip" x="40" y="346" width="640" height="100" rx="10"/>
+  <text class="tc" x="56" y="372">功能层死锁三坑：互借内存双方 Writeback 对堵、UMMU 页表借宿触发回环、Page Fault 换页流量被原访问堵死。</text>
+  <text class="tc" x="56" y="396">消息侧也有一坑：RNR TAACK 被 Send 堵住回不去，双端一起僵。三种药：传输层和事务层分离不互相反压、</text>
+  <text class="td" x="56" y="420">资源状态走响应由发起侧重试、超时放行保住电路畅通。和第 5 章死锁三招对照：那边破环，这边破「依赖」。</text>
+</svg>

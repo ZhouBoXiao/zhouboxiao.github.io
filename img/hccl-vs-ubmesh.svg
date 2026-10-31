@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" width="720" height="430" role="img" aria-label="HCCL 与 UB-Mesh 在拓扑、路由、集合通信、可靠性上的对照">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="430" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">同一件事的两种落点：一个负责摆，一个负责跑</text>
+
+  <rect class="panel" x="40" y="48" width="640" height="285" rx="10"/>
+  <text class="tb" x="56" y="72">HCCL 已落地 vs UB-Mesh 论文设计</text>
+
+  <text class="td" x="56" y="100">维度</text>
+  <text class="td" x="200" y="100">HCCL（代码里能查到）</text>
+  <text class="td" x="452" y="100">UB-Mesh（论文里能读到）</text>
+  <line x1="56" y1="108" x2="664" y2="108" stroke="rgba(23,23,23,0.12)" stroke-width="1"/>
+
+  <text class="tc" x="56" y="134">拓扑模型</text>
+  <text class="td" x="200" y="134">netLayer 分层 + level0 三态</text>
+  <text class="td" x="452" y="134">nD-FullMesh 递归到 4D</text>
+
+  <text class="tc" x="56" y="168">路由</text>
+  <text class="td" x="200" y="168">建链即定路，靠分层绕行</text>
+  <text class="td" x="452" y="168">APR 全路径 + 源路由</text>
+
+  <text class="tc" x="56" y="202">集合通信</text>
+  <text class="td" x="200" y="202">分级 + 六种模板</text>
+  <text class="td" x="452" y="202">Multi-Ring + 多路径 All2All</text>
+
+  <text class="tc" x="56" y="236">并行策略</text>
+  <text class="td" x="200" y="236">框架层决定，通信库配合</text>
+  <text class="td" x="452" y="236">拓扑感知搜索（三步）</text>
+
+  <text class="tc" x="56" y="270">可靠性</text>
+  <text class="td" x="200" y="270">超时重传 + 上层重调度</text>
+  <text class="td" x="452" y="270">64+1 + 直接通告</text>
+
+  <text class="tc" x="56" y="304">代价模型</text>
+  <text class="td" x="200" y="304">A/B/C/D 四项 + tuner 插件</text>
+  <text class="td" x="452" y="304">拓扑感知通信代价模型</text>
+
+  <rect class="strip" x="40" y="346" width="640" height="68" rx="10"/>
+  <text class="tc" x="56" y="370">UB-Mesh 把「多路径」当架构卖点，HCCL 把「分层」当工程手段。</text>
+  <text class="td" x="56" y="394">两者在 MESH_1D_CLOS 这个形状上正好接上：一个决定怎么摆，一个决定怎么跑。</text>
+</svg>

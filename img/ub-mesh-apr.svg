@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="All-Path Routing：源路由头、结构化寻址、TFC 死锁避免与直接通告">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">APR：把所有可用路径都用上，同时保证不死锁</text>
+
+  <rect class="panel" x="40" y="48" width="310" height="180" rx="10"/>
+  <text class="tb" x="56" y="70">最短路径 vs 全路径</text>
+
+  <line x1="75" y1="105" x2="145" y2="105" stroke="#4B3FE3" stroke-width="2"/>
+  <line x1="145" y1="105" x2="145" y2="165" stroke="#4B3FE3" stroke-width="2"/>
+  <line x1="75" y1="105" x2="75" y2="165" stroke="#A9AEFF" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <line x1="75" y1="165" x2="145" y2="165" stroke="#A9AEFF" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <circle cx="75" cy="105" r="11" fill="#4B3FE3"/>
+  <text class="tw" x="75" y="109" text-anchor="middle">S</text>
+  <circle cx="145" cy="105" r="11" fill="#6F6FFF"/>
+  <text class="tw" x="145" y="109" text-anchor="middle">R</text>
+  <circle cx="75" cy="165" r="11" fill="#6F6FFF"/>
+  <text class="tw" x="75" y="169" text-anchor="middle">R</text>
+  <circle cx="145" cy="165" r="11" fill="#4B3FE3"/>
+  <text class="tw" x="145" y="169" text-anchor="middle">D</text>
+
+  <line x1="211" y1="105" x2="281" y2="105" stroke="#4B3FE3" stroke-width="2"/>
+  <line x1="281" y1="105" x2="281" y2="165" stroke="#4B3FE3" stroke-width="2"/>
+  <line x1="211" y1="105" x2="211" y2="165" stroke="#4B3FE3" stroke-width="2"/>
+  <line x1="211" y1="165" x2="281" y2="165" stroke="#4B3FE3" stroke-width="2"/>
+  <circle cx="211" cy="105" r="11" fill="#4B3FE3"/>
+  <text class="tw" x="211" y="109" text-anchor="middle">S</text>
+  <circle cx="281" cy="105" r="11" fill="#6F6FFF"/>
+  <text class="tw" x="281" y="109" text-anchor="middle">R</text>
+  <circle cx="211" cy="165" r="11" fill="#6F6FFF"/>
+  <text class="tw" x="211" y="169" text-anchor="middle">R</text>
+  <circle cx="281" cy="165" r="11" fill="#4B3FE3"/>
+  <text class="tw" x="281" y="169" text-anchor="middle">D</text>
+
+  <text class="td" x="110" y="192" text-anchor="middle">SPF：一半链路闲着</text>
+  <text class="td" x="246" y="192" text-anchor="middle">APR：四条都在用</text>
+  <text class="td" x="56" y="214">实线 = 被选中的路，虚线 = 闲置的路</text>
+
+  <rect class="panel" x="356" y="48" width="324" height="180" rx="10"/>
+  <text class="tb" x="372" y="70">源路由头：8 字节装下一条路径</text>
+  <rect class="chip" x="372" y="86" width="44" height="34" rx="6"/>
+  <text class="tb" x="394" y="108" text-anchor="middle">ptr</text>
+  <rect class="chip" x="420" y="86" width="116" height="34" rx="6"/>
+  <text class="tb" x="478" y="108" text-anchor="middle">bitmap</text>
+  <rect class="chip" x="540" y="86" width="124" height="34" rx="6"/>
+  <text class="tb" x="602" y="108" text-anchor="middle">instr[0..5]</text>
+  <text class="td" x="394" y="132" text-anchor="middle">4 bit</text>
+  <text class="td" x="478" y="132" text-anchor="middle">12 bit</text>
+  <text class="td" x="602" y="132" text-anchor="middle">48 bit</text>
+  <text class="td" x="372" y="154">bit=1：该跳走源路由；0：查传统转发表</text>
+  <text class="td" x="372" y="174">bitmap 再选 6 个指令字段之一 → 本跳怎么走</text>
+  <text class="td" x="372" y="194">整条路径压进 8 字节，逐跳无需查大表</text>
+  <text class="td" x="372" y="214">所以 NPU 兼任路由器也不会拖慢转发</text>
+
+  <rect class="panel" x="40" y="246" width="310" height="110" rx="10"/>
+  <text class="tb" x="56" y="268">结构化寻址：按 Pod / 机柜 / 板 分段</text>
+  <rect x="56" y="278" width="110" height="22" rx="4" fill="#4B3FE3"/>
+  <text class="tw" x="60" y="293">Pod 前缀</text>
+  <rect x="166" y="278" width="110" height="22" rx="4" fill="#6F6FFF"/>
+  <text class="tw" x="170" y="293">机柜偏移</text>
+  <rect x="276" y="278" width="58" height="22" rx="4" fill="#A9AEFF"/>
+  <text class="tb" x="280" y="293">板内</text>
+  <text class="td" x="56" y="322">同段共享前缀，只存段地址 + 线性偏移</text>
+  <text class="td" x="56" y="342">表项少 → 收敛快 → 故障响应快</text>
+
+  <rect class="panel" x="356" y="246" width="324" height="110" rx="10"/>
+  <text class="tb" x="372" y="268">TFC：只用 2 个 VL 做到无死锁</text>
+  <text class="td" x="372" y="292">用通道依赖图 CDG 给环建模</text>
+  <text class="td" x="372" y="312">先跨维破环，再同维破环</text>
+  <text class="td" x="372" y="332">拆成单 VL 无环子集 → 得到 VL 映射</text>
+
+  <rect class="strip" x="40" y="372" width="640" height="84" rx="10"/>
+  <text class="tc" x="56" y="398">逐跳通告：链路 1—3 断了，1 和 3 挨个告诉邻居，收敛慢。</text>
+  <text class="tc" x="56" y="420">直接通告：按预先算好的关系，直接通知会受影响的节点 6。</text>
+  <text class="td" x="56" y="444">因为每个节点的通信目标集合是确定的，控制面开销能压得很低。</text>
+</svg>

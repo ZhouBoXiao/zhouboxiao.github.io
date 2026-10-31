@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 490" width="720" height="490" role="img" aria-label="UB 事务层 NO/RO/SO 执行序与 ROI/ROT/ROL/UNO 四种服务模式的组合关系">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="490" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+
+  <text class="th" x="40" y="30">保序这件事：标记（NO/RO/SO）说「谁等谁」，模式（ROI/ROT/ROL）说「在哪等」</text>
+
+  <rect class="panel" x="40" y="48" width="330" height="200" rx="10"/>
+  <text class="tb" x="56" y="72">一个队列的五种活法（规范表 7-13）</text>
+
+  <rect x="56" y="88" width="30" height="22" fill="#4B3FE3"/>
+  <text class="tw" x="71" y="104" text-anchor="middle">0</text>
+  <text class="td" x="94" y="104">Write RO —— 直接发</text>
+
+  <rect x="56" y="116" width="30" height="22" fill="#4B3FE3"/>
+  <text class="tw" x="71" y="132" text-anchor="middle">1</text>
+  <text class="td" x="94" y="132">Write SO —— 等事务 0 完成</text>
+
+  <rect x="56" y="144" width="30" height="22" fill="#6F6FFF"/>
+  <text class="tw" x="71" y="160" text-anchor="middle">2</text>
+  <text class="td" x="94" y="160">Read NO —— 可超越事务 1</text>
+
+  <rect x="56" y="172" width="30" height="22" fill="#A9AEFF"/>
+  <text class="tb" x="71" y="188" text-anchor="middle">3</text>
+  <text class="td" x="94" y="188">Write NO（FENCE）—— 等前序 Read 全回来</text>
+
+  <rect x="56" y="200" width="30" height="22" fill="#6F6FFF"/>
+  <text class="tw" x="71" y="216" text-anchor="middle">4</text>
+  <text class="td" x="94" y="216">Read NO —— 被事务 3 卡住</text>
+
+  <text class="td" x="56" y="240">RO 会挡后面的 SO；NO 谁都不挡，FENCE 只挡自己后面的。</text>
+
+  <rect class="panel" x="386" y="48" width="294" height="200" rx="10"/>
+  <text class="tb" x="402" y="72">四种模式：保序责任放哪里</text>
+  <text class="td" x="402" y="98">ROI —— Initiator 等：收齐前序响应才发下一个</text>
+  <text class="td" x="402" y="122">ROT —— Target 等：先发过去，Target 用 SC 资源排队</text>
+  <text class="td" x="402" y="146">ROL —— 下层等：同 TP Channel，传输层恢复顺序</text>
+  <text class="td" x="402" y="170">UNO —— 谁都不等：不可靠、不保序、限 1 个 MTU</text>
+  <text class="td" x="402" y="198">ROI/ROT 可多路径乱序传；ROL 单 Channel；</text>
+  <text class="td" x="402" y="216">CTP + ROL 必须 RT=00 逐流单路径。</text>
+  <text class="td" x="402" y="240">ROT 动态申请：Alloc=1 → SV=1 → SCID 落地</text>
+
+  <rect class="strip" x="40" y="264" width="640" height="120" rx="10"/>
+  <text class="tc" x="56" y="290">一次 RTT 省在哪：ROI 要「发 A → 等 A 的 TAACK → 发 B」，ROT 是「A、B 一起发，Target 排队按序执行」。</text>
+  <text class="tc" x="56" y="314">ROT 的代价是 Target 侧的 SC 资源：乱序包要么丢弃重传（简单但浪费），要么缓存排队（省重传但费缓存）。</text>
+  <text class="td" x="56" y="342">RO/SO 标记在完整 BTAH 里走 ODR[1:0]，精简包里走 MAETAH.SO —— 同一套语义，两种载体。</text>
+  <text class="td" x="56" y="364">完成序是另一个独立开关 ODR[2]：执行序管 Target 怎么做，完成序管 CQE 按什么顺序上报。</text>
+
+  <rect class="strip" x="40" y="398" width="640" height="74" rx="10"/>
+  <text class="tc" x="56" y="424">Write_with_notify 是这块的试金石：ROI 得收齐全部 Write 的 TAACK 才敢发 Notify 包，</text>
+  <text class="tc" x="56" y="448">ROT/ROL 可以 Write 和 Notify 一起发 —— 因为 Target / 下层协议承诺按序落地，Notify 天然排在最后。</text>
+  <text class="td" x="56" y="466">这一组差异是第一篇讲过三种模式流程图的字段级出处（7.4.2.1.2）。</text>
+</svg>

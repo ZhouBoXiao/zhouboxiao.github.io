@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="720" height="480" role="img" aria-label="UB 数据链路层 Retry Buffer 的四个指针与重传请求、重传应答两个状态机">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="480" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+
+  <text class="th" x="40" y="30">Retry Buffer：四个指针管住重传，两个状态机管住吵架</text>
+
+  <rect class="panel" x="40" y="48" width="640" height="162" rx="10"/>
+  <text class="tb" x="56" y="72">发送端的一块环形空间，编号 0 ~ RETRY_BUF_DEPTH-1，单位是 Flit</text>
+
+  <rect x="70" y="108" width="116" height="28" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="186" y="108" width="348" height="28" fill="#E6E6EA" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="534" y="108" width="116" height="28" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+
+  <line x1="186" y1="94" x2="186" y2="146" stroke="#4B3FE3" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="534" y1="94" x2="534" y2="146" stroke="#4B3FE3" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text class="tc" x="186" y="92" text-anchor="middle">TailPtr</text>
+  <text class="tc" x="534" y="92" text-anchor="middle">WrPtr</text>
+
+  <text class="td" x="128" y="127" text-anchor="middle">空</text>
+  <text class="td" x="360" y="127" text-anchor="middle">已发送、等 ACK</text>
+  <text class="td" x="592" y="127" text-anchor="middle">空</text>
+
+  <text class="td" x="56" y="168">白 = NumFreeBuf（还能写多少 Flit）；灰 = 已备份未确认，收到 ACK 才能释放</text>
+  <text class="td" x="56" y="188">RdPtr 平时不动，收到重传请求时置为对端的 RcvPtr，从那里一路重发到 WrPtr</text>
+  <text class="td" x="56" y="206">RcvPtr 是唯一一个「长在远端」的指针：接收端维护，随 Retry_Req Block 回传</text>
+
+  <rect class="panel" x="40" y="222" width="640" height="238" rx="10"/>
+  <text class="tb" x="56" y="246">两个状态机：接收端只负责喊，发送端只负责补</text>
+
+  <rect class="chip" x="40" y="262" width="96" height="34" rx="6"/>
+  <text class="tc" x="88" y="284" text-anchor="middle">NORMAL</text>
+  <rect class="chip" x="176" y="262" width="96" height="34" rx="6"/>
+  <text class="tc" x="224" y="284" text-anchor="middle">REQ</text>
+  <rect class="chip" x="312" y="262" width="96" height="34" rx="6"/>
+  <text class="tc" x="360" y="284" text-anchor="middle">WAIT</text>
+  <rect class="chip" x="448" y="262" width="96" height="34" rx="6"/>
+  <text class="tc" x="496" y="284" text-anchor="middle">RETRAIN</text>
+  <rect class="chip" x="584" y="262" width="96" height="34" rx="6"/>
+  <text class="tc" x="632" y="284" text-anchor="middle">ERROR</text>
+
+  <line class="arr" x1="136" y1="279" x2="172" y2="279" marker-end="url(#a)"/>
+  <line class="arr" x1="272" y1="279" x2="308" y2="279" marker-end="url(#a)"/>
+  <line class="arr" x1="408" y1="279" x2="444" y2="279" marker-end="url(#a)"/>
+  <line class="arr" x1="544" y1="279" x2="580" y2="279" marker-end="url(#a)"/>
+
+  <text class="td" x="154" y="314" text-anchor="middle">CRC 错</text>
+  <text class="td" x="290" y="314" text-anchor="middle">发完 1+32</text>
+  <text class="td" x="426" y="314" text-anchor="middle">超时重试</text>
+  <text class="td" x="562" y="314" text-anchor="middle">再重训</text>
+
+  <text class="td" x="56" y="340">WAIT 里等到 Retry_Ack_Set 就回 NORMAL；等超时就回 REQ 重喊一遍，最多 15 次。</text>
+  <text class="td" x="56" y="364">一整套请求 = 1 个 Retry_Idle + 连发 32 个 Retry_Req，少发了会被当成普通数据包。</text>
+  <text class="td" x="56" y="388">阈值：NUM_RETRY = 15，NUM_PHY_REINIT = 4；WAIT 超时建议大于 2 倍链路时延（1μs ~ 10s）。</text>
+  <text class="td" x="56" y="412">防互锁：NumFreeBuf 低于阈值就停发 DLLDP，优先送 Crd_Ack Block，保证 ACK 一定还在 Buffer 里。</text>
+  <text class="td" x="56" y="436">进了 ERROR 不自己恢复，上报后等 UBFM 复位 —— 这一步是「链路已经不可信」的显式声明。</text>
+</svg>

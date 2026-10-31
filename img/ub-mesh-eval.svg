@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" role="img" aria-label="UB-Mesh 的评估结果：性能、CapEx、可用性与线性度">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tn { fill: #3C2ECA; font: 600 22px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="400" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">代价与收益：性能几乎不变，成本与可用性一起改善</text>
+
+  <rect class="panel" x="40" y="48" width="310" height="120" rx="10"/>
+  <text class="td" x="60" y="76">机柜内 2D-FM 相对非收敛 Clos</text>
+  <text class="tn" x="60" y="112">93.2% ~ 95.9%</text>
+  <text class="td" x="60" y="134">8K-32K 序列 95.5%，64K-10M 95.0%</text>
+  <text class="td" x="60" y="152">机柜间差距 &lt;0.73%，开 Detour 后 0.46%</text>
+
+  <rect class="panel" x="358" y="48" width="322" height="120" rx="10"/>
+  <text class="td" x="378" y="76">CapEx：网络基础设施占系统成本</text>
+  <text class="tn" x="378" y="112">67% → 20%</text>
+  <text class="td" x="378" y="134">省 98% 高 radix 交换机、93% 光模块</text>
+  <text class="td" x="378" y="152">同口径 cost-efficiency 2.04×</text>
+
+  <rect class="panel" x="40" y="184" width="310" height="120" rx="10"/>
+  <text class="td" x="60" y="212">可用性（按 75 min MTTR 估算）</text>
+  <text class="tn" x="60" y="248">91.6% → 98.8%</text>
+  <text class="td" x="60" y="270">MTBF 13.8 h → 98.5 h（7.14×）</text>
+  <text class="td" x="60" y="288">10 min 定位 + 3 min 迁移 → 99.78%</text>
+
+  <rect class="panel" x="358" y="184" width="322" height="120" rx="10"/>
+  <text class="td" x="378" y="212">线性度：per-NPU 性能随规模的保持率</text>
+  <text class="tn" x="378" y="248">&gt; 95%</text>
+  <text class="td" x="378" y="270">1×~32× 甚至超 100%：域更大，解更优</text>
+  <text class="td" x="378" y="288">64K 卡时 GPT4-2T / Dense-1T 仍 &gt;95%</text>
+
+  <rect class="strip" x="40" y="316" width="640" height="68" rx="10"/>
+  <text class="tc" x="56" y="342">口径提醒：全部相对「非收敛 Clos」基线；换成收敛比更狠的 Clos，性能差会变大。</text>
+  <text class="td" x="56" y="366">性能让掉 4~7%，换回 2 倍成本效率和少一个数量级的故障点 —— 这笔账才是论文的重点。</text>
+</svg>

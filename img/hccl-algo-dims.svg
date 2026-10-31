@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" width="720" height="450" role="img" aria-label="HCCL 算法名的五个维度：Engine、OpType、Executor、Template、分层">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="450" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">算法名本身就是一份说明书：五个维度拼出来</text>
+
+  <rect x="56" y="58" width="110" height="40" rx="6" fill="#4B3FE3"/>
+  <text class="tw" x="111" y="83" text-anchor="middle">CcuSched</text>
+  <rect x="170" y="58" width="120" height="40" rx="6" fill="#6F6FFF"/>
+  <text class="tw" x="230" y="83" text-anchor="middle">AllReduce</text>
+  <rect x="294" y="58" width="110" height="40" rx="6" fill="#6F6FFF"/>
+  <text class="tw" x="349" y="83" text-anchor="middle">Parallel</text>
+  <rect x="408" y="58" width="80" height="40" rx="6" fill="#A9AEFF"/>
+  <text class="tb" x="448" y="83" text-anchor="middle">Mesh</text>
+  <rect x="492" y="58" width="80" height="40" rx="6" fill="#A9AEFF"/>
+  <text class="tb" x="532" y="83" text-anchor="middle">NHR</text>
+
+  <text class="td" x="111" y="118" text-anchor="middle">Engine</text>
+  <text class="td" x="230" y="118" text-anchor="middle">OpType</text>
+  <text class="td" x="349" y="118" text-anchor="middle">Executor</text>
+  <text class="td" x="448" y="118" text-anchor="middle">模板 L0</text>
+  <text class="td" x="532" y="118" text-anchor="middle">模板 L1</text>
+
+  <rect class="panel" x="40" y="140" width="310" height="108" rx="10"/>
+  <text class="tb" x="56" y="164">Engine：谁来执行（5）</text>
+  <text class="td" x="56" y="188">AICPU · CCU_MS · CCU_SCHED · AIV · DPU</text>
+  <text class="td" x="56" y="208">CCU 就是 UB IO 控制器里的集合通信单元，</text>
+  <text class="td" x="56" y="228">CCU_MS / CCU_SCHED 是它的两种调度模式</text>
+
+  <rect class="panel" x="358" y="140" width="322" height="108" rx="10"/>
+  <text class="tb" x="374" y="164">Executor：怎么编排（5）</text>
+  <text class="td" x="374" y="188">SEQUENCE · SOLE · PARALLEL · PIPELINE · CONCUR</text>
+  <text class="td" x="374" y="208">决定拆几段、段与段是串行还是并发</text>
+
+  <rect class="panel" x="40" y="262" width="310" height="108" rx="10"/>
+  <text class="tb" x="56" y="286">Template：用哪个模板（6）</text>
+  <text class="td" x="56" y="310">MESH · NHR · MESH_TWO_SHOT</text>
+  <text class="td" x="56" y="330">MESH_ONE_SHOT · MESH_CHUNK · MESH_2DIE</text>
+  <text class="td" x="56" y="350">每个模板对应一种通信关系与步数</text>
+
+  <rect class="panel" x="358" y="262" width="322" height="108" rx="10"/>
+  <text class="tb" x="374" y="286">OpType × 分层：15 种 × 2~3 层</text>
+  <text class="td" x="374" y="310">算法用 minTopoLevelNum / maxTopoLevelNum</text>
+  <text class="td" x="374" y="330">声明自己能在几层拓扑上跑</text>
+  <text class="td" x="374" y="350">名字末尾的 Mesh、NHR 就是逐层模板序列</text>
+
+  <rect class="strip" x="40" y="382" width="640" height="56" rx="10"/>
+  <text class="tc" x="56" y="404">同一个 AllReduce，可能叫 AicpuAllReduceSoleNHR，也可能叫 CcuMSAllReduceSequenceMesh2Die。</text>
+  <text class="td" x="56" y="426">读懂名字，就知道它落在哪个引擎、怎么分段、每段用什么模板。</text>
+</svg>

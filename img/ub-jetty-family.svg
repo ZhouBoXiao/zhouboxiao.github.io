@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="720" height="480" role="img" aria-label="UB 功能层 Jetty 家族、四种事务队列与 Jetty 状态机">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="480" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+
+  <text class="th" x="40" y="30">Jetty 家族：发送的、接收的、报完成的、报异常的，各配一条队列</text>
+
+  <rect class="panel" x="40" y="48" width="330" height="212" rx="10"/>
+  <text class="tb" x="56" y="72">六种 Jetty + 四种队列</text>
+
+  <rect class="chip" x="56" y="86" width="140" height="26" rx="6"/>
+  <text class="td" x="126" y="104" text-anchor="middle">标准 Jetty：SQ+RQ</text>
+  <rect class="chip" x="204" y="86" width="152" height="26" rx="6"/>
+  <text class="td" x="280" y="104" text-anchor="middle">JFS / JFR：只绑一边</text>
+
+  <rect class="chip" x="56" y="120" width="140" height="26" rx="6"/>
+  <text class="td" x="126" y="138" text-anchor="middle">Jetty Group（仅 Target）</text>
+  <rect class="chip" x="204" y="120" width="152" height="26" rx="6"/>
+  <text class="td" x="280" y="138" text-anchor="middle">JFC：轮询完成通知</text>
+
+  <rect class="chip" x="56" y="154" width="140" height="26" rx="6"/>
+  <text class="td" x="126" y="172" text-anchor="middle">JFCE：中断版 JFC</text>
+  <rect class="chip" x="204" y="154" width="152" height="26" rx="6"/>
+  <text class="td" x="280" y="172" text-anchor="middle">JFAE：异步异常事件</text>
+
+  <text class="td" x="56" y="202">SQ（发）· RQ（收）· CQ（完成）· EQ（事件）</text>
+  <text class="td" x="56" y="222">每个 SQ 配 RCID，每个 RQ 配 TCID —— 事务层</text>
+  <text class="td" x="56" y="240">包头里的 INI_RC_ID / TGT_TC_ID 就是它们。</text>
+
+  <text class="td" x="56" y="46" dominant-baseline="middle"></text>
+
+  <rect class="panel" x="386" y="48" width="294" height="212" rx="10"/>
+  <text class="tb" x="402" y="72">Jetty Group 的分发策略（免 CPU）</text>
+  <text class="td" x="402" y="98">包里带 Hint 8b，Target 按哈希散到 RQ</text>
+  <text class="td" x="402" y="120">或 RoundRobin 轮询</text>
+  <text class="td" x="402" y="142">或按 RQ 深度动态负载均衡，选最空的</text>
+  <text class="td" x="402" y="170">通信关系两种：M2N（任意对任意，省 Jetty）</text>
+  <text class="td" x="402" y="192">和 1:1（只有标准 Jetty 可用）</text>
+  <text class="td" x="402" y="220">公知 Jetty：0 传输层 / 1 事务层 / 2 Socket over UB</text>
+  <text class="td" x="402" y="242">3-31 预留 / 32-1023 用户自定义</text>
+
+  <rect class="strip" x="40" y="276" width="640" height="194" rx="10"/>
+  <text class="tb" x="56" y="302">四态状态机：Reset / Ready / Suspend / Error</text>
+
+  <rect class="chip" x="56" y="316" width="86" height="30" rx="6"/>
+  <text class="tc" x="99" y="336" text-anchor="middle">Reset</text>
+  <rect class="chip" x="176" y="316" width="86" height="30" rx="6"/>
+  <text class="tc" x="219" y="336" text-anchor="middle">Ready</text>
+  <rect class="chip" x="296" y="316" width="86" height="30" rx="6"/>
+  <text class="tc" x="339" y="336" text-anchor="middle">Suspend</text>
+  <rect class="chip" x="416" y="316" width="86" height="30" rx="6"/>
+  <text class="tc" x="459" y="336" text-anchor="middle">Error</text>
+
+  <line class="arr" x1="142" y1="331" x2="172" y2="331" marker-end="url(#a)"/>
+  <line class="arr" x1="262" y1="331" x2="292" y2="331" marker-end="url(#a)"/>
+  <line class="arr" x1="382" y1="331" x2="412" y2="331" marker-end="url(#a)"/>
+
+  <text class="td" x="516" y="336">任何状态可销毁；Error 只能回 Reset</text>
+
+  <text class="td" x="56" y="370">Reset / Error 收到包：静默丢弃；收到 Work Request：报错 —— 「不装死也不瞎干活」。</text>
+  <text class="td" x="56" y="394">Suspend 由 Exception Mode 决定存不存在：continue 模式下 SQE 粒度报错继续跑，整态不降级；</text>
+  <text class="td" x="56" y="416">suspend 模式下先排空 SQ、报完 CQE 再停，恢复权交给应用。</text>
+  <text class="td" x="56" y="444">Ready → Suspend 的触发是「可恢复故障」（传输通道坏）；Ready → Error 是「严重错误」（上下文被篡改）。</text>
+  <text class="td" x="56" y="464">与第 7 章 Retry 状态机的 ERROR 态对齐：到了顶层同样「上报 + 等复位」，不自己硬扛。</text>
+</svg>

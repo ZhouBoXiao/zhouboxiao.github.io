@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="720" height="480" role="img" aria-label="UB 传输层 PSN 环形空间划成的重复区间、乱序区间与无效区间，以及四种重传组合">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="480" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">PSN：24 bit 的环，被切成四段之后才有「丢包」这个判断</text>
+
+  <rect class="panel" x="40" y="48" width="640" height="150" rx="10"/>
+
+  <rect x="70" y="104" width="70" height="30" fill="#EFEFF1" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="140" y="104" width="290" height="30" fill="#D8D8DE" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="430" y="104" width="60" height="30" fill="#A9AEFF" stroke="rgba(23,23,23,0.12)"/>
+  <rect x="490" y="104" width="160" height="30" fill="#EFEFF1" stroke="rgba(23,23,23,0.12)"/>
+
+  <line x1="430" y1="92" x2="430" y2="146" stroke="#4B3FE3" stroke-width="1.5"/>
+  <text class="tc" x="430" y="88" text-anchor="middle">EPSN</text>
+
+  <text class="td" x="175" y="124" text-anchor="middle">重复区间 [EPSN-8M, EPSN-1]</text>
+  <text class="td" x="460" y="124" text-anchor="middle">乱序</text>
+  <text class="td" x="175" y="160" text-anchor="middle">最大重复区间，丢弃</text>
+  <text class="td" x="460" y="160" text-anchor="middle">乱序区间</text>
+  <text class="td" x="105" y="160" text-anchor="middle">无效</text>
+  <text class="td" x="570" y="160" text-anchor="middle">无效，丢弃</text>
+
+  <text class="td" x="56" y="184">左端 0，右端 16M-1；发送窗口收敛在 8M-1 以内，否则 PSN 会绕回来撞上还没确认的包。</text>
+
+  <rect class="panel" x="40" y="214" width="330" height="156" rx="10"/>
+  <text class="tb" x="56" y="238">四种组合，按「会不会乱序」选</text>
+  <text class="td" x="56" y="260">逐流（单路径）+ 快速重传 + GoBackN：结构最简单</text>
+  <text class="td" x="56" y="282">逐流（单路径）+ 快速重传 + 选择性重传：丢包率低</text>
+  <text class="td" x="56" y="304">逐包（多路径）+ 超时重传 + GoBackN：怕误判，只等超时</text>
+  <text class="td" x="56" y="326">逐包（多路径）+ 超时重传 + 选择性：乱序也能收</text>
+  <text class="td" x="56" y="352">快速重传永远可选，超时重传强制开启 —— 尾包丢了只能靠它。</text>
+
+  <rect class="panel" x="386" y="214" width="294" height="156" rx="10"/>
+  <text class="tb" x="402" y="238">MarkPSN：让「二次丢失」不用干等超时</text>
+  <text class="td" x="402" y="262">新包阶段只管发新包，丢的先进待重传集合</text>
+  <text class="td" x="402" y="284">等应答里出现 PSN ≥ MarkPSN，说明上一轮</text>
+  <text class="td" x="402" y="302">该到的都到了，切进「只重传」阶段</text>
+  <text class="td" x="402" y="326">LastFirstRtx 区分首次丢和二次丢</text>
+  <text class="td" x="402" y="350">HighRtxPSN 拦住重复重传</text>
+
+  <rect class="strip" x="40" y="386" width="640" height="76" rx="10"/>
+  <text class="tc" x="56" y="412">RTO 两档：静态 [512μs, 16ms, 128ms, 4s]；动态按指数退避 RTO = Base × 2^(N×Times)。</text>
+  <text class="td" x="56" y="436">N=3、Base=20μs 时，七次重传间隔为 20 → 160 → 1280 → 10240 → 81920 → 655360 → 5242880 μs。</text>
+  <text class="td" x="56" y="454">退避不只是怕浪费带宽，也是给路由收敛留时间 —— 太急会把「正在换个平面」误判成路径不可达。</text>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 445" width="720" height="445" role="img" aria-label="拓扑感知集合通信与拓扑感知并行化">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="445" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">硬件给了多路径，软件得把它们编排成算法</text>
+
+  <rect class="panel" x="40" y="48" width="310" height="140" rx="10"/>
+  <text class="tb" x="56" y="70">Multi-Ring AllReduce</text>
+  <text class="td" x="56" y="94">把拓扑抽象成节点 / 带宽 / 时延的统一模型</text>
+  <text class="td" x="56" y="114">再映射成逻辑多环，环与环路径不冲突</text>
+  <text class="td" x="56" y="134">环外的空闲链路靠 APR 借过来</text>
+  <text class="td" x="56" y="154">最后按带宽做最优流量切分</text>
+
+  <rect class="panel" x="358" y="48" width="322" height="140" rx="10"/>
+  <text class="tb" x="374" y="70">多路径 All2All</text>
+  <text class="td" x="374" y="94">每个张量切两份，X / Y 两维同时发</text>
+  <text class="td" x="374" y="114">最多 1 跳就到目的节点</text>
+  <text class="td" x="374" y="134">MoE 的 token 分发 = 广播 + 归约</text>
+  <text class="td" x="374" y="154">→ 那就改成分层做，省带宽</text>
+
+  <rect class="panel" x="40" y="196" width="310" height="140" rx="10"/>
+  <text class="tb" x="56" y="218">分层 Broadcast / Reduce</text>
+  <text class="td" x="56" y="242">先在 X-FullMesh 内聚合，再跨 Y 维</text>
+  <text class="td" x="56" y="262">跨维只传一次，避免 N×N 全量复制</text>
+  <text class="td" x="56" y="282">对大 EP 的 all2all 收益最明显</text>
+  <text class="td" x="56" y="302">这也是 CCU 卸载的主要目标</text>
+
+  <rect class="panel" x="358" y="196" width="322" height="140" rx="10"/>
+  <text class="tb" x="374" y="218">拓扑感知并行化：三步搜索</text>
+  <text class="td" x="374" y="242">① 生成可行并行配置，映射到拓扑</text>
+  <text class="td" x="374" y="262">② 用通信代价模型估算（含 APR 行为）</text>
+  <text class="td" x="374" y="282">③ 迭代求通信开销最小解</text>
+  <text class="td" x="374" y="302">剪枝：TP/SP 优先高带宽域，PP/DP 最低</text>
+
+  <rect class="strip" x="40" y="344" width="640" height="84" rx="10"/>
+  <text class="tc" x="56" y="368">TP 和 SP 占流量 97%，所以要优先塞进高带宽域；用了 EP 还要满足 SP×DP 是 EP 的整数倍。</text>
+  <text class="tc" x="56" y="390">这些算法都依赖同一个前提：APR 保证任意两点的所有路径都可用、且无死锁。</text>
+  <text class="td" x="56" y="414">所以路由不是「配套优化」，而是这套架构能不能成立的条件。</text>
+</svg>

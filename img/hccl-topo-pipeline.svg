@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 410" width="720" height="410" role="img" aria-label="HCCL 的 CalcTopoShape 拓扑识别流水线与 level0 形状判定">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="s" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="410" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">建通信域时先做一次拓扑体检：CalcTopoShape 的流水线</text>
+
+  <rect class="panel" x="40" y="48" width="300" height="250" rx="10"/>
+
+  <rect class="chip" x="56" y="64" width="268" height="40" rx="8"/>
+  <text class="tb" x="68" y="82">① 读 RankGraph</text>
+  <text class="td" x="68" y="98">ExtractNetLayerDetails / ExtractTopoDetails</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M190 104 V112" marker-end="url(#s)"/>
+
+  <rect class="chip" x="56" y="114" width="268" height="40" rx="8"/>
+  <text class="tb" x="68" y="132">② 判 level0 形状</text>
+  <text class="td" x="68" y="148">CalcLevel0TopoShape → MESH_1D / CLOS / 混合</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M190 154 V162" marker-end="url(#s)"/>
+
+  <rect class="chip" x="56" y="164" width="268" height="40" rx="8"/>
+  <text class="tb" x="68" y="182">③ 判层间关系</text>
+  <text class="td" x="68" y="198">CalcLevel1Nhr / Is2DieFullMesh / MeshType</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M190 204 V212" marker-end="url(#s)"/>
+
+  <rect class="chip" x="56" y="214" width="268" height="40" rx="8"/>
+  <text class="tb" x="68" y="232">④ 判 UB 特性</text>
+  <text class="td" x="68" y="248">topLevelUboe / level2UbRtp / hostDpuOnly</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M190 254 V262" marker-end="url(#s)"/>
+
+  <rect class="chip" x="56" y="264" width="268" height="26" rx="8"/>
+  <text class="td" x="68" y="282">⑤ BuildPhysicalLevels：建物理层视图供代价模型用</text>
+
+  <rect class="panel" x="356" y="48" width="324" height="250" rx="10"/>
+  <text class="tb" x="372" y="70">level0 形状只看两件事</text>
+  <text class="td" x="372" y="94">topoInstNum</text>
+  <text class="td" x="446" y="94">实例里有哪种拓扑</text>
+  <text class="td" x="600" y="94">判定结果</text>
+
+  <text class="tc" x="372" y="120">1</text>
+  <text class="tc" x="446" y="120">只有 1DMESH</text>
+  <text class="tb" x="600" y="120">MESH_1D</text>
+
+  <text class="tc" x="372" y="148">1</text>
+  <text class="tc" x="446" y="148">只有 CLOS</text>
+  <text class="tb" x="600" y="148">CLOS</text>
+
+  <text class="tc" x="372" y="176">2</text>
+  <text class="tc" x="446" y="176">两者都有</text>
+  <text class="tb" x="600" y="176">MESH_1D_CLOS</text>
+
+  <text class="tc" x="372" y="204">其他</text>
+  <text class="tc" x="446" y="204">都不匹配</text>
+  <text class="tb" x="600" y="204">CLOS + 告警</text>
+
+  <text class="td" x="372" y="232">CLOS rankSize &gt; BIG_CLOS_RANGE(8) → 置大 Clos 标记</text>
+  <text class="td" x="372" y="252">level0 各实例大小求 GCD：等于 1 时 Mesh 失效，</text>
+  <text class="td" x="372" y="272">退化成单级 NHR（Level1Nhr = true）</text>
+
+  <rect class="strip" x="40" y="312" width="640" height="72" rx="10"/>
+  <text class="tc" x="56" y="338">MESH_1D_CLOS 就是「柜内全互连 + 柜上 Clos」——正是 UB-Mesh 的 4D-FM + Clos。</text>
+  <text class="td" x="56" y="362">所以 HCCL 的拓扑模型本来就把超节点当一等公民，不是为 UB 临时加的。</text>
+</svg>

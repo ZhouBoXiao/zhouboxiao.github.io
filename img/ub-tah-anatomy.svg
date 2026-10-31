@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="UB 事务层包头解剖：完整与精简 BTAH 的域段布局与 TAOpcode 操作码地图">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">BTAH：前 6 字节人人都有，后 6 字节只有「完整格式」才有</text>
+
+  <rect class="panel" x="40" y="48" width="640" height="180" rx="10"/>
+  <text class="tb" x="56" y="72">同一个包头，两种身高的字段布局</text>
+
+  <text class="td" x="56" y="98">精简 6B：</text>
+  <rect x="110" y="86" width="80" height="24" rx="4" fill="#4B3FE3"/>
+  <text class="tw" x="150" y="103" text-anchor="middle">TAOpcode</text>
+  <rect x="190" y="86" width="120" height="24" rx="4" fill="#6F6FFF"/>
+  <text class="tw" x="250" y="103" text-anchor="middle">控制位 8b</text>
+  <rect x="310" y="86" width="140" height="24" rx="4" fill="#6F6FFF"/>
+  <text class="tw" x="380" y="103" text-anchor="middle">INI_TASSN 16b</text>
+
+  <text class="td" x="56" y="138">完整 12B：</text>
+  <rect x="110" y="126" width="80" height="24" rx="4" fill="#4B3FE3"/>
+  <text class="tw" x="150" y="143" text-anchor="middle">TAOpcode</text>
+  <rect x="190" y="126" width="120" height="24" rx="4" fill="#6F6FFF"/>
+  <text class="tw" x="250" y="143" text-anchor="middle">控制位 8b</text>
+  <rect x="310" y="126" width="140" height="24" rx="4" fill="#6F6FFF"/>
+  <text class="tw" x="380" y="143" text-anchor="middle">INI_TASSN 16b</text>
+  <rect x="450" y="126" width="120" height="24" rx="4" fill="#A9AEFF"/>
+  <text class="tb" x="510" y="143" text-anchor="middle">控制位 8b</text>
+  <rect x="570" y="126" width="92" height="24" rx="4" fill="#A9AEFF"/>
+  <text class="tb" x="616" y="143" text-anchor="middle">RC 22b</text>
+
+  <text class="td" x="56" y="172">控制位（精简 8b）：TAver · EE_bits · TV_EN · Poison · UD_Flag</text>
+  <text class="td" x="56" y="194">控制位（完整追加 8b）：No_TAACK · ODR · MT_EN · FCE · Retry · Alloc · E_bit</text>
+  <text class="td" x="56" y="216">RC 22b：INI_RC_Type 2b + INI_RC_ID 20b（ROT 模式下装的是 SCID）</text>
+
+  <rect class="panel" x="40" y="244" width="640" height="180" rx="10"/>
+  <text class="tb" x="56" y="268">TAOpcode 地图：0x0 ~ 0x18，一共 17 个正式操作</text>
+
+  <rect class="chip" x="56" y="282" width="196" height="30" rx="6"/>
+  <text class="td" x="68" y="302">0x0/0x1  Send · Send_imm</text>
+  <rect class="chip" x="260" y="282" width="200" height="30" rx="6"/>
+  <text class="td" x="272" y="302">0x3~0x5  Write 三兄弟</text>
+  <rect class="chip" x="468" y="282" width="196" height="30" rx="6"/>
+  <text class="td" x="480" y="302">0x6  Read（只有它有 Resp 数据）</text>
+
+  <rect class="chip" x="56" y="320" width="196" height="30" rx="6"/>
+  <text class="td" x="68" y="340">0x7~0xF  Atomic 九式</text>
+  <rect class="chip" x="260" y="320" width="200" height="30" rx="6"/>
+  <text class="td" x="272" y="340">0x10/0x15  Mgmt · Prefetch</text>
+  <rect class="chip" x="468" y="320" width="196" height="30" rx="6"/>
+  <text class="td" x="480" y="340">0x14/0x17/0x18  BE 系</text>
+
+  <rect class="chip" x="56" y="358" width="396" height="30" rx="6"/>
+  <text class="td" x="68" y="378">0x11/0x12/0x13  TAACK · Read_resp · Atomic_resp（响应也有自己的码）</text>
+
+  <text class="td" x="56" y="410">响应包换 ATAH：控制位换成 Status · SV · RSPST · RSPINFO，布局与 BTAH 镜像对称。</text>
+
+  <rect class="strip" x="40" y="438" width="640" height="20" rx="6"/>
+  <text class="td" x="56" y="452">完整格式给跨节点大事务用；精简格式配 TP Bypass，专供 Load/Store 这类小而急的同步访存。</text>
+</svg>

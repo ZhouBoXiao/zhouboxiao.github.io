@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" width="720" height="450" role="img" aria-label="UB 数据链路层信用证流控：Cell 换算、独占与共享模式、两条返还通道">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="450" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">信用流控：先问对方「你还能装几格」，装得下才发</text>
+
+  <rect class="panel" x="40" y="48" width="330" height="212" rx="10"/>
+  <text class="tb" x="56" y="72">一张信用证 = 1 个 Cell 的接收缓存</text>
+  <text class="td" x="56" y="96">1 Cell = n 个 Flit，n 由 Init Block 协商</text>
+  <rect class="chip" x="56" y="106" width="298" height="40" rx="6"/>
+  <text class="tb" x="70" y="132">1MB ÷ (8 × 20B) = 6553 Cells</text>
+  <text class="td" x="56" y="166">n 只能取 2 的幂：1/2/4/8/16/32/64/128</text>
+  <text class="td" x="56" y="188">全链路信用证总数上限 65535 Cells</text>
+
+  <text class="tb" x="56" y="216">两种分配模式</text>
+  <text class="td" x="56" y="238">独占：每个 VL 各自一份，互不干扰</text>
+  <text class="td" x="56" y="254">共享：留 128 + 128 独占，其余进 SHARE_CRD</text>
+
+  <rect class="panel" x="386" y="48" width="294" height="212" rx="10"/>
+  <text class="tb" x="402" y="72">信用证怎么还回来</text>
+
+  <rect class="chip" x="402" y="86" width="262" height="52" rx="6"/>
+  <text class="tb" x="416" y="108">① 搭便车：LPH/LBH 的 CRD 位</text>
+  <text class="td" x="416" y="128">粒度 m × Cell，m 协商决定</text>
+
+  <rect class="chip" x="402" y="148" width="262" height="52" rx="6"/>
+  <text class="tb" x="416" y="170">② 专程跑一趟：Crd_Ack Block</text>
+  <text class="td" x="416" y="190">CRD_NUM[95:0]，粒度 k × Cell</text>
+
+  <text class="td" x="402" y="222">没数据要发时走 ②，有数据就顺手搭车走 ①</text>
+  <text class="td" x="402" y="242">待还数量到阈值会反压网络层，强制走 ②</text>
+
+  <rect class="strip" x="40" y="276" width="640" height="150" rx="10"/>
+  <text class="tc" x="56" y="302">信用流控是「逐级反压」：接收端慢 -> 上一跳停发 -> 再上一跳停发。好处是不丢包，代价有两个。</text>
+
+  <text class="tb" x="56" y="330">代价一：拥塞会扩散</text>
+  <text class="td" x="56" y="352">真正堵的那个端口，会把压力一路反压回去，</text>
+  <text class="td" x="56" y="370">导致上游交换机看起来也「拥塞」。</text>
+  <text class="td" x="56" y="392">所以 FECN 打标要能识别「源头端口」。</text>
+
+  <text class="tb" x="372" y="330">代价二：会死锁</text>
+  <text class="td" x="372" y="352">环上的缓存互相等，谁都动不了。</text>
+  <text class="td" x="372" y="370">三种解法：路由破环 / VL 主动切换 / 超时丢包。</text>
+  <text class="td" x="372" y="392">这也是「多 VL」存在的真正理由。</text>
+</svg>

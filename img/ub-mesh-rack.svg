@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="UB-Mesh 单机柜：8 板 8 NPU 的 2D 全互连、18 个 LRS 交换平面与 64+1 备份">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="s" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="520" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">一个机柜：8 板 × 8 NPU 直连成 2D 全网格，18 个 LRS 拼成交换平面</text>
+
+  <rect class="chip" x="44" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="80" y="74" text-anchor="middle">板 0</text>
+  <text class="td" x="80" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="124" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="160" y="74" text-anchor="middle">板 1</text>
+  <text class="td" x="160" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="204" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="240" y="74" text-anchor="middle">板 2</text>
+  <text class="td" x="240" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="284" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="320" y="74" text-anchor="middle">板 3</text>
+  <text class="td" x="320" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="364" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="400" y="74" text-anchor="middle">板 4</text>
+  <text class="td" x="400" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="444" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="480" y="74" text-anchor="middle">板 5</text>
+  <text class="td" x="480" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="524" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="560" y="74" text-anchor="middle">板 6</text>
+  <text class="td" x="560" y="96" text-anchor="middle">8 × NPU</text>
+  <rect class="chip" x="604" y="48" width="72" height="64" rx="8"/>
+  <text class="tb" x="640" y="74" text-anchor="middle">板 7</text>
+  <text class="td" x="640" y="96" text-anchor="middle">8 × NPU</text>
+
+  <text class="td" x="44" y="128">板内 X 维全互连，板间 Y 维全互连 —— 64 颗 NPU 在机柜里就是一个 8×8 的全网格</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M360 136 V148" marker-end="url(#s)"/>
+
+  <rect class="panel" x="40" y="152" width="640" height="120" rx="10"/>
+  <text class="tb" x="56" y="176">背板 LRS 交换平面：18 个低 radix 交换机两两全互连</text>
+
+  <rect class="chip" x="56" y="188" width="176" height="56" rx="8"/>
+  <text class="tb" x="68" y="210">2 × LRS</text>
+  <text class="td" x="68" y="230">CPU 板 + 备份 NPU</text>
+
+  <rect class="chip" x="250" y="188" width="176" height="56" rx="8"/>
+  <text class="tb" x="262" y="210">8 × LRS</text>
+  <text class="td" x="262" y="230">64 颗常规 NPU 接入</text>
+
+  <rect class="chip" x="444" y="188" width="176" height="56" rx="8"/>
+  <text class="tb" x="456" y="210">8 × LRS</text>
+  <text class="td" x="456" y="230">机柜间 2D-FM 出口</text>
+
+  <text class="td" x="56" y="264">合计输出 4 个 UB x256 IO；每个 NPU 的 UB 控制器兼作路由器，可做间接转发</text>
+
+  <rect class="panel" x="40" y="286" width="300" height="150" rx="10"/>
+  <text class="tb" x="56" y="308">64 + 1：机柜里多备一颗 NPU</text>
+  <text class="tc" x="56" y="334">平时：5—3 直连，0 跳</text>
+  <text class="tc" x="56" y="356">故障：改走 5—LRS—B，1 跳</text>
+  <text class="td" x="56" y="380">备份 NPU 由 LRS 接入，软件只需重定向路径</text>
+  <text class="td" x="56" y="400">代价是 1 跳时延，收益是整柜不掉算力</text>
+  <text class="td" x="56" y="422">比「屏蔽坏卡、剩下 7 颗干活」划算得多</text>
+
+  <rect class="panel" x="356" y="286" width="324" height="150" rx="10"/>
+  <text class="tb" x="372" y="308">出柜：再叠一层 2D，就成了 4D</text>
+  <text class="tc" x="372" y="334">4 机柜 × 4 机柜 = 16 机柜全互连</text>
+  <text class="tc" x="372" y="356">每条机柜间链路是 UB x128</text>
+  <text class="td" x="372" y="380">1 Pod = 16 × 64 = 1024 NPU</text>
+  <text class="td" x="372" y="400">停在 4 个机柜，是因为有源电缆只到 10 米</text>
+  <text class="td" x="372" y="422">Pod 之上换 HRS 组 Clos，扩到 8K NPU</text>
+
+  <rect class="strip" x="40" y="446" width="640" height="68" rx="10"/>
+  <text class="tc" x="56" y="470">敢在机柜内全直连，是因为 X/Y 维链路都在 1 米内，无源电缆就能跑 —— 占全部线缆 86.7%。</text>
+  <text class="td" x="56" y="494">跨到 10 米要换有源电缆，100 米要光模块；再往外，全互连的性价比就没了。</text>
+</svg>

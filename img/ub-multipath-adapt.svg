@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" width="720" height="450" role="img" aria-label="UB 传输层多路径：TPG 分流、逐包负载均衡制造乱序、接收端与拥塞控制如何适配">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="450" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52525B"/>
+    </marker>
+  </defs>
+
+  <text class="th" x="40" y="30">逐包负载均衡：用乱序换带宽，然后想办法把乱序治住</text>
+
+  <rect class="panel" x="40" y="48" width="330" height="196" rx="10"/>
+  <text class="tb" x="56" y="72">TPG：一个事务固定一条 Channel，不同事务摊开</text>
+
+  <rect class="chip" x="56" y="90" width="72" height="52" rx="6"/>
+  <text class="tb" x="92" y="121" text-anchor="middle">TPG</text>
+
+  <rect class="chip" x="152" y="88" width="198" height="22" rx="4"/>
+  <text class="td" x="164" y="103">TP Ch 1 · src port 1</text>
+  <rect class="chip" x="152" y="116" width="198" height="22" rx="4"/>
+  <text class="td" x="164" y="131">TP Ch 2 · src port 2</text>
+  <rect class="chip" x="152" y="144" width="198" height="22" rx="4"/>
+  <text class="td" x="164" y="159">TP Ch 3 · src port 3</text>
+
+  <line class="arr" x1="130" y1="110" x2="149" y2="100" marker-end="url(#a)"/>
+  <line class="arr" x1="130" y1="116" x2="149" y2="126" marker-end="url(#a)"/>
+  <line class="arr" x1="130" y1="122" x2="149" y2="154" marker-end="url(#a)"/>
+
+  <text class="td" x="56" y="188">换 UDP source port（CNA 包换 LBF）= 换一条路径</text>
+  <text class="td" x="56" y="208">交换机按元组哈希选路，元组不变则路径不变</text>
+  <text class="td" x="56" y="228">所以传输层的「多路径」，本质是自己造不同元组</text>
+
+  <rect class="panel" x="386" y="48" width="294" height="196" rx="10"/>
+  <text class="tb" x="402" y="72">乱序了怎么办：三个开关一起拨</text>
+
+  <text class="tb" x="402" y="98">① 开乱序接收，给区间和 BitMap</text>
+  <text class="td" x="402" y="118">128/256/512/1024/2048 个包，按 Channel 配</text>
+
+  <text class="tb" x="402" y="146">② 关掉快速重传，只留超时</text>
+  <text class="td" x="402" y="166">乱序不等于丢包，见错就重传是白重传</text>
+
+  <text class="tb" x="402" y="194">③ 攒够乱序包再回 TPSACK</text>
+  <text class="td" x="402" y="214">应答包本身也占带宽，聚合能省一笔</text>
+
+  <text class="td" x="402" y="234">三个开关都要配，少一个就退化成「勉强能用」</text>
+
+  <rect class="strip" x="40" y="262" width="640" height="168" rx="10"/>
+  <text class="tc" x="56" y="288">带宽是这么换来的：一条 Channel 里的包走不同路径，单条路的拥塞被摊平到多条路上。</text>
+  <text class="tc" x="56" y="314">但拥塞控制不能跟着变敏感 —— 上下文仍按 TP Channel 维护，把网络当成一个整体看。</text>
+  <text class="tc" x="56" y="340">只有所有可用路径都堵了才降速；否则单条路的瞬时拥塞会把整条 Channel 的速率打下来，</text>
+  <text class="tc" x="56" y="364">结果路径利用率上去了、吞吐反而掉下来，这就是「过度响应」。</text>
+  <text class="td" x="56" y="396">依据：6.5.1（TPG、逐包负载均衡）、6.5.1.4（乱序接收与重传适配）、6.6.1.4（拥塞控制适配）。</text>
+  <text class="td" x="56" y="416">对照：UB-Mesh 论文里 TFC 用双 VL 破环，解决的是同一件事的另一半 —— 路径多了，顺序和环路都得管。</text>
+</svg>

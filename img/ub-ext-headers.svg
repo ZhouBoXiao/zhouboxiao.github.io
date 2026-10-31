@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="UB 事务层扩展头家族：九个扩展头各回答一个问题">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 500 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">九个扩展头：每个只回答一个问题，按需拼在 BTAH 后面</text>
+
+  <rect class="chip" x="40" y="52" width="210" height="86" rx="8"/>
+  <text class="tb" x="54" y="76">MAETAH —— 写到哪</text>
+  <text class="td" x="54" y="98">Address 64b + TokenID 20b</text>
+  <text class="td" x="54" y="116">Length：完整 32b / 精简 3b</text>
+  <text class="td" x="54" y="134">精简长度 = 64B × 2^length</text>
+
+  <rect class="chip" x="258" y="52" width="210" height="86" rx="8"/>
+  <text class="tb" x="272" y="76">MTETAH —— 发给谁</text>
+  <text class="td" x="272" y="98">TGT_TC_ID 20b = TCID</text>
+  <text class="td" x="272" y="116">Type：TC / TC Group</text>
+  <text class="td" x="272" y="134">Hint 8b 供 Group 哈希分流</text>
+
+  <rect class="chip" x="476" y="52" width="210" height="86" rx="8"/>
+  <text class="tb" x="490" y="76">TVETAH —— 凭据呢</text>
+  <text class="td" x="490" y="98">TokenValue 32b</text>
+  <text class="td" x="490" y="116">TV_EN=1 才携带</text>
+  <text class="td" x="490" y="134">和 TokenID 成对查权限</text>
+
+  <rect class="chip" x="40" y="148" width="210" height="86" rx="8"/>
+  <text class="tb" x="54" y="172">TAIDETAH —— 哪个任务</text>
+  <text class="td" x="54" y="194">TAID 16b，用户自定义任务号</text>
+  <text class="td" x="54" y="212">请求带了多少，响应</text>
+  <text class="td" x="54" y="230">原样带回多少</text>
+
+  <rect class="chip" x="258" y="148" width="210" height="86" rx="8"/>
+  <text class="tb" x="272" y="172">OFSTETAH —— 第几块</text>
+  <text class="td" x="272" y="194">Offset 24b，粒度 1KB</text>
+  <text class="td" x="272" y="212">首包 0，之后按 KB 递增</text>
+  <text class="td" x="272" y="230">Send 用它定位 RQE 内偏移</text>
+
+  <rect class="chip" x="476" y="148" width="210" height="86" rx="8"/>
+  <text class="tb" x="490" y="172">BEETAH —— 哪些字节</text>
+  <text class="td" x="490" y="194">BE 64~1024 bit 位图</text>
+  <text class="td" x="490" y="212">1 = 有效，0 = 不动</text>
+  <text class="td" x="490" y="230">超出位图的部分默认有效</text>
+
+  <rect class="chip" x="40" y="244" width="210" height="86" rx="8"/>
+  <text class="tb" x="54" y="268">IMMETAH —— 立即数</text>
+  <text class="td" x="54" y="290">Immediate_Data 64b</text>
+  <text class="td" x="54" y="308">不写内存，直接进 CQE</text>
+  <text class="td" x="54" y="326">Msg_Length 标总长</text>
+
+  <rect class="chip" x="258" y="244" width="210" height="86" rx="8"/>
+  <text class="tb" x="272" y="268">NTFETAH —— 通知</text>
+  <text class="td" x="272" y="290">Notify_Data 64b + 地址</text>
+  <text class="td" x="272" y="308">要写入 Target 内存，</text>
+  <text class="td" x="272" y="326">且必须等 Write 全落地</text>
+
+  <rect class="chip" x="476" y="244" width="210" height="86" rx="8"/>
+  <text class="tb" x="490" y="268">UDETAH —— 厂商自定义</text>
+  <text class="td" x="490" y="290">UD 32b 固定 4 字节</text>
+  <text class="td" x="490" y="308">Atomic_store/load 的</text>
+  <text class="td" x="490" y="326">子类型也借道 UDETAH[23:20]</text>
+
+  <rect class="strip" x="40" y="348" width="640" height="110" rx="10"/>
+  <text class="tc" x="56" y="374">IMMETAH 和 NTFETAH 长得像，分界线在「数据去哪」：Immediate 进 CQE 通知用户，Notify 写进内存当信号量。</text>
+  <text class="tc" x="56" y="398">Write_with_notify 可能带两个 TokenValue：TVETAH 管数据内存、NTFETAH 管 Notify 内存。</text>
+  <text class="td" x="56" y="426">BTAH 里的 TV_EN / MT_EN / UD_Flag 三个开关位，分别对应 TVETAH / MTETAH / UDETAH 是否在场 —— 包头自描述，收端不用猜。</text>
+  <text class="td" x="56" y="448">拼装顺序固定：BTAH → [UDETAH] → [TAIDETAH] → [OFSTETAH] → [MAETAH/MTETAH] → 专属头 → [TVETAH] → Payload。</text>
+</svg>

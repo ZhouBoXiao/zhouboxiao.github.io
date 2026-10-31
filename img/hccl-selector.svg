@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="HCCL 的两级算法选择：规则选择器与代价模型">
+  <style>
+    .th { fill: #171717; font: 500 15px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tw { fill: #FFFFFF; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tb { fill: #1A1759; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .tc { fill: #3F3A8C; font: 400 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .td { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #52525B; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .panel { fill: #F7F7F8; stroke: rgba(23,23,23,0.12); }
+    .chip { fill: #FFFFFF; stroke: #A9AEFF; }
+    .strip { fill: #F2F7FF; stroke: #A9AEFF; }
+  </style>
+  <defs>
+    <marker id="s" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+
+  <text class="th" x="40" y="30">选择分两级：能按规则命中就别算代价，算不清才交给代价模型</text>
+
+  <rect class="panel" x="40" y="48" width="330" height="250" rx="10"/>
+
+  <rect class="chip" x="56" y="64" width="298" height="52" rx="8"/>
+  <text class="tb" x="68" y="86">① 算法自己声明能力</text>
+  <text class="td" x="68" y="106">REGISTER_ALG_ATTRS：层数 / dtype / inplace</text>
+
+  <path class="arr" stroke="#4B3FE3" d="M205 116 V134" marker-end="url(#s)"/>
+  <text class="td" x="215" y="130">候选集</text>
+
+  <rect class="chip" x="56" y="136" width="298" height="52" rx="8"/>
+  <text class="tb" x="68" y="158">② 规则选择器：直接命中</text>
+  <text class="td" x="68" y="178">拓扑 × 数据量 × dtype × reduceType</text>
+
+  <path class="arr" stroke="#52525B" stroke-dasharray="4 4" d="M205 188 V206" marker-end="url(#s)"/>
+  <text class="td" x="215" y="202">NOT_MATCH</text>
+
+  <rect class="chip" x="56" y="208" width="298" height="52" rx="8"/>
+  <text class="tb" x="68" y="230">③ 代价模型：选最小代价</text>
+  <text class="td" x="68" y="250">CostModel → CostTable → SelectMinCost</text>
+
+  <text class="td" x="56" y="282">每一级都可以配置覆盖：HCCL_ALGO 显式指定时不再自适应</text>
+
+  <rect class="panel" x="386" y="48" width="294" height="250" rx="10"/>
+  <text class="tb" x="402" y="70">代价 = A + B + C + D</text>
+
+  <rect class="chip" x="402" y="82" width="262" height="44" rx="8"/>
+  <text class="tb" x="414" y="102">A：跨卡传输</text>
+  <text class="td" x="414" y="118">随 DataSize 变，受 UB 带宽利用率影响</text>
+
+  <rect class="chip" x="402" y="132" width="262" height="44" rx="8"/>
+  <text class="tb" x="414" y="152">B：本地拷贝 / 归约</text>
+  <text class="td" x="414" y="168">不受 UB 带宽影响，按引擎分档</text>
+
+  <rect class="chip" x="402" y="182" width="262" height="44" rx="8"/>
+  <text class="tb" x="414" y="202">C：基本时延</text>
+  <text class="td" x="414" y="218">按 task 数估，不同引擎不同系数</text>
+
+  <rect class="chip" x="402" y="232" width="262" height="44" rx="8"/>
+  <text class="tb" x="414" y="252">D：launch 开销</text>
+  <text class="td" x="414" y="268">按 task 数估，和引擎绑定</text>
+
+  <rect class="panel" x="40" y="314" width="640" height="110" rx="10"/>
+  <text class="tb" x="56" y="336">阈值是写死的经验值，以 AllReduce 在 UBX 机型上为例</text>
+  <text class="td" x="56" y="360">小于 512 KB → OneShot（源码注释写着「UB 协议一次传输的最大 size」）</text>
+  <text class="td" x="56" y="382">4P 且 Mesh 数 = Clos 数 → 小数据走 OneShot，大数据走 Mesh + NHR 并发</text>
+  <text class="td" x="56" y="404">Clos 是 Mesh 的整数倍且大于 32 MB → Pipeline（Mesh + NHR 串起来）</text>
+</svg>
