@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="任务完成判定的三种判据">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">「做完了没有」有三种答法，主判据不是 CQE</text>
+  <text class="ts" x="30" y="50">多数人的直觉是「等完成队列」，实际跑起来九成任务靠的是比两个下标</text>
+
+  <!-- 行一 -->
+  <rect x="30" y="64" width="660" height="94" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <rect x="30" y="64" width="6" height="94" rx="3" fill="#4B3FE3"/>
+  <text class="bd" x="50" y="86">主判据 · SQ head 追平</text>
+  <text class="ts" x="50" y="108">host 只维护自己的尾指针，硬件把 head 推上来；head 追上 tail 就意味着这条流空了。</text>
+  <text class="mono" x="50" y="126">Driver_-&gt;GetSqHead(dev, tsId, sqId, &amp;sqHead)</text>
+  <text class="ts" x="50" y="146" style="fill:#3F3A8C;">用在：aclrtSynchronizeStream、任务回收；同步就是一次比大小的循环，不产生设备侧流量。</text>
+
+  <!-- 行二 -->
+  <rect x="30" y="166" width="660" height="94" rx="9" fill="#FFFFFF" stroke="rgba(225,29,72,0.35)"/>
+  <rect x="30" y="166" width="6" height="94" rx="3" fill="#E11D48"/>
+  <text class="bd" x="50" y="188">异常通道 · CQE</text>
+  <text class="ts" x="50" y="210">只有 wrCqe 置位的任务才回写，任务失败时必回；errorType 非零就触发 excptCallBack_。</text>
+  <text class="mono" x="50" y="228">logicCq.errorType &amp; RT_STARS_EXIST_ERROR</text>
+  <text class="ts" x="50" y="248" style="fill:#9F1239;">用在：DVPP 流、遇错即停、异常定位；正常路径不产生 CQE 流量，这是设计目标不是巧合。</text>
+
+  <!-- 行三 -->
+  <rect x="30" y="268" width="660" height="94" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <rect x="30" y="268" width="6" height="94" rx="3" fill="#9CA3AF"/>
+  <text class="bd" x="50" y="290">语义同步 · Event / Notify</text>
+  <text class="ts" x="50" y="312">record 是「到这儿打个点」，wait 是「卡在这儿等这个点」；等发生在 TS 里，不占 host。</text>
+  <text class="mono" x="50" y="330">TS_TASK_TYPE_EVENT_RECORD / STREAM_WAIT_EVENT</text>
+  <text class="ts" x="50" y="350">用在：多流并行、跨卡依赖、Producer 与 Consumer 解耦；代价是多两条 SQE。</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="376" width="660" height="52" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="396">合起来一句：<tspan style="fill:#3F3A8C;">下发的确认靠 head 追平，正确性靠 CQE 兜底，顺序靠 Event 编排。</tspan></text>
+  <text class="ts" x="46" y="416">所以 Runtime 的同步接口大半是「用户态轮询 + 偶发内核查询」，而不是「阻塞等一个中断」。</text>
+</svg>

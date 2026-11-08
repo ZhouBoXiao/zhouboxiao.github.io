@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 540" width="720" height="540" role="img" aria-label="逻辑 SQ 到硬件 SQ 的绑定关系与三张反查表">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#A1A1AA"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="540" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">逻辑 SQ：捕获时不绑，执行时才绑</text>
+  <text class="ts" x="30" y="50">虚拟的一头是「每条流一条」，物理的一头是「硬件实际有几条」</text>
+
+  <!-- 左列 -->
+  <text class="ts" x="40" y="80" style="fill:#71717A;">捕获期 · 各攒各的</text>
+
+  <rect x="36" y="90" width="186" height="68" rx="7" fill="#F2F7FF" stroke="rgba(75,63,227,0.30)"/>
+  <text class="bd" x="46" y="110">LogicSq #0</text>
+  <text class="mono" x="46" y="127" style="font-size:9px;fill:#52525B;">streamId_ = 0</text>
+  <text class="mono" x="46" y="144" style="font-size:9px;fill:#B45309;">rtsqId_ = 0xFFFF</text>
+
+  <rect x="36" y="172" width="186" height="68" rx="7" fill="#F2F7FF" stroke="rgba(75,63,227,0.30)"/>
+  <text class="bd" x="46" y="192">LogicSq #1</text>
+  <text class="mono" x="46" y="209" style="font-size:9px;fill:#52525B;">streamId_ = 1</text>
+  <text class="mono" x="46" y="226" style="font-size:9px;fill:#B45309;">rtsqId_ = 0xFFFF</text>
+
+  <rect x="36" y="254" width="186" height="68" rx="7" fill="#F2F7FF" stroke="rgba(75,63,227,0.30)"/>
+  <text class="bd" x="46" y="274">LogicSq #2</text>
+  <text class="mono" x="46" y="291" style="font-size:9px;fill:#52525B;">streamId_ = 2</text>
+  <text class="mono" x="46" y="308" style="font-size:9px;fill:#B45309;">rtsqId_ = 0xFFFF</text>
+
+  <!-- 右列 -->
+  <text class="ts" x="492" y="80" style="fill:#71717A;">执行期 · 绑到真的 SQ</text>
+
+  <rect x="490" y="90" width="194" height="68" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="bd" x="500" y="110">硬件 SQ 0</text>
+  <text class="mono" x="500" y="127" style="font-size:9px;fill:#52525B;">sqId = 12</text>
+  <text class="ts" x="500" y="144" style="fill:#71717A;">由 sqCqPool 分配</text>
+
+  <rect x="490" y="172" width="194" height="68" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="bd" x="500" y="192">硬件 SQ 1</text>
+  <text class="mono" x="500" y="209" style="font-size:9px;fill:#52525B;">sqId = 13</text>
+  <text class="ts" x="500" y="226" style="fill:#71717A;">sqCqNum_ == logicSqNum</text>
+
+  <!-- 绑定箭头：横穿中部空白 -->
+  <path d="M222 124 L486 124" stroke="#4B3FE3" stroke-width="1.3" marker-end="url(#a)"/>
+  <path d="M222 206 L486 206" stroke="#4B3FE3" stroke-width="1.3" marker-end="url(#a)"/>
+  <path d="M222 288 L486 288" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ag)"/>
+
+  <text class="ts" x="300" y="118" style="fill:#3F3A8C;font-size:9px;">BindSqCq · 0xFFFF 被填成 12</text>
+  <text class="ts" x="300" y="200" style="fill:#3F3A8C;font-size:9px;">BindSqCq · 0xFFFF 被填成 13</text>
+  <text class="ts" x="300" y="282" style="fill:#71717A;font-size:9px;">这个流没绑（示意）</text>
+
+  <text class="ts" x="240" y="336" style="fill:#B45309;">0xFFFF 是哨兵值：SetUp 时写死，注释直说「推迟到模型执行时（BindSqCq）填充」</text>
+
+  <!-- 三张表 -->
+  <text class="ts" x="40" y="372" style="fill:#71717A;">执行完就有了三张表，CQE 回来靠它们反向定位</text>
+
+  <rect x="36" y="382" width="648" height="82" rx="8" fill="#F7F7F8"/>
+
+  <text class="ts" x="48" y="404" style="fill:#171717;">① sqId → logicSqId</text>
+  <text class="mono" x="48" y="421" style="font-size:8.5px;fill:#52525B;">rtsqIdToLogicSqIdMap_</text>
+  <text class="ts" x="48" y="438" style="fill:#71717A;">CQE 先查这张</text>
+
+  <text class="ts" x="252" y="404" style="fill:#171717;">② logicSqId → 对象</text>
+  <text class="mono" x="252" y="421" style="font-size:8.5px;fill:#52525B;">logicSqIdToLogicSqMap_</text>
+  <text class="ts" x="252" y="438" style="fill:#71717A;">拿到 LogicSq* 往下查</text>
+
+  <text class="ts" x="456" y="404" style="fill:#171717;">③ hwPos → (流, 位置)</text>
+  <text class="mono" x="456" y="421" style="font-size:8.5px;fill:#52525B;">hwPosToTask_（在 LogicSq 里）</text>
+  <text class="ts" x="456" y="438" style="fill:#71717A;">硬件位置反查任务</text>
+
+  <text class="ts" x="48" y="458" style="fill:#3F3A8C;">①② 互为逆映射，由 BindRtsqToLogicSq 建立；③ 才是真正落到「哪个任务」的那一步</text>
+
+  <!-- 反查链 -->
+  <rect x="36" y="474" width="648" height="40" rx="6" fill="#F0FDFA" stroke="rgba(15,118,110,0.28)"/>
+  <text class="mono" x="48" y="493" style="font-size:9px;fill:#0F766E;">report.sqId → logicSqId → LogicSq* → hwPosToTask_[hwPos] → (streamId, pos)</text>
+  <text class="ts" x="48" y="507" style="fill:#52525B;">CQE 只带 sqId 和队列位置，不知道它原本属于哪条流</text>
+
+  <text class="ts" x="40" y="530" style="fill:#3F3A8C;">多流共享硬件队列这件事，全靠这三张表撑着</text>
+</svg>

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 396" width="720" height="396" role="img" aria-label="ACL Graph 的流捕获与重放">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="a7" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="396" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">流捕获：把「下发动作」本身存下来，而不是把结果存下来</text>
+  <text class="ts" x="30" y="50">两次执行看到的是同一串 SQE，只是第二次不再经过用户态的函数调用栈</text>
+
+  <!-- 左 -->
+  <rect x="30" y="64" width="320" height="240" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="bd" x="44" y="86">① Eager：N 个算子 = N 次陷入</text>
+
+  <text class="ts" x="44" y="110">算子 1</text>
+  <rect x="44" y="116" width="150" height="26" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="56" y="133">填 SQE</text>
+  <rect x="200" y="116" width="72" height="26" rx="4" fill="#FEF2F2" stroke="#E11D48"/>
+  <text class="ts" x="210" y="133" style="fill:#9F1239;">ioctl</text>
+
+  <text class="ts" x="44" y="160">算子 2</text>
+  <rect x="44" y="166" width="150" height="26" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="56" y="183">填 SQE</text>
+  <rect x="200" y="166" width="72" height="26" rx="4" fill="#FEF2F2" stroke="#E11D48"/>
+  <text class="ts" x="210" y="183" style="fill:#9F1239;">ioctl</text>
+
+  <text class="ts" x="44" y="210">算子 3</text>
+  <rect x="44" y="216" width="150" height="26" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="56" y="233">填 SQE</text>
+  <rect x="200" y="216" width="72" height="26" rx="4" fill="#FEF2F2" stroke="#E11D48"/>
+  <text class="ts" x="210" y="233" style="fill:#9F1239;">ioctl</text>
+
+  <text class="ts" x="44" y="270">每多一个算子，就多一次固定开销；</text>
+  <text class="ts" x="44" y="288">这部分和算子算得快不快完全无关。</text>
+
+  <!-- 右 -->
+  <rect x="370" y="64" width="320" height="240" rx="10" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="384" y="86">② Capture：抄一遍，存进 model</text>
+
+  <rect x="384" y="98" width="292" height="26" rx="4" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="396" y="115">aclmdlRICaptureBegin</text>
+
+  <rect x="384" y="130" width="292" height="26" rx="4" fill="#EDEBFF" stroke="rgba(75,63,227,0.45)"/>
+  <text class="ts" x="396" y="147" style="fill:#3F3A8C;">SQE 1 —— 只生成，不发送</text>
+
+  <rect x="384" y="162" width="292" height="26" rx="4" fill="#EDEBFF" stroke="rgba(75,63,227,0.45)"/>
+  <text class="ts" x="396" y="179" style="fill:#3F3A8C;">SQE 2 —— 只生成，不发送</text>
+
+  <rect x="384" y="194" width="292" height="26" rx="4" fill="#EDEBFF" stroke="rgba(75,63,227,0.45)"/>
+  <text class="ts" x="396" y="211" style="fill:#3F3A8C;">SQE 3 —— 只生成，不发送</text>
+
+  <rect x="384" y="226" width="292" height="26" rx="4" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="396" y="243">aclmdlRICaptureEnd → model</text>
+
+  <text class="ts" x="384" y="270">之后每次 aclmdlRIExecuteAsync，都是把这一段</text>
+  <text class="ts" x="384" y="288">整体推给 TS —— 函数调用栈被整段跳过。</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="318" width="660" height="62" rx="8" fill="#FFFFFF" stroke="rgba(225,29,72,0.30)"/>
+  <text class="ts" x="46" y="338" style="fill:#9F1239;">硬约束：捕获期间禁止对 Stream / Event / Device / Context 做同步或查询 —— 因为「捕获」要求调用序列可复现。</text>
+  <text class="ts" x="46" y="356">要改参数时不能重捕获，两条路：分界点捕获（前后切两段）或任务组标记（只改标记区间，适合动态 shape）。</text>
+  <text class="ts" x="46" y="373" style="fill:#52525B;">这也是 TensorFlow / PyTorch 图模式在昇腾上最终落到的那条路径。</text>
+</svg>

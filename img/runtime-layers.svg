@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 574" width="720" height="574" role="img" aria-label="CANN Runtime 的四层结构与部署位置">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 11px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="a1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="574" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">Runtime 的四层：谁做决策，谁只负责转发</text>
+  <text class="ts" x="30" y="50">左列是部署位置，右列是这一层唯一要解决的问题</text>
+
+  <!-- 应用层 -->
+  <rect x="30" y="66" width="400" height="48" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="46" y="86">应用 / 框架</text>
+  <text class="ts" x="46" y="104">PyTorch · MindSpore · GE · HCCL · 算子库</text>
+  <text class="ts" x="452" y="86">不感知硬件，只认 aclrt 接口</text>
+  <text class="ts" x="452" y="104">同步语义在这一层被决定</text>
+
+  <path class="arr" d="M230 116 L230 128" marker-end="url(#a1)"/>
+
+  <!-- ACL -->
+  <rect x="30" y="130" width="400" height="40" rx="8" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="bd" x="46" y="150">ACL 接口层</text>
+  <text class="mono" x="200" y="150">libacl_rt.so</text>
+  <text class="ts" x="452" y="147">参数校验、错误码转换</text>
+  <text class="ts" x="452" y="163">rtXxx 与 aclrtXxx 两套门面</text>
+
+  <path class="arr" d="M230 172 L230 184" marker-end="url(#a1)"/>
+
+  <!-- Runtime 外框 -->
+  <rect x="30" y="186" width="400" height="222" rx="10" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.4"/>
+  <text class="bd" x="44" y="206">CANN Runtime（用户态动态库）</text>
+
+  <rect x="44" y="214" width="372" height="42" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="56" y="231">api/</text>
+  <text class="ts" x="148" y="231">rt · aclrt · aclmdlRI 三类入口</text>
+  <text class="ts" x="56" y="247">只做参数校验与错误装饰，不碰硬件</text>
+
+  <rect x="44" y="262" width="372" height="42" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="56" y="279">feature/</text>
+  <text class="ts" x="148" y="279">aclgraph · fusion · snapshot · model</text>
+  <text class="ts" x="56" y="295">可插拔，按特性独立编译</text>
+
+  <rect x="44" y="310" width="372" height="42" rx="6" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="mono" x="56" y="327">core/</text>
+  <text class="ts" x="148" y="327">Stream · Task · Kernel · Memory</text>
+  <text class="ts" x="56" y="343" style="fill:#3F3A8C;">真正拼 SQE、推队列、管对象生命周期的地方</text>
+
+  <rect x="44" y="358" width="372" height="42" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="56" y="375">driver/</text>
+  <text class="ts" x="148" y="375">v100 · v200 · v201 · config/&lt;chip&gt;</text>
+  <text class="ts" x="56" y="391">按芯片代际拆分支，对外统一 HAL 调用</text>
+
+  <path class="arr" d="M230 410 L230 422" marker-end="url(#a1)"/>
+
+  <!-- 内核态 -->
+  <rect x="30" y="424" width="400" height="40" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="46" y="444">驱动（内核态）</text>
+  <text class="mono" x="200" y="444">ascend_km  /dev/davinci*</text>
+  <text class="ts" x="452" y="441">ioctl 边界：唯一能碰寄存器的位置</text>
+
+  <path class="arr" d="M230 466 L230 478" marker-end="url(#a1)"/>
+
+  <!-- 硬件 -->
+  <rect x="30" y="480" width="400" height="46" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="46" y="500">硬件</text>
+  <text class="ts" x="46" y="518">TS 调度器 → AI Core / AI Cube / AICPU / CCU</text>
+  <text class="ts" x="452" y="500">从 SQ 取 SQE，取指执行</text>
+  <text class="ts" x="452" y="518">回写 SQ head，异常时回写 CQE</text>
+
+  <!-- 右侧竖线 -->
+  <path d="M438 66 L438 534" stroke="rgba(23,23,23,0.12)" stroke-width="1" fill="none"/>
+
+  <text class="ts" x="452" y="544">库：libruntime.so / libruntime_common.so</text>
+  <text class="ts" x="452" y="560">libruntime_v100.so / libruntime_v200.so</text>
+</svg>

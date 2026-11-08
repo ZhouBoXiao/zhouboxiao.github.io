@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="720" height="560" role="img" aria-label="三种 kernel lib 查符号方式的对比">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="ao" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#B45309"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="560" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">同一个 dlsym，三种可见范围</text>
+  <text class="ts" x="30" y="50">区别不在 API，在于传给 dlsym 的第一个参数：句柄，还是 RTLD_DEFAULT</text>
+
+  <!-- 三列标题 -->
+  <text class="bd" x="30" y="80">AiCpu</text>
+  <text class="ts" x="30" y="98" style="fill:#71717A;">内置算子</text>
+
+  <text class="bd" x="255" y="80">KFC</text>
+  <text class="ts" x="255" y="98" style="fill:#71717A;">融合大 kernel</text>
+
+  <text class="bd" x="480" y="80">FWK</text>
+  <text class="ts" x="480" y="98" style="fill:#71717A;">框架算子</text>
+
+  <!-- 列 1 -->
+  <rect x="30" y="110" width="196" height="34" rx="6" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="ts" x="42" y="131" style="font-size:10px;">kernelSo 必填，空就报错</text>
+  <path d="M128 144 L128 158" stroke="#4B3FE3" stroke-width="1.1" marker-end="url(#a)"/>
+  <rect x="30" y="162" width="196" height="34" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="42" y="183" style="font-size:9.5px;">dlsym(soHandle, name)</text>
+  <path d="M128 196 L128 210" stroke="#4B3FE3" stroke-width="1.1" marker-end="url(#a)"/>
+  <rect x="30" y="214" width="196" height="52" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="42" y="233" style="font-size:10px;">可见范围：这一个 so</text>
+  <text class="ts" x="42" y="251" style="font-size:10px;fill:#3F3A8C;">一个算子一个符号</text>
+
+  <!-- 列 2 -->
+  <rect x="255" y="110" width="196" height="34" rx="6" fill="#FFF7ED" stroke="rgba(180,83,9,0.30)"/>
+  <text class="ts" x="267" y="131" style="font-size:10px;fill:#B45309;">kernelSo 可空</text>
+  <path d="M353 144 L353 158" stroke="#B45309" stroke-width="1.1" marker-end="url(#ao)"/>
+  <rect x="255" y="162" width="196" height="34" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="267" y="183" style="font-size:9px;">dlsym(soHandle, …)</text>
+  <path d="M353 196 L353 210" stroke="#B45309" stroke-width="1.1" marker-end="url(#ao)"/>
+  <rect x="255" y="214" width="196" height="52" rx="6" fill="#FFF7ED" stroke="rgba(180,83,9,0.30)"/>
+  <text class="mono" x="267" y="233" style="font-size:9px;fill:#B45309;">dlsym(RTLD_DEFAULT, …)</text>
+  <text class="ts" x="267" y="251" style="font-size:10px;fill:#B45309;">兜底：全进程搜，先加载者赢</text>
+
+  <!-- 列 3 -->
+  <rect x="480" y="110" width="196" height="34" rx="6" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="ts" x="492" y="131" style="font-size:10px;">不用 kernelSo</text>
+  <path d="M578 144 L578 158" stroke="#4B3FE3" stroke-width="1.1" marker-end="url(#a)"/>
+  <rect x="480" y="162" width="196" height="34" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="492" y="183" style="font-size:9px;">GetApi(soFile, "TFOperateAPI")</text>
+  <path d="M578 196 L578 210" stroke="#4B3FE3" stroke-width="1.1" marker-end="url(#a)"/>
+  <rect x="480" y="214" width="196" height="52" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="492" y="233" style="font-size:10px;">只有一个固定符号</text>
+  <text class="ts" x="492" y="251" style="font-size:10px;fill:#3F3A8C;">名字写死在构造函数里</text>
+
+  <!-- 冲突提示 -->
+  <text class="ts" x="30" y="290" style="fill:#71717A;">AiCpu 的注释原话：</text>
+  <text class="mono" x="30" y="308" style="font-size:9px;fill:#52525B;">// Finding a cce op kernel from the whole process space is not supported.</text>
+  <text class="mono" x="30" y="324" style="font-size:9px;fill:#52525B;">// Only get aicpu op kernel a specific so lib.so, kernelSo should not be NULL.</text>
+  <text class="ts" x="30" y="344" style="fill:#B45309;">而 KFC 恰恰就在做「全进程搜」—— 两个 lib 对同一件事的态度是相反的，因为 KFC 的 so 不归 AE 管。</text>
+
+  <!-- 分隔 -->
+  <path d="M30 362 L690 362" stroke="rgba(23,23,23,0.12)" stroke-width="1" stroke-dasharray="5 4"/>
+
+  <!-- 三种签名 -->
+  <text class="tb" x="30" y="386" style="font-size:12px;">地址拿到之后，签名是猜的</text>
+
+  <text class="ts" x="30" y="410" style="fill:#71717A;">lib</text>
+  <text class="ts" x="150" y="410" style="fill:#71717A;">签名</text>
+  <text class="ts" x="420" y="410" style="fill:#71717A;">参数是什么</text>
+  <path d="M30 418 L690 418" stroke="rgba(23,23,23,0.14)"/>
+
+  <text class="mono" x="30" y="438">AiCpu 普通</text>
+  <text class="mono" x="150" y="438" style="font-size:10px;">uint32_t (*)(void*)</text>
+  <text class="ts" x="420" y="438">参数块地址</text>
+
+  <text class="mono" x="30" y="462" style="fill:#B45309;">AiCpu blockdim</text>
+  <text class="mono" x="150" y="462" style="font-size:10px;fill:#B45309;">uint32_t (*)(void*, void*)</text>
+  <text class="ts" x="420" y="462">参数块 + BlkDimInfo*</text>
+  <text class="ts" x="560" y="462" style="fill:#B45309;">靠名字区分</text>
+
+  <text class="mono" x="30" y="486">KFC</text>
+  <text class="mono" x="150" y="486" style="font-size:10px;">uint32_t (*)(void*)</text>
+  <text class="ts" x="420" y="486">参数块地址（无 blockdim 变体）</text>
+
+  <text class="mono" x="30" y="510">FWK</text>
+  <text class="mono" x="150" y="510" style="font-size:10px;">uint32_t (*)(uint64_t)</text>
+  <text class="ts" x="420" y="510">框架参数，一个整数不是指针</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="524" width="660" height="28" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="44" y="543">dlsym 返回的永远是 void*，C 没有重载也没有类型信息 —— 签名对不对，全靠调用方和算子作者的约定。</text>
+</svg>

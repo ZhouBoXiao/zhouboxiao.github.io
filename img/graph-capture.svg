@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="捕获与不捕获的流程对照：最后一拍被截断">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#A1A1AA"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">捕获到底截住了什么：造完，不发</text>
+  <text class="ts" x="30" y="50">同一个 aclrtLaunchKernel，两条路只差最后一拍</text>
+
+  <!-- 上半：不捕获 -->
+  <text class="ts" x="40" y="82" style="fill:#71717A;">不开捕获</text>
+  <rect x="36" y="90" width="648" height="118" rx="8" fill="#F7F7F8"/>
+  <rect x="48" y="104" width="96" height="30" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="60" y="123">分配 TaskInfo</text>
+  <rect x="156" y="104" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="176" y="123">填参数</text>
+  <rect x="240" y="104" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="264" y="123">填 SQE</text>
+  <rect x="324" y="104" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="348" y="123">拿锁</text>
+  <rect x="408" y="104" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="432" y="123">写 SQ</text>
+  <rect x="492" y="104" width="96" height="30" rx="5" fill="#4B3FE3"/>
+  <text class="ts" x="500" y="123" style="fill:#FFFFFF;">推 tail 进硬件</text>
+  <rect x="600" y="104" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="612" y="123">登记回收</text>
+  <path d="M144 119 L152 119" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M228 119 L236 119" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M312 119 L320 119" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M396 119 L404 119" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M480 119 L488 119" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M588 119 L596 119" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <text class="ts" x="48" y="158">七拍全走完，SQE 进了队列，硬件开始跑</text>
+  <text class="mono" x="48" y="180" style="font-size:9.5px;fill:#71717A;">SubmitTask → 写 SQ → sqTail 寄存器</text>
+  <text class="ts" x="400" y="180" style="fill:#3F3A8C;">每个算子都要走一遍</text>
+
+  <!-- 下半：捕获 -->
+  <text class="ts" x="40" y="238" style="fill:#71717A;">开了捕获</text>
+  <rect x="36" y="246" width="648" height="150" rx="8" fill="#F2F7FF"/>
+  <rect x="48" y="260" width="96" height="30" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="ts" x="60" y="279">分配 TaskInfo</text>
+  <rect x="156" y="260" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="ts" x="176" y="279">填参数</text>
+  <rect x="240" y="260" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="ts" x="264" y="279">填 SQE</text>
+  <rect x="324" y="260" width="72" height="30" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="ts" x="348" y="279">拿锁</text>
+  <text class="ts" x="432" y="279" style="fill:#3F3A8C;">← 到这里就 return</text>
+  <path d="M144 275 L152 275" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M228 275 L236 275" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M312 275 L320 275" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <path d="M396 275 L404 275" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+
+  <!-- 截断标记 -->
+  <path d="M406 258 L418 292" stroke="#B45309" stroke-width="1.8"/>
+  <path d="M418 258 L406 292" stroke="#B45309" stroke-width="1.8"/>
+
+  <!-- 落点 -->
+  <rect x="48" y="308" width="290" height="72" rx="6" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="62" y="328" style="font-size:10px;fill:#1A1759;">hostSqeAddr_</text>
+  <text class="ts" x="62" y="348">任务对象和 SQE 全躺在这块 host 内存里</text>
+  <text class="ts" x="62" y="368" style="fill:#71717A;">按流分开攒，互不干扰</text>
+  <path d="M96 292 L96 306" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <path d="M180 292 L180 306" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <path d="M276 292 L276 306" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <path d="M360 292 L360 306" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+
+  <rect x="356" y="308" width="316" height="72" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="370" y="328" style="fill:#171717;">没有哪个寄存器被改</text>
+  <text class="ts" x="370" y="348">硬件完全不知道这边在攒东西</text>
+  <text class="ts" x="370" y="368" style="fill:#71717A;">等 EndCapture 打成图，执行时才一次推</text>
+
+  <!-- 底条 -->
+  <rect x="36" y="410" width="648" height="44" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="48" y="428" style="fill:#3F3A8C;">截流不是硬件功能，是软件在提交前 return —— 该做的都做了，就是不给出门</text>
+  <text class="ts" x="48" y="444" style="fill:#71717A;">唯一例外：级联换流时的 CondStreamActive，那个必须真发</text>
+</svg>

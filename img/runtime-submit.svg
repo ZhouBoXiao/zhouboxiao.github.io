@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 436" width="720" height="436" role="img" aria-label="硬件 SQ 与软件 SQ 两条下发路径">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+    .arrr { stroke: #E11D48; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="a4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="r4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#E11D48"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="436" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">同一个 SQE，两条出门的路</text>
+  <text class="ts" x="30" y="50">差别不在 SQE 长什么样，而在它被「谁」写进「哪块内存」</text>
+
+  <!-- 路径一 -->
+  <rect x="30" y="64" width="660" height="146" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="bd" x="46" y="86">① 硬件 SQ：每条任务一次系统调用</text>
+
+  <rect x="46" y="98" width="132" height="52" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="56" y="119">AllocTask 拿槽位</text>
+  <text class="ts" x="56" y="136">填 TaskInfo → SQE</text>
+
+  <path class="arr" d="M182 124 L206 124" marker-end="url(#a4)"/>
+
+  <rect x="210" y="98" width="126" height="52" rx="6" fill="#FEF2F2" stroke="#E11D48" stroke-width="1.3"/>
+  <text class="mono" x="220" y="119">halSqTaskSend</text>
+  <text class="ts" x="220" y="136" style="fill:#9F1239;">用户态 → 内核</text>
+
+  <path class="arrr" d="M340 124 L364 124" marker-end="url(#r4)"/>
+
+  <rect x="368" y="98" width="128" height="52" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="378" y="119">驱动把 SQE 搬进</text>
+  <text class="ts" x="378" y="136">设备侧 SQ 环</text>
+
+  <path class="arr" d="M500 124 L524 124" marker-end="url(#a4)"/>
+
+  <rect x="528" y="98" width="146" height="52" rx="6" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="ts" x="538" y="119">更新 tail 寄存器</text>
+  <text class="ts" x="538" y="136">TS 才开始取这条 SQE</text>
+
+  <text class="ts" x="46" y="176">代价明确：一次陷入内核 ≈ 微秒级，且不可被编译器/框架合批 —— 这是 eager 模式最重的那块固定开销。</text>
+  <text class="ts" x="46" y="196">好处也明确：SQ 在设备内存里，多进程天然隔离，谁也别想改别人的队列。</text>
+
+  <!-- 路径二 -->
+  <rect x="30" y="222" width="660" height="146" rx="10" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="46" y="244">② 软件 SQ：队列被映射进用户态，写内存就等于下发</text>
+
+  <rect x="46" y="256" width="132" height="52" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="56" y="277">同一个 AllocTask</text>
+  <text class="ts" x="56" y="294">同一个 ToConstructSqe</text>
+
+  <path class="arr" d="M182 282 L206 282" marker-end="url(#a4)"/>
+
+  <rect x="210" y="256" width="150" height="52" rx="6" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="mono" x="220" y="277">memcpy_s(sqeBuffer_)</text>
+  <text class="ts" x="220" y="294" style="fill:#3F3A8C;">纯用户态写内存</text>
+
+  <path class="arr" d="M364 282 L388 282" marker-end="url(#a4)"/>
+
+  <rect x="392" y="256" width="130" height="52" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="402" y="277">软件尾指针</text>
+  <text class="ts" x="402" y="294">自己往前走一格</text>
+
+  <path class="arr" d="M526 282 L550 282" marker-end="url(#a4)"/>
+
+  <rect x="554" y="256" width="120" height="52" rx="6" fill="#EDEBFF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="ts" x="564" y="277">TS 直接读这块</text>
+  <text class="ts" x="564" y="294">共享内存</text>
+
+  <text class="ts" x="46" y="334">没有系统调用，也没有拷贝到驱动的动作 —— 唯一剩下的成本是那条 64 字节的 memset + 位域赋值。</text>
+  <text class="ts" x="46" y="354">代价：队列必须由 Runtime 自己管，谁写哪一格、什么时候 flush，全变成软件问题。</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="380" width="660" height="42" rx="8" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="ts" x="46" y="398" style="fill:#3F3A8C;">ACL Graph 就站在 ② 上面：捕获期间连 memcpy 都不做，SQE 直接抄进 model 自己的 host buffer，</text>
+  <text class="ts" x="46" y="414" style="fill:#3F3A8C;">执行时一次性推给 TS —— 这就是「任务下沉」在 Runtime 侧的真实含义。</text>
+</svg>

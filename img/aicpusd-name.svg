@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" width="720" height="450" role="img" aria-label="一个字符串从 host 走到 device 的旅程">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="450" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">HCCL 在设备侧的落点：一个字符串的旅程</text>
+  <text class="ts" x="30" y="50">host 侧一个常量，跨过硬件，最后变成设备侧一张 std::map 的 key</text>
+
+  <!-- 表头 -->
+  <text class="ts" x="48" y="76" style="fill:#71717A;">发生在哪</text>
+  <text class="ts" x="170" y="76" style="fill:#71717A;">做了什么</text>
+  <text class="ts" x="440" y="76" style="fill:#71717A;">此刻它是什么形态</text>
+  <path d="M48 84 L672 84" stroke="rgba(23,23,23,0.14)" stroke-width="1"/>
+
+  <!-- 第 1 行 -->
+  <rect x="40" y="90" width="640" height="26" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="108">host</text>
+  <text class="ts" x="170" y="108">program.hpp 里定义常量</text>
+  <text class="mono" x="440" y="108" style="fill:#1A1759;">"batchLoadsoFrombuf"</text>
+
+  <!-- 第 2 行 -->
+  <text class="mono" x="48" y="142">host</text>
+  <text class="ts" x="170" y="142">LaunchAicpuKernelForCpuSo</text>
+  <text class="ts" x="440" y="142">一条 64B SQE，kernelName 指它</text>
+
+  <!-- 第 3 行 -->
+  <text class="mono" x="48" y="176">TS</text>
+  <text class="ts" x="170" y="176">取指，判定这条走 AI CPU</text>
+  <text class="ts" x="440" y="176">翻译成 ts_aicpu_sqe_t</text>
+
+  <!-- 分隔 -->
+  <text class="ts" x="48" y="200" style="fill:#71717A;">从 TS 侧转到 aicpusd 侧</text>
+  <path d="M196 196 L672 196" stroke="rgba(23,23,23,0.18)" stroke-width="1" stroke-dasharray="5 4"/>
+
+  <!-- 第 4 行 -->
+  <rect x="40" y="210" width="640" height="26" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="228">device</text>
+  <text class="ts" x="170" y="228">aicpusd 取出 kernelName</text>
+  <text class="mono" x="440" y="228" style="fill:#1A1759;">"batchLoadsoFrombuf"</text>
+
+  <!-- 第 5 行 -->
+  <text class="mono" x="48" y="262">device</text>
+  <text class="ts" x="170" y="262">HwTsKernelRegister 查表</text>
+  <text class="mono" x="440" y="262">tsKernelInstMap_[name]</text>
+
+  <!-- 第 6 行 -->
+  <text class="mono" x="48" y="296">device</text>
+  <text class="ts" x="170" y="296">BatchLoadSoFromBuffTsKernel</text>
+  <text class="ts" x="440" y="296">写盘 + aeBatchLoadKernelSo</text>
+
+  <!-- 同一字符串的连线 -->
+  <path d="M682 103 L688 103 L688 223 L682 223" fill="none" stroke="#4B3FE3" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+  <!-- 注 -->
+  <text class="ts" x="30" y="330" style="fill:#3F3A8C;">两处紫底是同一个字符串——它没有任何编译期检查，改名就是静默失配。</text>
+  <text class="ts" x="30" y="350">再往里（.so 内部怎么组织通信 SQE）就是 libhccd.so 的事，已经出 runtime 仓了。</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="372" width="660" height="48" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="392">这是整套设计里最省事也最脆弱的一环：<tspan style="fill:#3F3A8C;">省事在于不需要任何协议扩展，脆弱在于这个名字谁都不能改。</tspan></text>
+  <text class="ts" x="46" y="410">改错的症状是：host 侧下发成功，设备侧查表失败，任务挂了但报错只说「找不到 kernel」。</text>
+</svg>

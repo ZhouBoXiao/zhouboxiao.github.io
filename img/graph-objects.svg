@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="捕获子系统的四个核心对象及其归属关系">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#A1A1AA"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">四个对象，两种挂法</text>
+  <text class="ts" x="30" y="50">两个是「扩展」，挂在别人的对象上；两个是本体</text>
+
+  <!-- 左列：扩展对象 -->
+  <text class="ts" x="40" y="82" style="fill:#71717A;">扩展对象（懒加载 · final）</text>
+
+  <rect x="36" y="92" width="308" height="120" rx="8" fill="#F2F7FF" stroke="rgba(75,63,227,0.30)"/>
+  <text class="bd" x="50" y="114">CaptureSession : ContextExtension</text>
+  <text class="mono" x="50" y="134" style="font-size:9.5px;fill:#52525B;">capture_session.hpp:30</text>
+  <text class="ts" x="50" y="156">管「谁在捕获、什么模式」</text>
+  <text class="ts" x="50" y="176" style="fill:#71717A;">captureMode_ + captureModeRefNum_[]</text>
+  <text class="ts" x="50" y="196" style="fill:#3F3A8C;">挂在 Context 上</text>
+
+  <rect x="36" y="226" width="308" height="126" rx="8" fill="#F2F7FF" stroke="rgba(75,63,227,0.30)"/>
+  <text class="bd" x="50" y="248">StreamCapture : StreamExtension</text>
+  <text class="mono" x="50" y="268" style="font-size:9.5px;fill:#52525B;">stream_capture.hpp:31</text>
+  <text class="ts" x="50" y="290">管「这条流攒了什么、链到哪」</text>
+  <text class="ts" x="50" y="310" style="fill:#71717A;">isOrigCaptureStream_ / parent_ / child_</text>
+  <text class="ts" x="50" y="330" style="fill:#71717A;">taskGroup_ / cacheCaptureTaskIds_</text>
+  <text class="ts" x="50" y="348" style="fill:#3F3A8C;">挂在 Stream 上</text>
+
+  <!-- 右列：本体 -->
+  <text class="ts" x="380" y="82" style="fill:#71717A;">本体对象</text>
+
+  <rect x="376" y="92" width="308" height="120" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="bd" x="390" y="114">CaptureModel : Model</text>
+  <text class="mono" x="390" y="134" style="font-size:9.5px;fill:#52525B;">core/inc/model/capture_model.hpp</text>
+  <text class="ts" x="390" y="156">一张图的全部资源与状态</text>
+  <text class="ts" x="390" y="176" style="fill:#71717A;">sqCqArray_ / logicSqs_ / notify 列表</text>
+  <text class="ts" x="390" y="196" style="fill:#71717A;">condHandles_ / taskGroupList_</text>
+
+  <rect x="376" y="226" width="308" height="126" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.18)"/>
+  <text class="bd" x="390" y="248">LogicSq</text>
+  <text class="mono" x="390" y="268" style="font-size:9.5px;fill:#52525B;">core/inc/model/logic_sq.hpp:24</text>
+  <text class="ts" x="390" y="290">一条流一条逻辑队列</text>
+  <text class="ts" x="390" y="310" style="fill:#71717A;">hostSqeAddr_ / deviceSqeAddr_</text>
+  <text class="ts" x="390" y="330" style="fill:#71717A;">rtsqId_（执行时才填）</text>
+  <text class="ts" x="390" y="348" style="fill:#71717A;">hwPosToTask_ 反查表</text>
+
+  <!-- 归属箭头 -->
+  <path d="M344 152 L372 152" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <path d="M530 216 L530 222" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <text class="ts" x="182" y="380" style="fill:#71717A;">CaptureModel 持有 N 条 LogicSq（N = 捕获到的流数）</text>
+
+  <!-- 底条 -->
+  <rect x="36" y="392" width="648" height="34" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="48" y="413" style="fill:#3F3A8C;">两个扩展对象都不在 Stream / Context 的字段里 —— 没开捕获时它们压根不存在，判空就过去了</text>
+</svg>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="kernelType 到三个 kernel lib 的映射，以及三种单例写法">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">五种内核类型，三个单例</text>
+  <text class="ts" x="30" y="50">映射是「普通 / 自定义」成对合并；编号跳了 3、7、8、9，另有 0 和 10 无 case</text>
+
+  <!-- 表头 -->
+  <text class="ts" x="48" y="78" style="fill:#71717A;">kernelType</text>
+  <text class="ts" x="300" y="78" style="fill:#71717A;">编号</text>
+  <text class="ts" x="360" y="78" style="fill:#71717A;">映射到</text>
+  <text class="ts" x="512" y="78" style="fill:#71717A;">单例写法</text>
+  <path d="M48 86 L672 86" stroke="rgba(23,23,23,0.14)" stroke-width="1"/>
+
+  <rect x="40" y="92" width="640" height="24" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="108">KERNEL_TYPE_FWK</text>
+  <text class="mono" x="300" y="108">1</text>
+  <text class="mono" x="360" y="108" style="fill:#1A1759;">AIKernelsLibFWK</text>
+  <text class="ts" x="512" y="108">mutex，忽略 Init 返回值</text>
+
+  <text class="mono" x="48" y="132">KERNEL_TYPE_AICPU</text>
+  <text class="mono" x="300" y="132">2</text>
+  <text class="mono" x="360" y="132" style="fill:#1A1759;">AIKernelsLibAiCpu</text>
+  <text class="ts" x="512" y="132">mutex + 双重检查</text>
+
+  <rect x="40" y="142" width="640" height="24" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="158">KERNEL_TYPE_AICPU_CUSTOM</text>
+  <text class="mono" x="300" y="158">4</text>
+  <text class="ts" x="360" y="158">同一个单例</text>
+  <text class="ts" x="512" y="158" style="fill:#71717A;">—</text>
+
+  <text class="mono" x="48" y="182">KERNEL_TYPE_AICPU_KFC</text>
+  <text class="mono" x="300" y="182">5</text>
+  <text class="mono" x="360" y="182" style="fill:#1A1759;">AIKernelsLibAiCpuKFC</text>
+  <text class="ts" x="512" y="182">std::call_once</text>
+
+  <rect x="40" y="192" width="640" height="24" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="208">KERNEL_TYPE_AICPU_CUSTOM_KFC</text>
+  <text class="mono" x="300" y="208">6</text>
+  <text class="ts" x="360" y="208">同一个单例</text>
+  <text class="ts" x="512" y="208" style="fill:#71717A;">—</text>
+
+  <text class="mono" x="48" y="232" style="fill:#A1A1AA;">KERNEL_TYPE_HWTS</text>
+  <text class="mono" x="300" y="232" style="fill:#A1A1AA;">10</text>
+  <text class="ts" x="360" y="232" style="fill:#B45309;">无 case → default 报错</text>
+  <text class="ts" x="512" y="232" style="fill:#71717A;">定义了却走不通</text>
+
+  <rect x="40" y="242" width="640" height="24" fill="#FAFAFA"/>
+  <text class="mono" x="48" y="258" style="fill:#A1A1AA;">KERNEL_TYPE_CCE</text>
+  <text class="mono" x="300" y="258" style="fill:#A1A1AA;">0</text>
+  <text class="ts" x="360" y="258" style="fill:#B45309;">无 case → default 报错</text>
+  <text class="ts" x="512" y="258" style="fill:#71717A;">只在 kernelSo==0 时被特判</text>
+
+  <!-- 三种单例 -->
+  <text class="tb" x="30" y="294" style="font-size:12px;">同一个基类，三种单例写法</text>
+
+  <rect x="30" y="304" width="210" height="108" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="bd" x="42" y="324">AiCpu</text>
+  <text class="mono" x="42" y="342" style="font-size:9.5px;">lock_guard&lt;mutex&gt;</text>
+  <text class="mono" x="42" y="358" style="font-size:9.5px;">if (instance_) return;</text>
+  <text class="ts" x="42" y="376">检查 Init，失败 delete</text>
+  <text class="ts" x="42" y="394" style="fill:#3F3A8C;">最规范的一个</text>
+
+  <rect x="255" y="304" width="210" height="108" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="bd" x="267" y="324">KFC</text>
+  <text class="mono" x="267" y="342" style="font-size:9.5px;">std::call_once</text>
+  <text class="mono" x="267" y="358" style="font-size:9.5px;">static std::once_flag</text>
+  <text class="ts" x="267" y="376">检查 Init，失败 delete</text>
+  <text class="ts" x="267" y="394" style="fill:#3F3A8C;">线程安全由标准库保证</text>
+
+  <rect x="480" y="304" width="210" height="108" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="bd" x="492" y="324">FWK</text>
+  <text class="mono" x="492" y="342" style="font-size:9.5px;">lock_guard&lt;mutex&gt;</text>
+  <text class="mono" x="492" y="358" style="font-size:9.5px;">(void)instance_-&gt;Init()</text>
+  <text class="ts" x="492" y="376">Init 失败静默</text>
+  <text class="ts" x="492" y="394" style="fill:#B45309;">CloseSo 也是空实现</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="428" width="660" height="56" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="449">FWK 那两处随意是有原因的：它只管一个 libtf_kernels.so，<tspan style="fill:#3F3A8C;">生命周期和进程一样长，关不关无所谓。</tspan></text>
+  <text class="ts" x="46" y="468">但代价是「初始化失败静默」——调用方拿到的是合法非空指针，要到真调算子时才失败。</text>
+</svg>

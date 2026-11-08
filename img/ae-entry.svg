@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="aeCallInterface 的四个调用点与 kernelSo 分叉">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#A1A1AA"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="520" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">AE 的入口：一行调用，前面还有一道分叉</text>
+  <text class="ts" x="30" y="50">aeCallInterface 只有四个真实调用点，全在设备侧；上游是 ExecuteTsKernelTask 的 kernelSo 判空</text>
+
+  <!-- 调用点表 -->
+  <text class="ts" x="48" y="78" style="fill:#71717A;">调用点（文件:行号）</text>
+  <text class="ts" x="336" y="78" style="fill:#71717A;">传的结构</text>
+  <text class="ts" x="452" y="78" style="fill:#71717A;">场景</text>
+  <path d="M48 86 L672 86" stroke="rgba(23,23,23,0.14)" stroke-width="1"/>
+
+  <rect x="40" y="92" width="640" height="24" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="108">aicpusd_event_process.cpp:775</text>
+  <text class="mono" x="336" y="108">tsKernelInfo</text>
+  <text class="ts" x="452" y="108">主路径 · SQE 分派下来</text>
+
+  <text class="mono" x="48" y="132">aicpusd_model.cpp:182</text>
+  <text class="mono" x="336" y="132">aicpufwKernelInfo</text>
+  <text class="ts" x="452" y="132">模型执行</text>
+
+  <text class="mono" x="48" y="156">cust_schedule/aicpusd_op_executor.cpp:75</text>
+  <text class="mono" x="336" y="156">tsKernelInfo</text>
+  <text class="ts" x="452" y="156">自定义调度器</text>
+
+  <text class="mono" x="48" y="180">cust_schedule/aicpusd_event_manager.cpp:281</text>
+  <text class="mono" x="336" y="180">aicpufwKernelInfo</text>
+  <text class="ts" x="452" y="180">自定义 · 事件路径</text>
+
+  <text class="ts" x="48" y="202" style="fill:#3F3A8C;">后两个在 aicpu_cust_schedule/ 下——两套调度器，同一个 AE 底座</text>
+
+  <!-- 汇合 -->
+  <path d="M360 210 L360 232" stroke="#A1A1AA" stroke-width="1.2" marker-end="url(#ag)"/>
+
+  <!-- aeCallInterface -->
+  <rect x="200" y="238" width="320" height="40" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="360" y="263" text-anchor="middle" style="fill:#1A1759;">aeCallInterface(HwtsTsKernel*)</text>
+
+  <!-- 分叉 -->
+  <path d="M300 278 L300 296 L196 296 L196 312" stroke="#4B3FE3" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+  <path d="M420 278 L420 296 L524 296 L524 312" stroke="#4B3FE3" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+
+  <!-- 左分支 -->
+  <rect x="56" y="316" width="280" height="34" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="66" y="338" style="fill:#1A1759;">kernelSo == 0</text>
+  <text class="ts" x="176" y="338">→ ExecuteLogicKernel</text>
+
+  <path d="M196 350 L196 372" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <rect x="56" y="376" width="280" height="46" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="66" y="394">HwTsKernelRegister::</text>
+  <text class="ts" x="66" y="410">RunTsKernelTaskProcess</text>
+  <text class="ts" x="230" y="402" style="fill:#71717A;">21 个逻辑核</text>
+
+  <!-- 右分支 -->
+  <rect x="404" y="316" width="280" height="34" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="414" y="338" style="fill:#1A1759;">kernelSo != 0</text>
+  <text class="ts" x="524" y="338">→ 进 AE</text>
+
+  <path d="M544 350 L544 372" stroke="#A1A1AA" stroke-width="1.1" marker-end="url(#ag)"/>
+  <rect x="404" y="376" width="280" height="46" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="414" y="394">GetKernelLib → 3 个单例之一</text>
+  <text class="ts" x="414" y="410">dlopen / dlsym / call</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="440" width="660" height="56" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="461">这道分叉把任务劈成两半：<tspan style="fill:#3F3A8C;">没带 .so 的是 runtime 自己实现的「逻辑核」，按名字查表直接跑；</tspan></text>
+  <text class="ts" x="46" y="480">带了 .so 的才需要 AE 去打开文件、查符号。所以 AE 的职责边界很干净——它只管外部 .so。</text>
+</svg>

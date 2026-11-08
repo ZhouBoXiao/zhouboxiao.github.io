@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 438" width="720" height="438" role="img" aria-label="内核二进制从 ELF 到设备侧 PC 的路径">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.2; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="a6" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="g6" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="438" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">从 .o 文件到设备上的一个 PC：四步，其中一步是 4KB 对齐</text>
+  <text class="ts" x="30" y="50">注册在 host，加载在第一次取函数句柄时，执行时只剩「基址 + 偏移」</text>
+
+  <!-- 第一段 -->
+  <rect x="40" y="64" width="200" height="54" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)"/>
+  <text class="mono" x="52" y="85">aclrtBinaryLoadFromFile</text>
+  <text class="ts" x="52" y="104">给的是算子编译产物（ELF）</text>
+
+  <path class="arr" d="M244 91 L268 91" marker-end="url(#a6)"/>
+
+  <rect x="272" y="64" width="180" height="54" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)"/>
+  <text class="mono" x="284" y="85">BinaryLoader::Load</text>
+  <text class="ts" x="284" y="104">按 CPU / 非 CPU 分叉</text>
+
+  <path class="arr" d="M456 91 L480 91" marker-end="url(#a6)"/>
+
+  <rect x="484" y="64" width="196" height="54" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="mono" x="496" y="85">ElfProgram::Register</text>
+  <text class="ts" x="496" y="104">ParserBinary 逐 section 读</text>
+
+  <text class="ts" x="484" y="136">e_machine 183 → AICPU，否则 AICORE</text>
+
+  <!-- 两张表 -->
+  <rect x="40" y="168" width="316" height="82" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="54" y="188" style="fill:#171717;">按名字找：kernelNameMap_</text>
+  <text class="mono" x="54" y="208">aclrtBinaryGetFunction</text>
+  <text class="ts" x="54" y="228">std::map&lt;string, Kernel*&gt;，一次哈希，O(1)</text>
+
+  <rect x="372" y="168" width="308" height="82" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="386" y="188" style="fill:#171717;">按 entry 找：KernelTable_</text>
+  <text class="mono" x="386" y="208">aclrtBinaryGetFunctionByEntry</text>
+  <text class="ts" x="386" y="228">按 tilingKey 排好序的数组，二分 O(log n)</text>
+
+  <path class="arr" d="M218 250 L218 264" marker-end="url(#a6)"/>
+  <path class="arr" d="M526 250 L526 264" marker-end="url(#a6)"/>
+
+  <!-- 加载 -->
+  <rect x="40" y="266" width="640" height="96" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="54" y="286">Load2Device：第一次拿到函数句柄时，顺手把整包二进制搬上设备</text>
+  <text class="ts" x="54" y="306">KernelMemoryPool 取内存 → 向上 4KB 对齐 → H2D 拷贝 → 记下 baseAddr / baseAddrAlign</text>
+  <text class="ts" x="54" y="326" style="fill:#3F3A8C;">4KB 对齐不是优化：ARM 的 ADRP 按页粒度算相对地址，基址不对齐，算出来的 PC 就是错的。</text>
+  <text class="ts" x="54" y="346">这解释了「同一个算子第一次 launch 慢、后面快」——慢的是这一步，不是 SQE。</text>
+
+  <path class="arr" d="M360 362 L360 376" marker-end="url(#a6)"/>
+
+  <!-- 地址计算 -->
+  <rect x="40" y="378" width="640" height="50" rx="7" fill="#FFFFFF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="54" y="398">kernelPc = baseAddrAlign + offset1</text>
+  <text class="ts" x="54" y="416">执行时不做查找：偏移在注册时就写进 Kernel 对象，launch 只做一次加法，再填进 SQE 的 W8–W9。</text>
+</svg>

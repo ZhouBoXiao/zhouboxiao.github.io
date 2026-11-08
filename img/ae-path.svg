@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 540" width="720" height="540" role="img" aria-label="内置 so 的路径决策表与三级回退链">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="540" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">.so 在哪：五条规则，然后三次尝试</text>
+  <text class="ts" x="30" y="50">GetInnerSoPath 从上往下第一条命中就返回；算出来的路径不存在，还有两级兜底</text>
+
+  <!-- 表头 -->
+  <text class="ts" x="48" y="78" style="fill:#71717A;">序</text>
+  <text class="ts" x="76" y="78" style="fill:#71717A;">条件</text>
+  <text class="ts" x="300" y="78" style="fill:#71717A;">路径</text>
+  <path d="M48 86 L672 86" stroke="rgba(23,23,23,0.14)" stroke-width="1"/>
+
+  <rect x="40" y="92" width="640" height="26" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="109">1</text>
+  <text class="ts" x="76" y="109">THREAD_MODE + 环境变量</text>
+  <text class="mono" x="300" y="109" style="fill:#1A1759;">$ASCEND_AICPU_KERNEL_PATH</text>
+
+  <text class="mono" x="48" y="135">2</text>
+  <text class="mono" x="76" y="135" style="font-size:10px;">libretr_kernels.so</text>
+  <text class="mono" x="300" y="135">/usr/lib64/aicpu_kernels/</text>
+
+  <rect x="40" y="144" width="640" height="26" fill="#FFF7ED"/>
+  <text class="mono" x="48" y="161">3</text>
+  <text class="ts" x="76" y="161">hccl / builtin 两个 so</text>
+  <text class="mono" x="300" y="161" style="fill:#B45309;">/usr/lib64/</text>
+  <text class="ts" x="392" y="161" style="fill:#B45309;">← 老路径，注释写 old path only for hccl</text>
+
+  <text class="mono" x="48" y="187">4</text>
+  <text class="ts" x="76" y="187">THREAD_MODE 兜底</text>
+  <text class="mono" x="300" y="187" style="font-size:9.5px;">$HOME/aicpu_kernels/&lt;vfId&gt;/aicpu_kernels_device/</text>
+
+  <rect x="40" y="196" width="640" height="26" fill="#F2F7FF"/>
+  <text class="mono" x="48" y="213">5</text>
+  <text class="ts" x="76" y="213">默认（其余全部）</text>
+  <text class="mono" x="300" y="213" style="font-size:9.5px;">/usr/lib64/aicpu_kernels/&lt;vfId&gt;/aicpu_kernels_device/</text>
+
+  <text class="ts" x="48" y="242" style="fill:#71717A;">cust 类不走这张表：路径 = 基址 / cust_aicpu_&lt;deviceId&gt;_&lt;vfId&gt;_&lt;hostPid&gt;/</text>
+
+  <!-- 三级回退 -->
+  <text class="tb" x="30" y="278" style="font-size:12px;">路径不存在时的三级回退（CreateSingleSoMgr）</text>
+
+  <rect x="30" y="290" width="196" height="72" rx="7" fill="#F2F7FF" stroke="#4B3FE3"/>
+  <text class="bd" x="44" y="311">① 算出来的路径</text>
+  <text class="mono" x="44" y="330" style="font-size:9px;">realSoPath</text>
+  <text class="ts" x="44" y="348" style="font-size:10px;">按上一张表得到的</text>
+
+  <path d="M226 326 L252 326" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <text class="ts" x="232" y="318" style="font-size:9px;fill:#B45309;">失败</text>
+
+  <rect x="258" y="290" width="196" height="72" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="bd" x="272" y="311">② 总仓库</text>
+  <text class="mono" x="272" y="330" style="font-size:9px;">/usr/lib64/aicpu_kernels/</text>
+  <text class="ts" x="272" y="348" style="font-size:10px;">丢掉 vfId，直接翻根目录</text>
+
+  <path d="M454 326 L480 326" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <text class="ts" x="460" y="318" style="font-size:9px;fill:#B45309;">失败</text>
+
+  <rect x="486" y="290" width="204" height="72" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="bd" x="500" y="311">③ 进程私有目录</text>
+  <text class="mono" x="500" y="330" style="font-size:9px;">&lt;oriPath&gt;&lt;pid&gt;_&lt;dev&gt;/</text>
+  <text class="ts" x="500" y="348" style="font-size:10px;">GetSoInHostPidPath</text>
+
+  <!-- 顺序提醒 -->
+  <rect x="30" y="378" width="660" height="60" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="399" style="fill:#B45309;">注意拼的顺序不一致：cust 目录名是 &lt;deviceId&gt;_&lt;vfId&gt;_&lt;hostPid&gt;，而第③级回退拼的是 &lt;hostPid&gt;_&lt;deviceId&gt;。</text>
+  <text class="ts" x="46" y="418">两处先后颠倒，看代码时特别容易读错 —— 而且没人会因此报错，只会找不到文件。</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="452" width="660" height="60" rx="8" fill="#F2F7FF" stroke="rgba(75,63,227,0.20)"/>
+  <text class="ts" x="46" y="473" style="fill:#1A1759;">三级兜底是典型的兼容性妥协：新版定了规矩，但不能把老版本放在哪儿都算对的部署打死。</text>
+  <text class="ts" x="46" y="492">诊断口诀：先看算出来的路径对不对（尤其 cust 那三级标识），再看总仓库，最后才怀疑文件真没装。</text>
+</svg>

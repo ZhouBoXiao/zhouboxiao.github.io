@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" role="img" aria-label="三个都叫 SQE 的东西">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .box { fill: #FFFFFF; stroke: #4B3FE3; stroke-width: 1.2; }
+    .boxg { fill: #F7F7F8; stroke: rgba(23,23,23,0.14); }
+  </style>
+  <rect x="0" y="0" width="720" height="460" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#52525B"/>
+    </marker>
+  </defs>
+
+  <text class="tb" x="30" y="30">「SQE」这个词在昇腾代码里至少指三个不同的东西</text>
+  <text class="ts" x="30" y="50">只有 ① 和 ③ 进环形队列；② 是进程间消息，格式和 64 字节毫无关系</text>
+
+  <!-- ① 上 -->
+  <rect x="30" y="64" width="660" height="104" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <rect x="30" y="64" width="6" height="104" rx="3" fill="#4B3FE3"/>
+  <text class="bd" x="50" y="86">① host 造的 SQE —— 给硅片看的</text>
+  <text class="ts" x="50" y="106">定长 64 字节，落在 SQ 环形队列里，等 TS 硬件来取。上一篇讲的就是它。</text>
+  <rect x="50" y="118" width="170" height="36" rx="5" class="box"/>
+  <text class="mono" x="135" y="140" text-anchor="middle">stars_sqe_t (64B)</text>
+  <path d="M226 136 L266 136" stroke="#52525B" stroke-width="1.3" marker-end="url(#a)"/>
+  <rect x="272" y="118" width="160" height="36" rx="5" class="boxg"/>
+  <text class="mono" x="352" y="140" text-anchor="middle">SQ 环形队列</text>
+  <path d="M438 136 L478 136" stroke="#52525B" stroke-width="1.3" marker-end="url(#a)"/>
+  <rect x="484" y="118" width="176" height="36" rx="5" class="box"/>
+  <text class="mono" x="572" y="140" text-anchor="middle">TS 硬件取指</text>
+
+  <!-- ② 中 -->
+  <rect x="30" y="178" width="660" height="104" rx="9" fill="#FFFFFF" stroke="rgba(225,29,72,0.35)"/>
+  <rect x="30" y="178" width="6" height="104" rx="3" fill="#E11D48"/>
+  <text class="bd" x="50" y="200">② TS 投给 AICPU 的 SQE —— 给软件看的</text>
+  <text class="ts" x="50" y="220">不在队列里，走驱动消息通道 tsDevSendMsgAsync。结构叫 ts_aicpu_sqe_t。</text>
+  <rect x="50" y="232" width="170" height="36" rx="5" fill="#FFFFFF" stroke="rgba(225,29,72,0.6)" stroke-width="1.2"/>
+  <text class="mono" x="135" y="254" text-anchor="middle" style="fill:#9F1239;">ts_aicpu_sqe_t</text>
+  <path d="M226 250 L266 250" stroke="#52525B" stroke-width="1.3" marker-end="url(#a)"/>
+  <rect x="272" y="232" width="160" height="36" rx="5" class="boxg"/>
+  <text class="mono" x="352" y="254" text-anchor="middle">消息通道</text>
+  <path d="M438 250 L478 250" stroke="#52525B" stroke-width="1.3" marker-end="url(#a)"/>
+  <rect x="484" y="232" width="176" height="36" rx="5" fill="#FFFFFF" stroke="rgba(225,29,72,0.6)" stroke-width="1.2"/>
+  <text class="mono" x="572" y="254" text-anchor="middle" style="fill:#9F1239;">aicpusd 进程</text>
+
+  <!-- ③ 下 -->
+  <rect x="30" y="292" width="660" height="104" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)" stroke-dasharray="5 3"/>
+  <rect x="30" y="292" width="6" height="104" rx="3" fill="#9CA3AF"/>
+  <text class="bd" x="50" y="314">③ device 侧自己造的 SQE —— 本文追不到底</text>
+  <text class="ts" x="50" y="334">HCCL 在设备上跑通信算子时，往 SQ 里再写一批任务；代码在 libhccd.so 里，不在本仓。</text>
+  <rect x="50" y="346" width="170" height="36" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)" stroke-dasharray="4 3"/>
+  <text class="mono" x="135" y="368" text-anchor="middle" style="fill:#52525B;">libhccd.so</text>
+  <path d="M226 364 L266 364" stroke="#9CA3AF" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <rect x="272" y="346" width="160" height="36" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)" stroke-dasharray="4 3"/>
+  <text class="mono" x="352" y="368" text-anchor="middle" style="fill:#52525B;">(再次) 写 SQ</text>
+  <path d="M438 364 L478 364" stroke="#9CA3AF" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <rect x="484" y="346" width="176" height="36" rx="5" fill="#F7F7F8" stroke="rgba(23,23,23,0.14)" stroke-dasharray="4 3"/>
+  <text class="mono" x="572" y="368" text-anchor="middle" style="fill:#52525B;">TS 硬件取指</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="406" width="660" height="48" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="426">三者唯一的共同点是都叫 SQE：<tspan style="fill:#3F3A8C;">① 是给硬件的定长指令包，② 是给进程的消息，③ 是 ① 的另一种生产者。</tspan></text>
+  <text class="ts" x="46" y="444">把 ② 和 ① 混为一谈，就会出现「明明 64 字节，怎么又变成 union 了」这种困惑。</text>
+</svg>

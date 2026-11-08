@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" role="img" aria-label="SQ 环形下标绕回与 64 限流">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="460" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">下标是环形跑的：比大小之前先看有没有绕回</text>
+  <text class="ts" x="30" y="50">sqHead &lt; taskHead 不是异常，是队列从上界翻回了 0 号位——剩余数得换一条式子算</text>
+
+  <!-- ============ 情形一 ============ -->
+  <rect x="30" y="64" width="660" height="156" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="48" y="86">情形一 · sqHead ≥ taskHead，直接相减</text>
+
+  <text class="ts" x="122" y="106" text-anchor="middle" style="fill:#71717A;">已回收</text>
+  <text class="ts" x="322" y="106" text-anchor="middle" style="fill:#3F3A8C;">已完成待回收</text>
+  <text class="ts" x="547" y="106" text-anchor="middle" style="fill:#71717A;">未下发</text>
+  <path d="M48 111 L196 111" stroke="#A1A1AA" stroke-width="1"/>
+  <path d="M198 111 L446 111" stroke="#4B3FE3" stroke-width="1.2"/>
+  <path d="M448 111 L646 111" stroke="#A1A1AA" stroke-width="1"/>
+
+  <rect x="48" y="118" width="48" height="34" rx="4" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="72" y="140" text-anchor="middle">0</text>
+  <rect x="98" y="118" width="48" height="34" rx="4" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="122" y="140" text-anchor="middle">1</text>
+  <rect x="148" y="118" width="48" height="34" rx="4" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="172" y="140" text-anchor="middle">2</text>
+  <rect x="198" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="222" y="140" text-anchor="middle">3</text>
+  <rect x="248" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="272" y="140" text-anchor="middle">4</text>
+  <rect x="298" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="322" y="140" text-anchor="middle">5</text>
+  <rect x="348" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="372" y="140" text-anchor="middle">6</text>
+  <rect x="398" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="422" y="140" text-anchor="middle">7</text>
+  <rect x="448" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="472" y="140" text-anchor="middle">8</text>
+  <rect x="498" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="522" y="140" text-anchor="middle">9</text>
+  <rect x="548" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="572" y="140" text-anchor="middle">10</text>
+  <rect x="598" y="118" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="622" y="140" text-anchor="middle">11</text>
+
+  <path d="M198 152 L198 162" stroke="#1A1759" stroke-width="1.3"/>
+  <text class="mono" x="198" y="176" text-anchor="middle" style="fill:#1A1759;">taskHead=3</text>
+  <path d="M448 152 L448 162" stroke="#3F3A8C" stroke-width="1.3"/>
+  <text class="mono" x="448" y="176" text-anchor="middle" style="fill:#3F3A8C;">sqHead=8</text>
+
+  <text class="mono" x="48" y="200">needRecycle = sqHead - taskHead = 8 - 3 = 5</text>
+
+  <!-- ============ 情形二 ============ -->
+  <rect x="30" y="232" width="660" height="156" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="bd" x="48" y="254">情形二 · sqHead &lt; taskHead，绕回了</text>
+  <text class="ts" x="380" y="254" style="fill:#9F1239;">待回收区被切成两段</text>
+
+  <text class="ts" x="97" y="276" text-anchor="middle" style="fill:#3F3A8C;">待回收</text>
+  <text class="ts" x="347" y="276" text-anchor="middle" style="fill:#71717A;">未下发</text>
+  <text class="ts" x="597" y="276" text-anchor="middle" style="fill:#3F3A8C;">待回收</text>
+  <path d="M48 281 L146 281" stroke="#4B3FE3" stroke-width="1.2"/>
+  <path d="M148 281 L546 281" stroke="#A1A1AA" stroke-width="1"/>
+  <path d="M548 281 L646 281" stroke="#4B3FE3" stroke-width="1.2"/>
+
+  <rect x="48" y="286" width="48" height="34" rx="4" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="72" y="308" text-anchor="middle">0</text>
+  <rect x="98" y="286" width="48" height="34" rx="4" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="122" y="308" text-anchor="middle">1</text>
+  <rect x="148" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="172" y="308" text-anchor="middle">2</text>
+  <rect x="198" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="222" y="308" text-anchor="middle">3</text>
+  <rect x="248" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="272" y="308" text-anchor="middle">4</text>
+  <rect x="298" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="322" y="308" text-anchor="middle">5</text>
+  <rect x="348" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="372" y="308" text-anchor="middle">6</text>
+  <rect x="398" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="422" y="308" text-anchor="middle">7</text>
+  <rect x="448" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="472" y="308" text-anchor="middle">8</text>
+  <rect x="498" y="286" width="48" height="34" rx="4" fill="#FFFFFF" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="522" y="308" text-anchor="middle">9</text>
+  <rect x="548" y="286" width="48" height="34" rx="4" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="572" y="308" text-anchor="middle">10</text>
+  <rect x="598" y="286" width="48" height="34" rx="4" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="mono" x="622" y="308" text-anchor="middle">11</text>
+
+  <path d="M148 320 L148 330" stroke="#3F3A8C" stroke-width="1.3"/>
+  <text class="mono" x="148" y="344" text-anchor="middle" style="fill:#3F3A8C;">sqHead=2</text>
+  <path d="M548 320 L548 330" stroke="#1A1759" stroke-width="1.3"/>
+  <text class="mono" x="548" y="344" text-anchor="middle" style="fill:#1A1759;">taskHead=10</text>
+
+  <text class="mono" x="48" y="368">needRecycle = (depth - taskHead) + sqHead = (12 - 10) + 2 = 4</text>
+
+  <!-- ============ 底部 ============ -->
+  <rect x="30" y="400" width="660" height="48" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="420">三个 64 别混：<tspan class="mono" style="font-size:10.5px;">QUERY_INTERVAL</tspan> 管多久问一次设备，<tspan class="mono" style="font-size:10.5px;">RECLAIM_MAX</tspan> 管一次最多收多少。</text>
+  <text class="ts" x="46" y="438">后者是限流器——设备一口气跑完 500 个，回收方也只收 64 个就走，剩下的摊到后面几轮。</text>
+</svg>

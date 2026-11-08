@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 348" width="720" height="348" role="img" aria-label="CCU 的六个核心概念及其发生顺序">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 11.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.3; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="m1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="m2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="348" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">CCU 的六个核心概念，按发生顺序排</text>
+  <text class="ts" x="30" y="50">上排只做一次，下排每次调用都走；拆单动作在哪一排，就是两种引擎的分界</text>
+
+  <!-- 注册期 -->
+  <rect x="30" y="64" width="660" height="104" rx="10" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="bd" x="46" y="86">注册期 · 通信域初始化时，一次性</text>
+  <rect x="46" y="98" width="192" height="54" rx="8" fill="#FFFFFF" stroke="rgba(75,63,227,0.3)"/>
+  <text class="th" x="60" y="119">CCU</text>
+  <text class="ts" x="60" y="138">IO Die 上的专用协处理器</text>
+  <rect x="264" y="98" width="192" height="54" rx="8" fill="#FFFFFF" stroke="rgba(75,63,227,0.3)"/>
+  <text class="th" x="278" y="119">指令空间（1MB）</text>
+  <text class="ts" x="278" y="138">存微码，与寄存器并列的资源</text>
+  <rect x="482" y="98" width="192" height="54" rx="8" fill="#FFFFFF" stroke="rgba(75,63,227,0.3)"/>
+  <text class="th" x="496" y="119">Mission</text>
+  <text class="ts" x="496" y="138">一段可独立启动的微码程序</text>
+  <path class="arr" d="M240 125 L260 125" marker-end="url(#m1)"/>
+  <path class="arr" d="M458 125 L478 125" marker-end="url(#m1)"/>
+
+  <!-- 分界 -->
+  <path d="M30 186 L690 186" stroke="#4B3FE3" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>
+  <rect x="228" y="175" width="264" height="22" rx="11" fill="#FFFFFF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="ts" x="360" y="190" text-anchor="middle" style="fill:#3F3A8C;">AICPU 拆单在线下，CCU 拆单在线上</text>
+
+  <!-- 运行期 -->
+  <rect x="30" y="206" width="660" height="104" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="46" y="228">运行期 · 每次调用，硬件自己取指执行</text>
+  <rect x="46" y="240" width="192" height="54" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="th" x="60" y="261">Loop / LoopGroup</text>
+  <text class="ts" x="60" y="280">内串行、间并行，撑满带宽</text>
+  <rect x="264" y="240" width="192" height="54" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="th" x="278" y="261">CcuBuffer（4KB）</text>
+  <text class="ts" x="278" y="280">片上中转，片内做归约</text>
+  <rect x="482" y="240" width="192" height="54" rx="8" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="th" x="496" y="261">同步寄存器</text>
+  <text class="ts" x="496" y="280">本地 Event、跨卡 Notify</text>
+  <path class="arrg" d="M240 267 L260 267" marker-end="url(#m2)"/>
+  <path class="arrg" d="M458 267 L478 267" marker-end="url(#m2)"/>
+
+  <!-- 底部总结 -->
+  <rect x="30" y="320" width="660" height="20" rx="6" fill="#F2F7FF"/>
+  <text class="ts" x="42" y="334" style="fill:#3F3A8C;">注册期录成 Mission 并翻译进指令空间；运行期只给入口，Loop / 同步 / CcuBuffer 全在硬件里跑</text>
+</svg>

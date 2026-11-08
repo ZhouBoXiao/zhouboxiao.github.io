@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470" role="img" aria-label="TS 投给 AICPU 的消息格式与 11 种命令">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="470" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">TS 只说 11 种话，每种一句话，装在一个 union 里</text>
+  <text class="ts" x="30" y="50">头 8 字节是信封（定长、偏移固定），后面是信纸（union，一条消息只装一种命令）</text>
+
+  <!-- 左：结构 -->
+  <rect x="30" y="64" width="340" height="330" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="48" y="88">信封 · 8 字节（ts_aicpu_sqe_t）</text>
+
+  <text class="mono" x="48" y="114">pid</text>
+  <text class="ts" x="150" y="114">u32 · 哪个 host 进程的活</text>
+  <text class="mono" x="48" y="140">cmd_type</text>
+  <text class="ts" x="150" y="140">u8 · 要干什么（11 种）</text>
+  <text class="mono" x="48" y="166">vf_id</text>
+  <text class="ts" x="150" y="166">u8 · 虚拟化分组</text>
+  <text class="mono" x="48" y="192">tid</text>
+  <text class="ts" x="150" y="192">u8 · 线程号</text>
+  <text class="mono" x="48" y="218">ts_id</text>
+  <text class="ts" x="150" y="218">u8 · 哪个 TS 发的</text>
+
+  <path d="M48 238 L354 238" stroke="rgba(23,23,23,0.12)" stroke-width="1"/>
+  <text class="bd" x="48" y="260">信纸 · union，19 个成员</text>
+  <text class="ts" x="48" y="282">靠 cmd_type 决定读哪一个成员</text>
+  <text class="ts" x="48" y="302">同一条消息里只可能装一种命令</text>
+  <text class="ts" x="48" y="322">所以必须先看类型、再取字段</text>
+  <text class="mono" x="48" y="348" style="fill:#3F3A8C;">v1 版只有 12 个成员，信封不变</text>
+  <text class="ts" x="48" y="370">两代格式靠 MSG_VERSION 握手协商</text>
+
+  <!-- 右：11 种命令 -->
+  <rect x="386" y="64" width="304" height="330" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="404" y="88">cmd_type 的 11 个取值</text>
+
+  <text class="mono" x="404" y="114" style="fill:#4B3FE3;">0</text>
+  <text class="mono" x="424" y="114">MSG_VERSION</text>
+  <text class="ts" x="556" y="114">握手</text>
+
+  <text class="mono" x="404" y="138">1</text>
+  <text class="mono" x="424" y="138">MODEL_OPERATE</text>
+  <text class="ts" x="556" y="138">模型操作</text>
+
+  <text class="mono" x="404" y="162">2</text>
+  <text class="mono" x="424" y="162">TASK_REPORT</text>
+  <text class="ts" x="556" y="162">完成上报</text>
+
+  <text class="mono" x="404" y="186">3</text>
+  <text class="mono" x="424" y="186">ACTIVE_STREAM</text>
+  <text class="ts" x="556" y="186">激活流</text>
+
+  <text class="mono" x="404" y="210">4</text>
+  <text class="mono" x="424" y="210">RECORD</text>
+  <text class="ts" x="556" y="210">打点记录</text>
+
+  <text class="mono" x="404" y="234" style="fill:#71717A;">5</text>
+  <text class="mono" x="424" y="234" style="fill:#71717A;">NORMAL_DATADUMP</text>
+  <text class="ts" x="556" y="234">普通 dump</text>
+
+  <text class="mono" x="404" y="258" style="fill:#71717A;">6</text>
+  <text class="mono" x="424" y="258" style="fill:#71717A;">DEBUG_DATADUMP</text>
+  <text class="ts" x="556" y="258">调试 dump</text>
+
+  <text class="mono" x="404" y="282" style="fill:#71717A;">7</text>
+  <text class="mono" x="424" y="282" style="fill:#71717A;">DATADUMP_INFO_LOAD</text>
+  <text class="ts" x="556" y="282">dump 配置</text>
+
+  <text class="mono" x="404" y="306" style="fill:#71717A;">8</text>
+  <text class="mono" x="424" y="306" style="fill:#71717A;">TIMEOUT_CONFIG</text>
+  <text class="ts" x="556" y="306">超时配置</text>
+
+  <text class="mono" x="404" y="330" style="fill:#71717A;">9</text>
+  <text class="mono" x="424" y="330" style="fill:#71717A;">INFO_LOAD</text>
+  <text class="ts" x="556" y="330">信息装载</text>
+
+  <text class="mono" x="404" y="354" style="fill:#71717A;">10</text>
+  <text class="mono" x="424" y="354" style="fill:#71717A;">AIC_ERROR_REPORT</text>
+  <text class="ts" x="556" y="354">AI Core 报错</text>
+
+  <text class="ts" x="404" y="378" style="fill:#71717A;">紫=握手　黑=控制面　灰=辅助面</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="406" width="660" height="48" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="426">翻遍这 11 种，找不到「执行一个算子」——<tspan style="fill:#3F3A8C;">算子是第三条路，走 HwtsTsKernel，不在消息通道上。</tspan></text>
+  <text class="ts" x="46" y="444">这一层只负责「管」：握手、开关流、配超时、收错误。真正跑代码的是 AE。</text>
+</svg>

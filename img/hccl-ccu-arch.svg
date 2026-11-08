@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 396" width="720" height="396" role="img" aria-label="CCU 内部组件与四条数据通路">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 11.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.3; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="m1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="m2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="396" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">CCU 在 IO Die 上，以及它能搬的四条路</text>
+  <text class="ts" x="30" y="50">左：内部五类组件都是按 die 隔离的硬配额；右：本地内存、寄存器、片上缓存、远端内存之间</text>
+
+  <!-- 左侧：IO Die -->
+  <rect x="30" y="64" width="330" height="286" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="46" y="86">一颗 NPU 的 IO Die（最多 2 个）</text>
+  <rect x="46" y="98" width="298" height="198" rx="9" fill="#F2F7FF" stroke="rgba(75,63,227,0.35)"/>
+  <text class="th" x="60" y="120">CCU</text>
+  <rect x="60" y="130" width="270" height="28" rx="6" fill="#FFFFFF" stroke="rgba(75,63,227,0.2)"/>
+  <text class="ts" x="72" y="148">指令空间 · 1MB，存微码</text>
+  <rect x="60" y="164" width="270" height="28" rx="6" fill="#FFFFFF" stroke="rgba(75,63,227,0.2)"/>
+  <text class="ts" x="72" y="182">通用 / 地址 / 同步寄存器</text>
+  <rect x="60" y="198" width="270" height="28" rx="6" fill="#FFFFFF" stroke="rgba(75,63,227,0.2)"/>
+  <text class="ts" x="72" y="216">并发执行引擎 · Loop / LoopGroup</text>
+  <rect x="60" y="232" width="270" height="28" rx="6" fill="#FFFFFF" stroke="rgba(75,63,227,0.2)"/>
+  <text class="ts" x="72" y="250">片上缓存 · 4KB 一分片</text>
+  <rect x="60" y="266" width="270" height="24" rx="6" fill="#FFFFFF" stroke="rgba(75,63,227,0.2)"/>
+  <text class="ts" x="72" y="282">Channel 表 · 每条 UB 链路一项上下文</text>
+  <text class="ts" x="46" y="320">旁边挂着网络设备；一个 CCU 不能跨 Die 借用</text>
+  <text class="ts" x="46" y="338">另一个 IO Die 的网络设备</text>
+
+  <!-- 右侧：数据通路 -->
+  <rect x="376" y="64" width="314" height="286" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="392" y="86">四条数据搬运通路</text>
+
+  <rect x="394" y="104" width="128" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="458" y="122" text-anchor="middle">本地内存</text>
+  <text class="ts" x="458" y="138" text-anchor="middle">HBM</text>
+  <rect x="548" y="104" width="126" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="611" y="122" text-anchor="middle">寄存器</text>
+  <text class="ts" x="611" y="138" text-anchor="middle">Variable / Address</text>
+
+  <rect x="394" y="196" width="128" height="40" rx="7" fill="#F2F7FF" stroke="#4B3FE3"/>
+  <text class="th" x="458" y="214" text-anchor="middle">CcuBuffer</text>
+  <text class="ts" x="458" y="230" text-anchor="middle">4KB / 片，片内归约</text>
+  <rect x="548" y="196" width="126" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="611" y="214" text-anchor="middle">远端内存</text>
+  <text class="ts" x="611" y="230" text-anchor="middle">对端 rank</text>
+
+  <path class="arr" d="M524 118 L544 118" marker-end="url(#m1)"/>
+  <text class="ts" x="524" y="104" text-anchor="middle">①</text>
+  <path class="arr" d="M440 146 L440 192" marker-end="url(#m1)"/>
+  <text class="ts" x="386" y="172">②</text>
+  <path class="arr" d="M524 216 L544 216" marker-end="url(#m1)"/>
+  <text class="ts" x="534" y="204">③</text>
+  <path class="arrg" d="M458 146 L458 160 L611 160 L611 192" marker-end="url(#m2)"/>
+  <text class="ts" x="611" y="176" text-anchor="middle">④ 本地 ↔ 远端直传</text>
+
+  <text class="ts" x="392" y="268">① 本地↔寄存器　② 本地↔CcuBuffer</text>
+  <text class="ts" x="392" y="288">③ CcuBuffer↔远端　④ 本地↔远端直传</text>
+  <text class="ts" x="392" y="312" style="fill:#3F3A8C;">约束：本地↔远端 &lt; 256MB，缓存类 ≤ 4096B</text>
+  <text class="ts" x="392" y="330" style="fill:#3F3A8C;">长度不能为 0；不能读写他设备的 CcuBuffer</text>
+
+  <rect x="30" y="360" width="660" height="22" rx="6" fill="#F2F7FF"/>
+  <text class="ts" x="42" y="375" style="fill:#3F3A8C;">CcuBuffer 那条路（②③）就是 CCU_MS 省访存的关键：数据先上操作台归约完，再写回内存一次</text>
+</svg>

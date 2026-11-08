@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 486" width="720" height="486" role="img" aria-label="Runtime 的对象骨架与引用计数">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.2; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="g2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="486" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">对象骨架：一个单例，一条继承链，一棵引用树</text>
+  <text class="ts" x="30" y="50">左边回答「设备怎么分代际」，右边回答「谁保证对象不被提前释放」</text>
+
+  <!-- 左：三层继承 -->
+  <rect x="30" y="64" width="300" height="346" rx="10" fill="#FAFAFB" stroke="rgba(23,23,23,0.10)"/>
+  <text class="th" x="46" y="86">① Device 的三层继承</text>
+
+  <rect x="46" y="98" width="268" height="46" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="58" y="117">Device</text>
+  <text class="ts" x="58" y="134">纯虚接口：Init / Start / SubmitTask</text>
+
+  <path class="arr" d="M180 146 L180 158" marker-end="url(#a2)"/>
+
+  <rect x="46" y="160" width="268" height="46" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="58" y="179">GroupDevice</text>
+  <text class="ts" x="58" y="196">设备组：多 die / 多芯片的统一视图</text>
+
+  <path class="arr" d="M180 208 L180 220" marker-end="url(#a2)"/>
+
+  <rect x="46" y="222" width="268" height="46" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="mono" x="58" y="241">RawDevice</text>
+  <text class="ts" x="58" y="258">真正持资源的那一层</text>
+
+  <text class="ts" x="46" y="292">RawDevice 手里攥着六样东西：</text>
+  <rect x="46" y="302" width="126" height="26" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="mono" x="58" y="319">Engine</text>
+  <rect x="182" y="302" width="132" height="26" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="mono" x="194" y="319">TaskFactory</text>
+
+  <rect x="46" y="334" width="126" height="26" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="mono" x="58" y="351">Driver</text>
+  <rect x="182" y="334" width="132" height="26" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="mono" x="194" y="351">MemoryPool</text>
+
+  <rect x="46" y="366" width="126" height="26" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="mono" x="58" y="383">EventPool</text>
+  <rect x="182" y="366" width="132" height="26" rx="5" fill="#FFFFFF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="mono" x="194" y="383">DeviceSqCqPool</text>
+
+  <!-- 右：对象树 -->
+  <rect x="350" y="64" width="340" height="346" rx="10" fill="#FAFAFB" stroke="rgba(23,23,23,0.10)"/>
+  <text class="th" x="366" y="86">② 对象树：一层只管下一层</text>
+
+  <rect x="366" y="98" width="308" height="42" rx="7" fill="#4B3FE3"/>
+  <text class="mono" x="380" y="117" style="fill:#FFFFFF;">Runtime::Instance()</text>
+  <text class="ts" x="380" y="132" style="fill:#DDE0FF;">进程级单例，RuntimeKeeper 懒加载</text>
+
+  <path class="arrg" d="M520 142 L520 152" marker-end="url(#g2)"/>
+
+  <rect x="366" y="154" width="308" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="380" y="172">Device[devId]</text>
+  <text class="ts" x="382" y="187">DeviceRetain / DeviceRelease 计数</text>
+
+  <path class="arrg" d="M520 196 L520 206" marker-end="url(#g2)"/>
+
+  <rect x="366" y="208" width="308" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="380" y="226">primary Context</text>
+  <text class="ts" x="382" y="241">RefObject&lt;Context*&gt;，每设备每 TS 一份</text>
+
+  <path class="arrg" d="M520 250 L520 260" marker-end="url(#g2)"/>
+
+  <rect x="366" y="262" width="308" height="40" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="mono" x="380" y="280">Stream（默认流 + 显式流）</text>
+  <text class="ts" x="382" y="295">sqId / cqId / sqDepth 都在这里</text>
+
+  <path class="arrg" d="M520 304 L520 314" marker-end="url(#g2)"/>
+
+  <rect x="366" y="316" width="308" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="380" y="334">TaskInfo（环形池）</text>
+  <text class="ts" x="382" y="349">id == 槽位号，天然对应 SQE 位置</text>
+
+  <text class="ts" x="366" y="382">释放顺序只能从下往上：</text>
+  <text class="ts" x="366" y="400" style="fill:#9F1239;">Task 回收 → Stream 销毁 → Context 释放 → Device 释放</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="424" width="660" height="44" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="443">进程内单例、多进程隔离：两个进程各有一份 Runtime，各自维护自己的 Device / Context / Stream 视图，</text>
+  <text class="ts" x="46" y="460">共享的只有同一块物理设备——所以跨进程传内存要走 IPC key，不能传裸指针。</text>
+</svg>

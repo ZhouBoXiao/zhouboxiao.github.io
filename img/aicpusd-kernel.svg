@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="HwtsTsKernel 结构与七种 kernelType 分支">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">算子从哪来：HwtsTsKernel 是一张提货单，不是指令包</text>
+  <text class="ts" x="30" y="50">8 个字段里没有一个是「指令」或「数据」，全是地址和尺寸——去哪拿、拿多少</text>
+
+  <!-- 左：结构 -->
+  <rect x="30" y="64" width="340" height="300" rx="9" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.3"/>
+  <text class="bd" x="48" y="88">HwtsTsKernel</text>
+  <text class="mono" x="48" y="112">kernelType : uint32_t</text>
+  <text class="mono" x="48" y="132">kernelBase : union {</text>
+  <text class="mono" x="64" y="152" style="fill:#1A1759;">cceKernel</text>
+  <text class="ts" x="184" y="152" style="fill:#3F3A8C;">← 主要</text>
+  <text class="mono" x="64" y="172">fwkKernel</text>
+  <text class="mono" x="64" y="192" style="fill:#71717A;">hwtsKernel</text>
+  <text class="ts" x="184" y="192" style="fill:#71717A;">← 仅非 cloud 平台</text>
+  <text class="mono" x="48" y="212">}</text>
+
+  <path d="M48 228 L354 228" stroke="rgba(23,23,23,0.12)" stroke-width="1"/>
+
+  <text class="ts" x="48" y="248">其中 HwtsCceKernel 的 8 个字段：</text>
+  <text class="mono" x="48" y="270">kernelName　　kernelSo</text>
+  <text class="mono" x="48" y="288">paramBase　　 l2VaddrBase</text>
+  <text class="mono" x="48" y="306">blockId　　　 blockNum</text>
+  <text class="mono" x="48" y="324">l2Size　　　　l2InMain</text>
+  <text class="ts" x="48" y="348" style="fill:#3F3A8C;">全是「在哪」，没有一个「是什么」</text>
+
+  <!-- 右：七种 kernelType -->
+  <rect x="386" y="64" width="304" height="300" rx="9" fill="#FFFFFF" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="404" y="88">kernelType 七种</text>
+
+  <text class="mono" x="404" y="114">0</text>
+  <text class="mono" x="428" y="114">KERNEL_TYPE_CCE</text>
+  <text class="mono" x="404" y="138">1</text>
+  <text class="mono" x="428" y="138">KERNEL_TYPE_FWK</text>
+  <text class="mono" x="404" y="162">2</text>
+  <text class="mono" x="428" y="162">KERNEL_TYPE_AICPU</text>
+  <text class="mono" x="404" y="186" style="fill:#4B3FE3;">4</text>
+  <text class="mono" x="428" y="186" style="fill:#4B3FE3;">KERNEL_TYPE_AICPU_CUSTOM</text>
+  <text class="mono" x="404" y="210" style="fill:#6F6FFF;">5</text>
+  <text class="mono" x="428" y="210" style="fill:#6F6FFF;">KERNEL_TYPE_AICPU_KFC</text>
+  <text class="mono" x="404" y="234" style="fill:#4B3FE3;">6</text>
+  <text class="mono" x="428" y="234" style="fill:#4B3FE3;">KERNEL_TYPE_AICPU_CUSTOM_KFC</text>
+  <text class="mono" x="404" y="258">10</text>
+  <text class="mono" x="428" y="258">KERNEL_TYPE_HWTS</text>
+
+  <path d="M404 272 L672 272" stroke="rgba(23,23,23,0.12)" stroke-width="1"/>
+  <text class="ts" x="404" y="292">3 / 7 / 8 / 9 是空号，历史预留</text>
+  <text class="ts" x="404" y="312" style="fill:#3F3A8C;">4 和 6 = 定制算子，HCCL 走 4</text>
+  <text class="ts" x="404" y="332">5 = KFC，AI CPU 跑着跑着回调 AI Core</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="376" width="660" height="48" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="396">分派判据只有一个：<tspan style="fill:#3F3A8C;">kernelSo 为空 = 逻辑核，查 21 项表；不为空 = 真算子，交给 ae 去 .so 里调函数。</tspan></text>
+  <text class="ts" x="46" y="414">host 侧不需要额外标记「这条是逻辑任务」——把 so 字段留空就行。省事，但也容易看漏。</text>
+</svg>

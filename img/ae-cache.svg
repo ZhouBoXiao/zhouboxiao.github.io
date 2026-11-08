@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="MultiSoManager 与 SingleSoManager 的两级缓存结构">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="520" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">两级缓存：按文件管一层，按符号管一层</text>
+  <text class="ts" x="30" y="50">MultiSoManager 管「装过哪些 so」，SingleSoManager 管「一个 so 里查过哪些符号」</text>
+
+  <!-- 第一级 -->
+  <rect x="30" y="68" width="660" height="86" rx="8" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="bd" x="46" y="90">MultiSoManager</text>
+  <text class="ts" x="160" y="90" style="fill:#71717A;">每个 kernel lib 各持一个</text>
+
+  <text class="mono" x="46" y="114" style="font-size:10px;">soCacher_ : unordered_map&lt;string, SingleSoManager*&gt;</text>
+  <text class="ts" x="46" y="136" style="fill:#B45309;">key 是 so 名字，不是全路径 —— 同名不同目录的 so 会撞</text>
+
+  <!-- 分三支 -->
+  <path d="M140 154 L140 176" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <path d="M360 154 L360 176" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <path d="M580 154 L580 176" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+
+  <!-- 第二级 -->
+  <rect x="40" y="182" width="200" height="126" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="52" y="202" style="fill:#1A1759;">SingleSoManager</text>
+  <path d="M52 210 L228 210" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="52" y="228" style="font-size:9.5px;">soHandle_ ← dlopen</text>
+  <text class="mono" x="52" y="246" style="font-size:9.5px;">apiCacher_</text>
+  <text class="ts" x="52" y="264" style="font-size:10px;">  "opA" → 0x7f2a…</text>
+  <text class="ts" x="52" y="280" style="font-size:10px;">  "opB" → 0x7f2b…</text>
+  <text class="ts" x="52" y="298" style="fill:#3F3A8C;font-size:10px;">符号缓存在这一层</text>
+
+  <rect x="260" y="182" width="200" height="126" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="272" y="202" style="fill:#1A1759;">SingleSoManager</text>
+  <path d="M272 210 L448 210" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="272" y="228" style="font-size:9.5px;">soHandle_ ← dlopen</text>
+  <text class="mono" x="272" y="246" style="font-size:9.5px;">apiCacher_</text>
+  <text class="ts" x="272" y="264" style="font-size:10px;">  "opC" → 0x7f3c…</text>
+  <text class="ts" x="272" y="298" style="fill:#71717A;font-size:10px;">每个 so 一份，互不可见</text>
+
+  <rect x="480" y="182" width="200" height="126" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="492" y="202" style="fill:#1A1759;">SingleSoManager</text>
+  <path d="M492 210 L668 210" stroke="rgba(23,23,23,0.10)"/>
+  <text class="mono" x="492" y="228" style="font-size:9.5px;">soHandle_ ← dlopen</text>
+  <text class="mono" x="492" y="246" style="font-size:9.5px;">apiCacher_</text>
+  <text class="ts" x="492" y="264" style="font-size:10px;">  "opD" → 0x7f4d…</text>
+  <text class="ts" x="492" y="298" style="fill:#71717A;font-size:10px;">CloseSo 时整份丢掉</text>
+
+  <!-- 锁 -->
+  <text class="ts" x="30" y="332" style="fill:#71717A;">锁</text>
+  <text class="ts" x="60" y="332">两级各有一把 <tspan class="mono" style="font-size:10px;">pthread_rwlock_t</tspan>，且都用「读锁查 → 写锁再查 → 建」的双重检查</text>
+  <text class="ts" x="60" y="350" style="fill:#71717A;">读锁那一遍是为了让缓存命中走快路径；写锁那一遍是为了防止两个线程同时建同一个</text>
+
+  <!-- KFC 特例 -->
+  <rect x="30" y="368" width="660" height="72" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="bd" x="46" y="390">KFC 是个例外：它的符号缓存不在这两层</text>
+  <text class="ts" x="46" y="410">因为它允许 <tspan class="mono" style="font-size:10px;">dlsym(RTLD_DEFAULT, name)</tspan> 全进程搜 —— 搜到的符号可能不属于任何 AE 管着的 so，</text>
+  <text class="ts" x="46" y="428">所以只能在 <tspan class="mono" style="font-size:10px;">AIKernelsLibAiCpuKFC</tspan> 自己身上挂一份全局缓存。</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="456" width="660" height="52" rx="8" fill="#F2F7FF" stroke="rgba(75,63,227,0.20)"/>
+  <text class="ts" x="46" y="477" style="fill:#1A1759;">「缓存挂在哪一层」= 「谁掌管这个符号的生命周期」。</text>
+  <text class="ts" x="46" y="496">AiCpu 的符号属于某个 so，so 关了符号就没了；KFC 的符号可能压根不在 AE 管的 so 里，只能自己存。</text>
+</svg>

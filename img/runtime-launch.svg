@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" role="img" aria-label="一次 aclrtLaunchKernel 的七个步骤">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .num { fill: #FFFFFF; font: 500 11px "SF Mono", Consolas, monospace; }
+  </style>
+  <rect x="0" y="0" width="720" height="440" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">一次 aclrtLaunchKernel 的七拍</text>
+  <text class="ts" x="30" y="50">前三拍算地址，中间三拍拼字节，最后一拍交给驱动</text>
+
+  <path d="M52 66 L52 372" stroke="rgba(75,63,227,0.20)" stroke-width="1.6" fill="none"/>
+
+  <!-- 1 -->
+  <circle cx="52" cy="88" r="12" fill="#4B3FE3"/><text class="num" x="52" y="92" text-anchor="middle">1</text>
+  <rect x="76" y="70" width="300" height="36" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="88" y="93">入口：aclrtLaunchKernel → rts 层</text>
+  <text class="ts" x="392" y="86">api/ 层只做参数校验与错误码转换，</text>
+  <text class="ts" x="392" y="102">不产生任何硬件访问。</text>
+
+  <!-- 2 -->
+  <circle cx="52" cy="132" r="12" fill="#4B3FE3"/><text class="num" x="52" y="136" text-anchor="middle">2</text>
+  <rect x="76" y="114" width="300" height="36" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="88" y="137">算地址：Kernel::GetFunctionDevAddr</text>
+  <text class="ts" x="392" y="130">baseAddrAlign + offset1/2，一次加法，</text>
+  <text class="ts" x="392" y="146">得到 kernelPc1 / kernelPc2。</text>
+
+  <!-- 3 -->
+  <circle cx="52" cy="176" r="12" fill="#4B3FE3"/><text class="num" x="52" y="180" text-anchor="middle">3</text>
+  <rect x="76" y="158" width="300" height="36" rx="6" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="ts" x="88" y="181">要槽位：Stream::AllocTask</text>
+  <text class="ts" x="392" y="174">TaskResManageDavid 从环形池取一格，</text>
+  <text class="ts" x="392" y="190" style="fill:#3F3A8C;">拿到的 id 同时就是 SQE 的下标 pos。</text>
+
+  <!-- 4 -->
+  <circle cx="52" cy="220" r="12" fill="#4B3FE3"/><text class="num" x="52" y="224" text-anchor="middle">4</text>
+  <rect x="76" y="202" width="300" height="36" rx="6" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="ts" x="88" y="225">填语义：AicTaskInit + LoadArgsInfo</text>
+  <text class="ts" x="392" y="218">blockDim / qos / 栈基址进 union，</text>
+  <text class="ts" x="392" y="234">参数走 ArgPool 或直接 H2D。</text>
+
+  <!-- 5 -->
+  <circle cx="52" cy="264" r="12" fill="#4B3FE3"/><text class="num" x="52" y="268" text-anchor="middle">5</text>
+  <rect x="76" y="246" width="300" height="36" rx="6" fill="#EDEBFF" stroke="rgba(75,63,227,0.45)"/>
+  <text class="ts" x="88" y="269">拼字节：ToConstructSqe</text>
+  <text class="ts" x="392" y="262">按 taskType 查注册好的 toSqeFunc，</text>
+  <text class="ts" x="392" y="278">把 union 摊成 64 字节位域。</text>
+
+  <!-- 6 -->
+  <circle cx="52" cy="308" r="12" fill="#4B3FE3"/><text class="num" x="52" y="312" text-anchor="middle">6</text>
+  <rect x="76" y="290" width="300" height="36" rx="6" fill="#FEF2F2" stroke="#E11D48" stroke-width="1.2"/>
+  <text class="ts" x="88" y="313">出门：软件尾 +1，再 halSqTaskSend</text>
+  <text class="ts" x="392" y="306" style="fill:#9F1239;">先推自己的尾指针，再敲驱动的门；</text>
+  <text class="ts" x="392" y="322" style="fill:#9F1239;">软件 SQ 模式下这一步只剩 memcpy。</text>
+
+  <!-- 7 -->
+  <circle cx="52" cy="352" r="12" fill="#4B3FE3"/><text class="num" x="52" y="356" text-anchor="middle">7</text>
+  <rect x="76" y="334" width="300" height="36" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="ts" x="88" y="357">等结果：Synchronize / 回收线程</text>
+  <text class="ts" x="392" y="350">比对 sqHead 与自己记的 tail，</text>
+  <text class="ts" x="392" y="366">追平即完成；异常才去读 CQE。</text>
+
+  <!-- 底部 -->
+  <rect x="30" y="390" width="660" height="40" rx="8" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="ts" x="46" y="408" style="fill:#3F3A8C;">七拍里真正可能变慢的只有 6 和 7：前者是系统调用，后者是等待。1–5 全在用户态内存里完成。</text>
+  <text class="ts" x="46" y="424" style="fill:#52525B;">所以「算子下发慢」这类问题，先分清是哪一拍 —— 这个切分比看总耗时有用得多。</text>
+</svg>

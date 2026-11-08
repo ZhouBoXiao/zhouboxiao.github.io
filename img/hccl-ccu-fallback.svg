@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 404" width="720" height="404" role="img" aria-label="跨 rank 资源协商与 CCU 降级阶梯">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .th { fill: #171717; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 11.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .arr { stroke: #4B3FE3; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .arrg { stroke: #9CA3AF; stroke-width: 1.3; stroke-linecap: round; fill: none; }
+  </style>
+  <defs>
+    <marker id="m1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#4B3FE3"/>
+    </marker>
+    <marker id="m2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="404" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">降级必须是全体一起降</text>
+  <text class="ts" x="30" y="50">集合通信要求所有 rank 跑同一算法；一个 rank 悄悄退回 AI_CPU，同步语义就对不上</text>
+
+  <!-- 上：协商 -->
+  <rect x="30" y="64" width="660" height="140" rx="10" fill="#F2F7FF" stroke="rgba(75,63,227,0.28)"/>
+  <text class="bd" x="46" y="86">跨 rank 协商：资源不足的 rank 报 0，做一次 AllReduce(MIN)</text>
+
+  <rect x="46" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="80" y="112" text-anchor="middle">R0</text>
+  <text class="mono" x="80" y="129" text-anchor="middle">0x5a5a</text>
+  <rect x="124" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="158" y="112" text-anchor="middle">R1</text>
+  <text class="mono" x="158" y="129" text-anchor="middle">0x5a5a</text>
+  <rect x="202" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="236" y="112" text-anchor="middle">R2</text>
+  <text class="mono" x="236" y="129" text-anchor="middle">0x5a5a</text>
+  <rect x="280" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="314" y="112" text-anchor="middle">R3</text>
+  <text class="mono" x="314" y="129" text-anchor="middle">0x5a5a</text>
+  <rect x="358" y="98" width="68" height="38" rx="6" fill="#FFF1F2" stroke="#E11D48"/>
+  <text class="ts" x="392" y="112" text-anchor="middle" style="fill:#9F1239;">R4</text>
+  <text class="mono" x="392" y="129" text-anchor="middle" style="fill:#9F1239;">0</text>
+  <rect x="436" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="470" y="112" text-anchor="middle">R5</text>
+  <text class="mono" x="470" y="129" text-anchor="middle">0x5a5a</text>
+  <rect x="514" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="548" y="112" text-anchor="middle">R6</text>
+  <text class="mono" x="548" y="129" text-anchor="middle">0x5a5a</text>
+  <rect x="592" y="98" width="68" height="38" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.14)"/>
+  <text class="ts" x="626" y="112" text-anchor="middle">R7</text>
+  <text class="mono" x="626" y="129" text-anchor="middle">0x5a5a</text>
+
+  <path d="M80 138 L80 148 M158 138 L158 148 M236 138 L236 148 M314 138 L314 148 M392 138 L392 148 M470 138 L470 148 M548 138 L548 148 M626 138 L626 148" stroke="#9CA3AF" stroke-width="1.2" fill="none"/>
+  <path d="M80 148 L626 148" stroke="#9CA3AF" stroke-width="1.2" fill="none"/>
+  <path class="arr" d="M360 148 L360 158" marker-end="url(#m1)"/>
+  <rect x="270" y="160" width="180" height="32" rx="7" fill="#4B3FE3"/>
+  <text class="th" x="360" y="181" text-anchor="middle" style="fill:#FFFFFF;">AllReduce(MIN)</text>
+  <path class="arr" d="M452 176 L468 176" marker-end="url(#m1)"/>
+  <rect x="470" y="160" width="190" height="32" rx="7" fill="#FFF1F2" stroke="#E11D48"/>
+  <text class="th" x="565" y="181" text-anchor="middle" style="fill:#9F1239;">结果 0 → 全体回退</text>
+
+  <!-- 中：降级阶梯 -->
+  <rect x="30" y="214" width="660" height="100" rx="10" fill="#F7F7F8" stroke="rgba(23,23,23,0.12)"/>
+  <text class="bd" x="46" y="236">降级阶梯 · GetOpExecuteConfigLevel()</text>
+  <rect x="46" y="248" width="150" height="40" rx="7" fill="#F2F7FF" stroke="#4B3FE3"/>
+  <text class="th" x="121" y="273" text-anchor="middle">3 · CCU_MS</text>
+  <rect x="210" y="248" width="150" height="40" rx="7" fill="#F2F7FF" stroke="rgba(75,63,227,0.4)"/>
+  <text class="th" x="285" y="273" text-anchor="middle">2 · CCU_SCHED</text>
+  <rect x="374" y="248" width="150" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="449" y="273" text-anchor="middle">1 · AICPU_TS</text>
+  <rect x="538" y="248" width="136" height="40" rx="7" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="th" x="606" y="273" text-anchor="middle">0 · default</text>
+  <path class="arrg" d="M198 268 L208 268" marker-end="url(#m2)"/>
+  <path class="arrg" d="M362 268 L372 268" marker-end="url(#m2)"/>
+  <path class="arrg" d="M526 268 L536 268" marker-end="url(#m2)"/>
+  <text class="ts" x="46" y="306">CompareCcuParam 取所有 rank 里 level 最低的 config，再 ReSelector 重选算法</text>
+
+  <!-- 下：缓存 -->
+  <rect x="30" y="324" width="660" height="48" rx="9" fill="#F2F7FF" stroke="rgba(75,63,227,0.24)"/>
+  <text class="bd" x="46" y="344">协商结果有缓存，不必每次算子都付一次集合通信</text>
+  <text class="ts" x="46" y="362">cacheTag = algName + opExecuteConfig + "_ccuParamCache"；协商子通信域强制走 AI_CPU</text>
+
+  <rect x="30" y="382" width="660" height="18" rx="6" fill="#F7F7F8"/>
+  <text class="ts" x="42" y="395" style="fill:#3F3A8C;">用一次集合通信来决定要不要用更高效的集合通信——CCU 资源协商的设计</text>
+</svg>

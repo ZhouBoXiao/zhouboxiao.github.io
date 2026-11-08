@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 510" width="720" height="510" role="img" aria-label="错误码的两层翻译，以及三个 kernel lib 的策略差异">
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4B3FE3"/>
+    </marker>
+  </defs>
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="510" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">错误码要过两道手</text>
+  <text class="ts" x="30" y="50">第一道把魔数翻成语义，第二道决定「这算不算错」——两件事分给两个人做</text>
+
+  <!-- 流水 -->
+  <rect x="30" y="72" width="180" height="64" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="44" y="94">算子函数返回</text>
+  <text class="mono" x="44" y="114" style="fill:#1A1759;">uint32_t</text>
+  <text class="ts" x="44" y="128" style="font-size:9.5px;fill:#71717A;">作者自己定的数</text>
+
+  <path d="M212 104 L240 104" stroke="#4B3FE3" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="246" y="72" width="214" height="64" rx="7" fill="#F2F7FF" stroke="#4B3FE3" stroke-width="1.2"/>
+  <text class="ts" x="260" y="94" style="fill:#1A1759;">第一层 · 认知翻译</text>
+  <text class="mono" x="260" y="112" style="font-size:9.5px;fill:#1A1759;">TransformKernelErrorCode</text>
+  <text class="ts" x="260" y="128" style="font-size:9.5px;fill:#71717A;">三个 lib 各有一套</text>
+
+  <path d="M462 104 L490 104" stroke="#4B3FE3" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="496" y="72" width="166" height="64" rx="7" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="508" y="94" style="fill:#1A1759;">aeStatus_t</text>
+  <text class="ts" x="508" y="114" style="font-size:10px;">AE 的统一语义</text>
+  <text class="ts" x="508" y="128" style="font-size:9.5px;fill:#71717A;">20 个状态码</text>
+
+  <!-- 第二层 -->
+  <path d="M579 136 L579 154" stroke="#4B3FE3" stroke-width="1.2" marker-end="url(#a)"/>
+  <rect x="420" y="158" width="242" height="40" rx="6" fill="#FFFFFF" stroke="rgba(23,23,23,0.16)"/>
+  <text class="ts" x="434" y="175" style="font-size:10px;">第二层 · 行为决策</text>
+  <text class="mono" x="434" y="191" style="font-size:9px;">PostProcessTsKernelTask</text>
+
+  <text class="ts" x="30" y="176" style="fill:#3F3A8C;">成功 / EOS / TASK_WAIT / TASK_ABORT</text>
+  <text class="ts" x="30" y="193" style="fill:#71717A;">这四个不算错，注释写 never print error log</text>
+
+  <!-- 差异表 -->
+  <text class="tb" x="30" y="228" style="font-size:12px;">第一层里，三个 lib 的策略并不一致</text>
+
+  <text class="ts" x="40" y="252" style="fill:#71717A;">算子返回</text>
+  <text class="ts" x="190" y="252" style="fill:#71717A;">AiCpu</text>
+  <text class="ts" x="370" y="252" style="fill:#71717A;">KFC</text>
+  <text class="ts" x="530" y="252" style="fill:#71717A;">FWK</text>
+  <path d="M40 260 L690 260" stroke="rgba(23,23,23,0.14)"/>
+
+  <rect x="32" y="266" width="658" height="24" fill="#F2F7FF"/>
+  <text class="mono" x="40" y="283">0</text>
+  <text class="mono" x="190" y="283" style="font-size:10px;">SUCCESS</text>
+  <text class="mono" x="370" y="283" style="font-size:10px;">SUCCESS</text>
+  <text class="mono" x="530" y="283" style="font-size:10px;">SUCCESS</text>
+
+  <text class="ts" x="40" y="307">序列结束</text>
+  <text class="mono" x="190" y="307" style="font-size:10px;">201 → EOS</text>
+  <text class="ts" x="370" y="307" style="fill:#A1A1AA;">—</text>
+  <text class="ts" x="530" y="307" style="font-size:10px;">FWK_EOS → EOS</text>
+
+  <rect x="32" y="314" width="658" height="24" fill="#F2F7FF"/>
+  <text class="ts" x="40" y="331">要等待</text>
+  <text class="mono" x="190" y="331" style="font-size:10px;">101 → TASK_WAIT</text>
+  <text class="ts" x="370" y="331" style="fill:#A1A1AA;">—</text>
+  <text class="ts" x="530" y="331" style="fill:#A1A1AA;">—</text>
+
+  <text class="ts" x="40" y="355">中止</text>
+  <text class="ts" x="190" y="355" style="fill:#A1A1AA;">—</text>
+  <text class="mono" x="370" y="355" style="font-size:10px;">301 → TASK_ABORT</text>
+  <text class="ts" x="530" y="355" style="fill:#A1A1AA;">—</text>
+
+  <rect x="32" y="362" width="658" height="24" fill="#F2F7FF"/>
+  <text class="ts" x="40" y="379" style="font-size:10.5px;">501~505（非 cust）</text>
+  <text class="ts" x="190" y="379" style="font-size:10px;">→ 各类 fault</text>
+  <text class="ts" x="370" y="379" style="fill:#A1A1AA;">—</text>
+  <text class="ts" x="530" y="379" style="fill:#A1A1AA;">—</text>
+
+  <text class="ts" x="40" y="403">1000 ~ 1099</text>
+  <text class="ts" x="190" y="403" style="fill:#A1A1AA;">—</text>
+  <text class="ts" x="370" y="403" style="font-size:10px;fill:#B45309;">原样穿透到 RTS</text>
+  <text class="ts" x="530" y="403" style="fill:#A1A1AA;">—</text>
+
+  <rect x="32" y="410" width="658" height="24" fill="#FFF7ED"/>
+  <text class="ts" x="40" y="427">其他未知</text>
+  <text class="ts" x="190" y="427" style="font-size:10px;fill:#B45309;">原样返回</text>
+  <text class="ts" x="370" y="427" style="font-size:10px;fill:#B45309;">统一 TASK_FAIL</text>
+  <text class="ts" x="530" y="427" style="font-size:10px;">原样返回（有特判）</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="446" width="660" height="56" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="467">最右一列是两种相反态度：<tspan style="fill:#3F3A8C;">AiCpu 不认识的码原封不动往上抛，KFC 不认识的码一律收敛成 TASK_FAIL。</tspan></text>
+  <text class="ts" x="46" y="486">KFC 敢这么做，是因为它有 1000~1099 这个穿透区——真要传信息，走那条专用通道，不用挤未知码。</text>
+</svg>

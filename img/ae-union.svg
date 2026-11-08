@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500" role="img" aria-label="HwtsTsKernel 的 union 三种解释与字节布局">
+  <style>
+    .tb { fill: #171717; font: 500 13px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .ts { fill: #52525B; font: 400 11px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+    .mono { fill: #171717; font: 500 10.5px "SF Mono", Consolas, monospace; }
+    .bd { fill: #1A1759; font: 500 12px "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="720" height="500" fill="#FFFFFF"/>
+
+  <text class="tb" x="30" y="30">同一块内存，三种读法</text>
+  <text class="ts" x="30" y="50">HwtsTsKernel 是 kernelType 加一个 union；union 里三种结构，谁大听谁的</text>
+
+  <!-- 外层结构 -->
+  <rect x="30" y="68" width="200" height="34" rx="6" fill="#F7F7F8" stroke="rgba(23,23,23,0.16)"/>
+  <text class="mono" x="42" y="90">kernelType</text>
+  <text class="ts" x="126" y="90" style="fill:#71717A;">uint32，当 tag 用</text>
+
+  <rect x="240" y="68" width="450" height="34" rx="6" fill="#F2F7FF" stroke="#4B3FE3"/>
+  <text class="ts" x="252" y="90" style="fill:#1A1759;">kernelBase（union）—— 三种 lib 各按各的结构体解释这块内存</text>
+
+  <path d="M456 104 L456 122" stroke="#A1A1AA" stroke-width="1.1"/>
+
+  <!-- 三条并列解释 -->
+  <!-- 行 1 : HwtsCceKernel 48 -->
+  <text class="mono" x="30" y="142" style="fill:#1A1759;">HwtsCceKernel</text>
+  <text class="ts" x="30" y="158" style="fill:#71717A;">48 字节</text>
+
+  <rect x="150" y="128" width="60" height="30" fill="#E8EAF6" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="180" y="147" text-anchor="middle" style="font-size:9px;">kernelName</text>
+  <rect x="210" y="128" width="60" height="30" fill="#E8EAF6" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="240" y="147" text-anchor="middle" style="font-size:9px;">kernelSo</text>
+  <rect x="270" y="128" width="60" height="30" fill="#E8EAF6" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="300" y="147" text-anchor="middle" style="font-size:9px;">paramBase</text>
+  <rect x="330" y="128" width="60" height="30" fill="#E8EAF6" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="360" y="147" text-anchor="middle" style="font-size:9px;">l2Vaddr</text>
+  <rect x="390" y="128" width="48" height="30" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="mono" x="414" y="147" text-anchor="middle" style="font-size:9px;">blockId</text>
+  <rect x="438" y="128" width="48" height="30" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="mono" x="462" y="147" text-anchor="middle" style="font-size:9px;">blockNum</text>
+  <rect x="486" y="128" width="40" height="30" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="mono" x="506" y="147" text-anchor="middle" style="font-size:8px;">l2Sz</text>
+  <rect x="526" y="128" width="40" height="30" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="mono" x="546" y="147" text-anchor="middle" style="font-size:8px;">l2InMain</text>
+  <text class="ts" x="586" y="147" style="fill:#3F3A8C;">← AiCpu / KFC 读</text>
+
+  <!-- 行 2 : HwtsFwkKernel 16 -->
+  <text class="mono" x="30" y="200" style="fill:#1A1759;">HwtsFwkKernel</text>
+  <text class="ts" x="30" y="216" style="fill:#71717A;">16 字节</text>
+
+  <rect x="150" y="186" width="120" height="30" fill="#E8EAF6" stroke="rgba(75,63,227,0.35)"/>
+  <text class="mono" x="210" y="205" text-anchor="middle" style="font-size:9px;">kernel</text>
+  <rect x="270" y="186" width="60" height="30" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="mono" x="300" y="205" text-anchor="middle" style="font-size:9px;">size</text>
+  <text class="ts" x="344" y="205" style="fill:#3F3A8C;">← FWK 只用前 12 字节（kernel + size）</text>
+
+  <!-- 行 3 : hwts_ts_kernel 64 -->
+  <text class="mono" x="30" y="258" style="fill:#1A1759;">hwts_ts_kernel</text>
+  <text class="ts" x="30" y="274" style="fill:#71717A;">64 字节 · 最大</text>
+
+  <rect x="150" y="244" width="416" height="30" fill="#F2F7FF" stroke="rgba(75,63,227,0.25)"/>
+  <text class="ts" x="162" y="263">pid · 位域 · streamID · 5 个 uint64 · blockId · blockNum · l2InMain · taskID</text>
+  <text class="ts" x="150" y="292" style="fill:#71717A;">非云平台才有；CFG_SOC_PLATFORM_CLOUD 下被 #ifndef 掉了</text>
+
+  <!-- union 尺寸条 -->
+  <text class="ts" x="30" y="322" style="fill:#71717A;">union 实际大小 = max(48, 16, 64) =</text>
+  <rect x="248" y="308" width="416" height="18" fill="#4B3FE3" opacity="0.12"/>
+  <text class="ts" x="456" y="322" style="fill:#1A1759;">64 字节（非云） / 48 字节（云）</text>
+
+  <!-- 只传 union 地址 -->
+  <text class="tb" x="30" y="356" style="font-size:12px;">关键在于往下传的是什么</text>
+  <rect x="30" y="368" width="300" height="30" rx="6" fill="#F7F7F8"/>
+  <text class="mono" x="42" y="388" style="fill:#B45309;">CallKernelApi(kernelType, &amp;kernelBase)</text>
+  <text class="ts" x="344" y="388">传 union 的地址，不传整个结构</text>
+  <text class="ts" x="30" y="416" style="fill:#71717A;">kernelType 已经单独作参数给了，所以 union 内部不需要再带 tag —— 但这也意味着类型安全全靠调用方自觉。</text>
+
+  <!-- 底条 -->
+  <rect x="30" y="432" width="660" height="52" rx="8" fill="#F7F7F8" stroke="rgba(23,23,23,0.10)"/>
+  <text class="ts" x="46" y="453">如果 kernelType 说 FWK，而实际填的是 CCE 布局：<tspan style="fill:#3F3A8C;">FWK 会把 kernelName 那个指针当成 STR_FWK_OP_KERNEL* 去解引用。</tspan></text>
+  <text class="ts" x="46" y="472">不会崩，会读到垃圾。这是 tagged union 加 void* 的固有代价，编译期一点忙都帮不上。</text>
+</svg>
